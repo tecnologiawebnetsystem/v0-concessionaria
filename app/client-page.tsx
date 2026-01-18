@@ -1,8 +1,7 @@
 "use client"
 import { PublicHeader } from "@/components/public/public-header"
 import { PublicFooter } from "@/components/public/public-footer"
-import { WhatsAppFloat } from "@/components/public/whatsapp-float"
-import { Chatbot } from "@/components/public/chatbot"
+import { UnifiedChat } from "@/components/public/unified-chat"
 import { TestDriveScheduler } from "@/components/public/test-drive-scheduler"
 import { CarEvaluation } from "@/components/public/car-evaluation"
 import { Button } from "@/components/ui/button"
@@ -54,8 +53,7 @@ export default function ClientHomePage({ vehicles }: HomePageProps) {
   return (
     <div className="flex min-h-screen flex-col">
       <PublicHeader />
-      <WhatsAppFloat />
-      <Chatbot />
+      <UnifiedChat />
 
       <main className="flex-1">
         <section className="relative bg-gradient-to-br from-blue-950 via-blue-900 to-indigo-900 text-white overflow-hidden">

@@ -15,11 +15,8 @@ import {
   DollarSign
 } from "lucide-react"
 import Link from "next/link"
-import { useSearchParams } from "next/navigation"
-import { Suspense } from "react"
 
-async function getAvailableVehicles(searchParams: any) {
-  const query = searchParams.get("query") || ""
+async function getAvailableVehicles() {
   const vehicles = await sql`
     SELECT v.*, b.name as brand_name, c.name as category_name,
     (SELECT url FROM vehicle_images WHERE vehicle_id = v.id AND is_primary = true LIMIT 1) as image_url,
@@ -27,7 +24,7 @@ async function getAvailableVehicles(searchParams: any) {
     FROM vehicles v
     LEFT JOIN brands b ON v.brand_id = b.id
     LEFT JOIN vehicle_categories c ON v.category_id = c.id
-    WHERE v.published = true AND v.status = 'available' AND (v.name ILIKE ${`%${query}%`} OR b.name ILIKE ${`%${query}%`} OR c.name ILIKE ${`%${query}%`})
+    WHERE v.published = true AND v.status = 'available'
     ORDER BY v.is_featured DESC, v.created_at DESC
   `
 
@@ -43,14 +40,11 @@ async function getAvailableVehicles(searchParams: any) {
   return { vehicles, stats }
 }
 
-const Loading = () => null;
-
 export default async function SellerVehiclesPage() {
   const session = await getSession()
   if (!session) redirect("/login")
 
-  const searchParams = useSearchParams();
-  const { vehicles, stats } = await getAvailableVehicles(searchParams)
+  const { vehicles, stats } = await getAvailableVehicles()
 
   const formatCurrency = (value: number) => 
     new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(value)
@@ -210,5 +204,3 @@ export default async function SellerVehiclesPage() {
     </div>
   )
 }
-
-export { Loading };

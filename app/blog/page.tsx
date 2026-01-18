@@ -4,16 +4,11 @@ import { PublicFooter } from "@/components/public/public-footer"
 import { WhatsAppFloat } from "@/components/public/whatsapp-float"
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Calendar, User, Search, Eye, BookOpen, ArrowRight } from "lucide-react"
+import { Calendar, Search, Eye, BookOpen, ArrowRight } from "lucide-react"
 import Link from "next/link"
 import Image from "next/image"
 import type { Metadata } from "next"
-import { Footer } from "@/components/public/footer" // Import Footer component
-import { useSearchParams } from "next/navigation"
-import { Suspense } from "react"
-import Loading from "./loading"
 
 const sql = neon(process.env.DATABASE_URL!)
 
@@ -256,8 +251,4 @@ export default async function BlogPage() {
       <PublicFooter />
     </div>
   )
-}
-
-export function Loading() {
-  return null
 }
