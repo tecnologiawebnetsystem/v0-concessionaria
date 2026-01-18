@@ -14,11 +14,23 @@ import {
   BarChart3,
   Tags,
   Bookmark,
+  DollarSign,
+  Receipt,
+  UserCheck,
+  ClipboardList,
+  CalendarCheck,
+  Star,
 } from "lucide-react"
 
 const navigation = [
   { name: "Dashboard", href: "/admin", icon: LayoutDashboard },
   { name: "Veículos", href: "/admin/vehicles", icon: Car },
+  { name: "Vendas", href: "/admin/sales", icon: Receipt },
+  { name: "Financeiro", href: "/admin/finance", icon: DollarSign },
+  { name: "Vendedores", href: "/admin/sellers", icon: UserCheck },
+  { name: "Propostas", href: "/admin/proposals", icon: ClipboardList },
+  { name: "Test Drives", href: "/admin/test-drives", icon: CalendarCheck },
+  { name: "Avaliações", href: "/admin/evaluations", icon: Star },
   { name: "Marcas", href: "/admin/brands", icon: Tags },
   { name: "Categorias", href: "/admin/categories", icon: Bookmark },
   { name: "Blog", href: "/admin/blog", icon: FileText },

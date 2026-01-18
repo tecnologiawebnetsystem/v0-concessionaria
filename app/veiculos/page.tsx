@@ -1,10 +1,12 @@
 import { sql } from "@/lib/db"
 import { PublicHeader } from "@/components/public/public-header"
 import { PublicFooter } from "@/components/public/public-footer"
-import { VehicleFilters } from "@/components/public/vehicle-filters"
+import { AdvancedFilters } from "@/components/public/advanced-filters"
 import { VehicleCatalog } from "@/components/public/vehicle-catalog"
 import { SortSelect } from "@/components/public/sort-select"
 import { WhatsAppFloat } from "@/components/public/whatsapp-float"
+import { RecentlyViewedSection } from "@/components/public/recently-viewed-section"
+import { VehicleFilters } from "@/components/public/vehicle-filters" // Import VehicleFilters
 
 async function getVehiclesData(searchParams: any) {
   const { categoria, marca, ano_min, ano_max, preco_min, preco_max, busca, ordenar, combustivel, cambio } = searchParams
@@ -133,8 +135,8 @@ export default async function VehiclesPage({ searchParams }: { searchParams: Pro
 
         <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
           <div className="flex flex-col gap-8 lg:flex-row">
-            <aside className="lg:w-64">
-              <VehicleFilters brands={brands} categories={categories} currentFilters={params} />
+            <aside className="lg:w-80">
+              <AdvancedFilters brands={brands} categories={categories} currentFilters={params} />
             </aside>
             <div className="flex-1">
               <div className="mb-6">
@@ -144,6 +146,9 @@ export default async function VehiclesPage({ searchParams }: { searchParams: Pro
             </div>
           </div>
         </div>
+        
+        {/* Recently Viewed Section */}
+        <RecentlyViewedSection />
       </main>
       <PublicFooter />
     </div>

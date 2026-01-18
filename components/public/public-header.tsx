@@ -3,7 +3,7 @@
 import Link from "next/link"
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
-import { Menu, X, Search, Phone, User, LogOut, MessageCircle } from "lucide-react"
+import { Menu, X, Search, Phone, User, LogOut, MessageCircle, Moon, Sun } from "lucide-react"
 import { cn } from "@/lib/utils"
 import {
   DropdownMenu,
@@ -16,11 +16,20 @@ import {
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { useRouter } from "next/navigation"
 import { toast } from "sonner"
+import { useTheme } from "next-themes"
+import { FavoritesPanel } from "./favorites-panel"
+import { ComparePanel } from "./compare-panel"
 
 export function PublicHeader() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [user, setUser] = useState<any>(null)
   const router = useRouter()
+  const { theme, setTheme } = useTheme()
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   useEffect(() => {
     // Check if user is logged in
@@ -107,13 +116,32 @@ export function PublicHeader() {
             </nav>
           </div>
 
-          <div className="hidden items-center gap-3 lg:flex">
+          <div className="hidden items-center gap-2 lg:flex">
             <Button variant="ghost" size="sm" asChild className="text-gray-700">
               <Link href="/veiculos">
                 <Search className="mr-2 size-4" />
                 Buscar
               </Link>
             </Button>
+            
+            {/* Favoritos */}
+            <FavoritesPanel />
+            
+            {/* Comparar */}
+            <ComparePanel />
+            
+            {/* Dark Mode Toggle */}
+            {mounted && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+                className="text-gray-700"
+              >
+                {theme === "dark" ? <Sun className="size-5" /> : <Moon className="size-5" />}
+              </Button>
+            )}
+            
             {user ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
