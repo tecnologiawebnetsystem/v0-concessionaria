@@ -11,7 +11,11 @@ import {
   Clock,
   Award,
   ArrowUpRight,
-  ArrowDownRight
+  ArrowDownRight,
+  Users,
+  Zap,
+  ChevronRight,
+  Star
 } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { Progress } from "@/components/ui/progress"
@@ -19,20 +23,16 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 
 async function getSellerStats(userId: string) {
-  // Buscar seller_id pelo user_id
   const [seller] = await sql`
     SELECT * FROM sellers WHERE user_id = ${userId}
   `
   
-  if (!seller) {
-    return null
-  }
+  if (!seller) return null
 
   const sellerId = seller.id
   const currentMonth = new Date().getMonth() + 1
   const currentYear = new Date().getFullYear()
 
-  // Vendas do mês
   const [monthSales] = await sql`
     SELECT 
       COUNT(*) as total_sales,
@@ -45,7 +45,6 @@ async function getSellerStats(userId: string) {
     AND status IN ('approved', 'completed')
   `
 
-  // Comissões pendentes
   const [pendingCommissions] = await sql`
     SELECT COALESCE(SUM(commission_value), 0) as total
     FROM sales 
@@ -54,7 +53,6 @@ async function getSellerStats(userId: string) {
     AND status IN ('approved', 'completed')
   `
 
-  // Meta do mês
   const [monthGoal] = await sql`
     SELECT * FROM sales_goals 
     WHERE seller_id = ${sellerId}
@@ -62,7 +60,6 @@ async function getSellerStats(userId: string) {
     AND year = ${currentYear}
   `
 
-  // Vendas do mês anterior para comparação
   const lastMonth = currentMonth === 1 ? 12 : currentMonth - 1
   const lastMonthYear = currentMonth === 1 ? currentYear - 1 : currentYear
   
@@ -75,17 +72,16 @@ async function getSellerStats(userId: string) {
     AND status IN ('approved', 'completed')
   `
 
-  // Vendas recentes
   const recentSales = await sql`
-    SELECT s.*, v.name as vehicle_name
+    SELECT s.*, v.name as vehicle_name, b.name as brand_name
     FROM sales s
     LEFT JOIN vehicles v ON s.vehicle_id = v.id
+    LEFT JOIN brands b ON v.brand_id = b.id
     WHERE s.seller_id = ${sellerId}
     ORDER BY s.sale_date DESC
     LIMIT 5
   `
 
-  // Próximos agendamentos (test drives)
   const upcomingAppointments = await sql`
     SELECT * FROM test_drives
     WHERE preferred_date >= CURRENT_DATE
@@ -93,7 +89,6 @@ async function getSellerStats(userId: string) {
     LIMIT 5
   `
 
-  // Ranking do mês
   const ranking = await sql`
     SELECT 
       s.id,
@@ -112,7 +107,6 @@ async function getSellerStats(userId: string) {
     LIMIT 5
   `
 
-  // Encontrar posição do vendedor no ranking
   const sellerPosition = ranking.findIndex((r: any) => r.id === sellerId) + 1
 
   return {
@@ -141,17 +135,18 @@ export default async function SellerDashboard() {
 
   const stats = await getSellerStats(session.userId)
 
-  // Se não encontrou vendedor, mostrar mensagem
   if (!stats) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] text-center">
-        <div className="bg-amber-50 p-8 rounded-xl border border-amber-200 max-w-md">
-          <Award className="size-16 mx-auto text-amber-500 mb-4" />
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Conta não configurada</h2>
-          <p className="text-gray-600 mb-4">
-            Seu perfil de vendedor ainda não foi configurado. Entre em contato com o administrador.
+        <div className="bg-slate-800/50 p-8 rounded-2xl border border-slate-700 max-w-md">
+          <div className="w-16 h-16 rounded-2xl bg-amber-500/20 flex items-center justify-center mx-auto mb-4">
+            <Award className="h-8 w-8 text-amber-400" />
+          </div>
+          <h2 className="text-2xl font-bold text-white mb-2">Conta nao configurada</h2>
+          <p className="text-slate-400 mb-6">
+            Seu perfil de vendedor ainda nao foi configurado. Entre em contato com o administrador.
           </p>
-          <Button asChild>
+          <Button asChild className="bg-emerald-600 hover:bg-emerald-700">
             <Link href="/">Voltar para o site</Link>
           </Button>
         </div>
@@ -161,154 +156,162 @@ export default async function SellerDashboard() {
 
   const { monthSales, lastMonthSales, pendingCommissions, monthGoal, recentSales, upcomingAppointments, ranking, sellerPosition, seller } = stats
 
-  // Calcular variação
   const salesVariation = lastMonthSales.count > 0 
     ? ((monthSales.count - lastMonthSales.count) / lastMonthSales.count * 100).toFixed(1)
     : 0
 
-  // Calcular progresso da meta
   const goalProgress = monthGoal?.goal_quantity > 0 
     ? (monthSales.count / monthGoal.goal_quantity * 100)
     : 0
 
+  const formatCurrency = (value: number) => new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(value)
+  const formatCompact = (value: number) => new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL", notation: "compact" }).format(value)
+
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
-        <p className="text-gray-600">
-          Olá, {session.name.split(" ")[0]}! Aqui está o resumo do seu desempenho.
-        </p>
+      {/* Header */}
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <div>
+          <h1 className="text-3xl font-bold text-white">Dashboard</h1>
+          <p className="text-slate-400">
+            Ola, {session.name.split(" ")[0]}! Aqui esta o resumo do seu desempenho.
+          </p>
+        </div>
+        <div className="flex items-center gap-3">
+          <Badge className="bg-emerald-500/20 text-emerald-400 border-emerald-500/30 px-3 py-1.5">
+            <Zap className="h-3 w-3 mr-1" />
+            {sellerPosition > 0 ? `${sellerPosition}o no ranking` : "Novo vendedor"}
+          </Badge>
+        </div>
       </div>
 
-      {/* Cards de Estatísticas */}
+      {/* Stats Cards */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-gray-600">Vendas do Mês</CardTitle>
-            <Car className="size-5 text-emerald-600" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-3xl font-bold text-gray-900">{monthSales.count}</div>
-            <div className="flex items-center mt-1">
-              {Number(salesVariation) >= 0 ? (
-                <ArrowUpRight className="size-4 text-emerald-500" />
-              ) : (
-                <ArrowDownRight className="size-4 text-red-500" />
-              )}
-              <span className={`text-sm ${Number(salesVariation) >= 0 ? 'text-emerald-600' : 'text-red-600'}`}>
-                {salesVariation}% vs mês anterior
-              </span>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-gray-600">Valor Vendido</CardTitle>
-            <DollarSign className="size-5 text-blue-600" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-gray-900">
-              {new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL", notation: "compact" }).format(monthSales.value)}
-            </div>
-            <p className="mt-1 text-xs text-gray-500">Este mês</p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-gray-600">Comissões do Mês</CardTitle>
-            <TrendingUp className="size-5 text-amber-600" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-emerald-600">
-              {new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(monthSales.commission)}
-            </div>
-            <p className="mt-1 text-xs text-gray-500">
-              Taxa: {seller.commission_rate}%
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-gray-600">Comissões Pendentes</CardTitle>
-            <Clock className="size-5 text-purple-600" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-amber-600">
-              {new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(pendingCommissions)}
-            </div>
-            <p className="mt-1 text-xs text-gray-500">Aguardando pagamento</p>
-          </CardContent>
-        </Card>
+        {[
+          {
+            title: "Vendas do Mes",
+            value: monthSales.count.toString(),
+            subtitle: `${Number(salesVariation) >= 0 ? "+" : ""}${salesVariation}% vs mes anterior`,
+            icon: Car,
+            color: "emerald",
+            trend: Number(salesVariation) >= 0 ? "up" : "down"
+          },
+          {
+            title: "Valor Vendido",
+            value: formatCompact(monthSales.value),
+            subtitle: "Este mes",
+            icon: DollarSign,
+            color: "blue",
+            trend: "up"
+          },
+          {
+            title: "Comissoes do Mes",
+            value: formatCurrency(monthSales.commission),
+            subtitle: `Taxa: ${seller.commission_rate}%`,
+            icon: TrendingUp,
+            color: "amber",
+            trend: "up"
+          },
+          {
+            title: "Comissoes Pendentes",
+            value: formatCurrency(pendingCommissions),
+            subtitle: "Aguardando pagamento",
+            icon: Clock,
+            color: "violet",
+            trend: "neutral"
+          }
+        ].map((stat, idx) => (
+          <Card key={idx} className={`bg-slate-900/50 border-slate-800 hover:border-${stat.color}-500/30 transition-all`}>
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between mb-4">
+                <div className={`p-3 rounded-xl bg-${stat.color}-500/10`}>
+                  <stat.icon className={`h-6 w-6 text-${stat.color}-400`} />
+                </div>
+                {stat.trend !== "neutral" && (
+                  <div className={`flex items-center gap-1 text-sm ${stat.trend === "up" ? "text-emerald-400" : "text-red-400"}`}>
+                    {stat.trend === "up" ? <ArrowUpRight className="h-4 w-4" /> : <ArrowDownRight className="h-4 w-4" />}
+                  </div>
+                )}
+              </div>
+              <p className="text-sm text-slate-500 mb-1">{stat.title}</p>
+              <p className="text-3xl font-bold text-white">{stat.value}</p>
+              <p className="text-xs text-slate-500 mt-1">{stat.subtitle}</p>
+            </CardContent>
+          </Card>
+        ))}
       </div>
 
-      {/* Meta do Mês */}
+      {/* Meta do Mes */}
       {monthGoal && (
-        <Card>
-          <CardHeader>
-            <div className="flex items-center justify-between">
-              <CardTitle className="flex items-center gap-2">
-                <Target className="size-5 text-emerald-600" />
-                Meta do Mês
-              </CardTitle>
-              <Badge variant={goalProgress >= 100 ? "default" : "secondary"} className={goalProgress >= 100 ? "bg-emerald-500" : ""}>
+        <Card className="bg-gradient-to-br from-emerald-500/10 to-teal-500/5 border-emerald-500/20">
+          <CardContent className="p-6">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-3">
+                <div className="p-3 rounded-xl bg-emerald-500/20">
+                  <Target className="h-6 w-6 text-emerald-400" />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-white">Meta do Mes</h3>
+                  <p className="text-sm text-slate-400">{monthSales.count} de {monthGoal.goal_quantity} veiculos</p>
+                </div>
+              </div>
+              <Badge className={goalProgress >= 100 ? "bg-emerald-500" : "bg-slate-700 text-slate-300"}>
                 {goalProgress >= 100 ? "Meta Atingida!" : `${goalProgress.toFixed(0)}%`}
               </Badge>
             </div>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-2">
-              <div className="flex justify-between text-sm">
-                <span className="text-gray-600">Progresso</span>
-                <span className="font-medium">{monthSales.count} de {monthGoal.goal_quantity} veículos</span>
-              </div>
-              <Progress value={Math.min(goalProgress, 100)} className="h-3" />
-              {monthGoal.bonus_percentage > 0 && (
-                <p className="text-xs text-gray-500 mt-2">
-                  Bônus de {monthGoal.bonus_percentage}% ao atingir a meta
-                </p>
-              )}
-            </div>
+            <Progress value={Math.min(goalProgress, 100)} className="h-3 bg-slate-700" />
+            {monthGoal.bonus_percentage > 0 && (
+              <p className="text-xs text-emerald-400 mt-3">
+                <Star className="inline h-3 w-3 mr-1" />
+                Bonus de {monthGoal.bonus_percentage}% ao atingir a meta
+              </p>
+            )}
           </CardContent>
         </Card>
       )}
 
       <div className="grid gap-6 lg:grid-cols-3">
         {/* Vendas Recentes */}
-        <Card className="lg:col-span-2">
+        <Card className="lg:col-span-2 bg-slate-900/50 border-slate-800">
           <CardHeader className="flex flex-row items-center justify-between">
-            <CardTitle>Vendas Recentes</CardTitle>
-            <Button variant="ghost" size="sm" asChild>
-              <Link href="/seller/sales">Ver todas</Link>
-            </Button>
+            <CardTitle className="text-white">Vendas Recentes</CardTitle>
+            <Link href="/seller/sales">
+              <Button variant="ghost" size="sm" className="text-slate-400 hover:text-white">
+                Ver todas <ChevronRight className="h-4 w-4 ml-1" />
+              </Button>
+            </Link>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
               {recentSales.length === 0 ? (
-                <p className="text-sm text-gray-500 text-center py-8">Nenhuma venda registrada ainda</p>
+                <div className="text-center py-8">
+                  <Car className="h-12 w-12 text-slate-700 mx-auto mb-3" />
+                  <p className="text-sm text-slate-500">Nenhuma venda registrada ainda</p>
+                </div>
               ) : (
                 recentSales.map((sale: any) => (
-                  <div key={sale.id} className="flex items-center justify-between border-b pb-3 last:border-0">
-                    <div className="flex-1">
-                      <p className="font-medium text-gray-900">{sale.vehicle_name || 'Veículo'}</p>
-                      <p className="text-sm text-gray-500">{sale.customer_name}</p>
+                  <div key={sale.id} className="flex items-center justify-between p-4 rounded-xl bg-slate-800/50 hover:bg-slate-800 transition-colors">
+                    <div className="flex items-center gap-4">
+                      <div className="w-12 h-12 rounded-xl bg-blue-500/10 flex items-center justify-center">
+                        <Car className="h-6 w-6 text-blue-400" />
+                      </div>
+                      <div>
+                        <p className="font-medium text-white">{sale.brand_name} {sale.vehicle_name}</p>
+                        <p className="text-sm text-slate-500">{sale.customer_name}</p>
+                      </div>
                     </div>
                     <div className="text-right">
-                      <p className="font-semibold text-emerald-600">
-                        {new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(Number(sale.final_price))}
-                      </p>
+                      <p className="font-bold text-emerald-400">{formatCurrency(Number(sale.final_price))}</p>
                       <Badge 
                         variant="outline" 
                         className={
-                          sale.status === 'completed' ? 'border-emerald-500 text-emerald-600' :
-                          sale.status === 'approved' ? 'border-blue-500 text-blue-600' :
-                          sale.status === 'cancelled' ? 'border-red-500 text-red-600' :
-                          'border-amber-500 text-amber-600'
+                          sale.status === 'completed' ? 'border-emerald-500/50 text-emerald-400 bg-emerald-500/10' :
+                          sale.status === 'approved' ? 'border-blue-500/50 text-blue-400 bg-blue-500/10' :
+                          sale.status === 'cancelled' ? 'border-red-500/50 text-red-400 bg-red-500/10' :
+                          'border-amber-500/50 text-amber-400 bg-amber-500/10'
                         }
                       >
-                        {sale.status === 'completed' ? 'Concluída' :
+                        {sale.status === 'completed' ? 'Concluida' :
                          sale.status === 'approved' ? 'Aprovada' :
                          sale.status === 'cancelled' ? 'Cancelada' : 'Pendente'}
                       </Badge>
@@ -321,11 +324,11 @@ export default async function SellerDashboard() {
         </Card>
 
         {/* Ranking */}
-        <Card>
+        <Card className="bg-slate-900/50 border-slate-800">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Award className="size-5 text-amber-500" />
-              Ranking do Mês
+            <CardTitle className="text-white flex items-center gap-2">
+              <Award className="h-5 w-5 text-amber-400" />
+              Ranking do Mes
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -333,28 +336,30 @@ export default async function SellerDashboard() {
               {ranking.map((r: any, index: number) => (
                 <div 
                   key={r.id} 
-                  className={`flex items-center gap-3 p-2 rounded-lg ${r.id === stats.seller.id ? 'bg-emerald-50 border border-emerald-200' : ''}`}
+                  className={`flex items-center gap-3 p-3 rounded-xl transition-colors ${
+                    r.id === stats.seller.id 
+                      ? 'bg-emerald-500/10 border border-emerald-500/20' 
+                      : 'bg-slate-800/50 hover:bg-slate-800'
+                  }`}
                 >
-                  <div className={`size-8 rounded-full flex items-center justify-center text-sm font-bold ${
-                    index === 0 ? 'bg-amber-500 text-white' :
-                    index === 1 ? 'bg-gray-400 text-white' :
-                    index === 2 ? 'bg-amber-700 text-white' :
-                    'bg-gray-200 text-gray-600'
+                  <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${
+                    index === 0 ? 'bg-gradient-to-br from-amber-400 to-amber-600 text-white' :
+                    index === 1 ? 'bg-gradient-to-br from-slate-300 to-slate-500 text-white' :
+                    index === 2 ? 'bg-gradient-to-br from-amber-600 to-amber-800 text-white' :
+                    'bg-slate-700 text-slate-400'
                   }`}>
                     {index + 1}
                   </div>
-                  <div className="flex-1">
-                    <p className="font-medium text-sm">{r.name}</p>
-                    <p className="text-xs text-gray-500">{r.total_sales} vendas</p>
+                  <div className="flex-1 min-w-0">
+                    <p className="font-medium text-white text-sm truncate">{r.name}</p>
+                    <p className="text-xs text-slate-500">{r.total_sales} vendas</p>
                   </div>
-                  <p className="text-sm font-semibold text-gray-700">
-                    {new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL", notation: "compact" }).format(Number(r.total_value))}
-                  </p>
+                  <p className="text-sm font-semibold text-slate-400">{formatCompact(Number(r.total_value))}</p>
                 </div>
               ))}
               {sellerPosition > 5 && (
-                <div className="text-center pt-2 border-t">
-                  <p className="text-sm text-gray-500">Sua posição: <span className="font-bold">{sellerPosition}º</span></p>
+                <div className="text-center pt-3 border-t border-slate-700">
+                  <p className="text-sm text-slate-400">Sua posicao: <span className="font-bold text-emerald-400">{sellerPosition}o</span></p>
                 </div>
               )}
             </div>
@@ -362,46 +367,54 @@ export default async function SellerDashboard() {
         </Card>
       </div>
 
-      {/* Próximos Agendamentos */}
-      <Card>
+      {/* Proximos Agendamentos */}
+      <Card className="bg-slate-900/50 border-slate-800">
         <CardHeader className="flex flex-row items-center justify-between">
-          <CardTitle className="flex items-center gap-2">
-            <Calendar className="size-5 text-blue-600" />
-            Próximos Agendamentos
+          <CardTitle className="text-white flex items-center gap-2">
+            <Calendar className="h-5 w-5 text-blue-400" />
+            Proximos Agendamentos
           </CardTitle>
-          <Button variant="ghost" size="sm" asChild>
-            <Link href="/seller/appointments">Ver todos</Link>
-          </Button>
+          <Link href="/seller/appointments">
+            <Button variant="ghost" size="sm" className="text-slate-400 hover:text-white">
+              Ver todos <ChevronRight className="h-4 w-4 ml-1" />
+            </Button>
+          </Link>
         </CardHeader>
         <CardContent>
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {upcomingAppointments.length === 0 ? (
-              <p className="text-sm text-gray-500 col-span-full text-center py-8">Nenhum agendamento próximo</p>
-            ) : (
-              upcomingAppointments.map((apt: any) => (
-                <div key={apt.id} className="p-4 border rounded-lg bg-white">
-                  <div className="flex items-start justify-between">
+          {upcomingAppointments.length === 0 ? (
+            <div className="text-center py-8">
+              <Calendar className="h-12 w-12 text-slate-700 mx-auto mb-3" />
+              <p className="text-sm text-slate-500">Nenhum agendamento proximo</p>
+            </div>
+          ) : (
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+              {upcomingAppointments.map((apt: any) => (
+                <div key={apt.id} className="p-4 rounded-xl bg-slate-800/50 hover:bg-slate-800 transition-colors">
+                  <div className="flex items-start justify-between mb-3">
                     <div>
-                      <p className="font-medium text-gray-900">{apt.customer_name}</p>
-                      <p className="text-sm text-gray-500">{apt.customer_phone}</p>
+                      <p className="font-medium text-white">{apt.customer_name}</p>
+                      <p className="text-sm text-slate-500">{apt.customer_phone}</p>
                     </div>
-                    <Badge variant="outline" className={
-                      apt.status === 'confirmed' ? 'border-emerald-500 text-emerald-600' :
-                      apt.status === 'completed' ? 'border-blue-500 text-blue-600' :
-                      'border-amber-500 text-amber-600'
-                    }>
+                    <Badge 
+                      variant="outline" 
+                      className={
+                        apt.status === 'confirmed' ? 'border-emerald-500/50 text-emerald-400 bg-emerald-500/10' :
+                        apt.status === 'completed' ? 'border-blue-500/50 text-blue-400 bg-blue-500/10' :
+                        'border-amber-500/50 text-amber-400 bg-amber-500/10'
+                      }
+                    >
                       {apt.status === 'confirmed' ? 'Confirmado' :
                        apt.status === 'completed' ? 'Realizado' : 'Pendente'}
                     </Badge>
                   </div>
-                  <div className="mt-2 flex items-center gap-2 text-sm text-gray-600">
-                    <Calendar className="size-4" />
-                    {new Date(apt.preferred_date).toLocaleDateString('pt-BR')} às {apt.preferred_time}
+                  <div className="flex items-center gap-2 text-sm text-slate-400">
+                    <Calendar className="h-4 w-4" />
+                    {new Date(apt.preferred_date).toLocaleDateString('pt-BR')} as {apt.preferred_time}
                   </div>
                 </div>
-              ))
-            )}
-          </div>
+              ))}
+            </div>
+          )}
         </CardContent>
       </Card>
     </div>

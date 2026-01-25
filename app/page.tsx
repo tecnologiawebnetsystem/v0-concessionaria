@@ -15,7 +15,7 @@ async function getHomeData() {
       LEFT JOIN vehicle_categories c ON v.category_id = c.id
       WHERE v.published = true
       ORDER BY v.is_featured DESC, v.created_at DESC
-      LIMIT 12
+      LIMIT 30
     `,
     sql`SELECT COUNT(*) as total FROM vehicles WHERE published = true`,
     sql`SELECT id, name, logo_url FROM brands WHERE is_active = true ORDER BY name`

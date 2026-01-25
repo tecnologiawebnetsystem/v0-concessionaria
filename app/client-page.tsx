@@ -23,6 +23,7 @@ import {
   Award,
   Users,
   ChevronRight,
+  ChevronLeft,
   DollarSign,
   FileText,
   TrendingUp,
@@ -35,8 +36,11 @@ import {
   BadgeCheck,
   Calculator,
   Newspaper,
+  Play,
+  Eye,
+  ArrowUpRight,
 } from "lucide-react"
-import { useState } from "react"
+import { useState, useRef } from "react"
 
 function formatCurrency(value: number) {
   return new Intl.NumberFormat("pt-BR", {
@@ -56,26 +60,41 @@ interface HomePageProps {
 export default function ClientHomePage({ vehicles, totalVehicles = 0, brands = [] }: HomePageProps) {
   const [searchType, setSearchType] = useState<"all" | "new" | "used">("all")
   const [searchBrand, setSearchBrand] = useState("")
-  const [searchModel, setSearchModel] = useState("")
   const [priceRange, setPriceRange] = useState("")
+  const [favorites, setFavorites] = useState<number[]>([])
+  const scrollContainerRef = useRef<HTMLDivElement>(null)
 
-  const featuredVehicles = vehicles.filter((v) => v.is_featured).slice(0, 6)
-  const recentVehicles = vehicles.slice(0, 8)
+  const featuredVehicles = vehicles.filter((v) => v.is_featured).slice(0, 8)
+  const allVehicles = vehicles.slice(0, 30)
 
-  // Categorias por tipo
-  const categories = [
-    { name: "SUVs", icon: Truck, count: vehicles.filter(v => v.body_type === "SUV").length, filter: "suv" },
-    { name: "Sedans", icon: Car, count: vehicles.filter(v => v.body_type === "Sedan").length, filter: "sedan" },
-    { name: "Hatches", icon: Car, count: vehicles.filter(v => v.body_type === "Hatch").length, filter: "hatch" },
-    { name: "Picapes", icon: Truck, count: vehicles.filter(v => v.body_type === "Picape").length, filter: "picape" },
+  const toggleFavorite = (id: number) => {
+    setFavorites(prev => prev.includes(id) ? prev.filter(f => f !== id) : [...prev, id])
+  }
+
+  const scroll = (direction: "left" | "right") => {
+    if (scrollContainerRef.current) {
+      const scrollAmount = 400
+      scrollContainerRef.current.scrollBy({
+        left: direction === "left" ? -scrollAmount : scrollAmount,
+        behavior: "smooth"
+      })
+    }
+  }
+
+  const priceRanges = [
+    { label: "Ate R$ 50 mil", value: "0-50000", color: "from-emerald-500 to-teal-500", icon: "💚" },
+    { label: "R$ 50 - 100 mil", value: "50000-100000", color: "from-blue-500 to-cyan-500", icon: "💙" },
+    { label: "R$ 100 - 150 mil", value: "100000-150000", color: "from-violet-500 to-purple-500", icon: "💜" },
+    { label: "Acima R$ 150 mil", value: "150000-999999", color: "from-amber-500 to-orange-500", icon: "🧡" },
   ]
 
-  // Faixas de preco
-  const priceRanges = [
-    { label: "Ate R$ 50.000", min: 0, max: 50000, color: "from-emerald-500 to-teal-600" },
-    { label: "R$ 50.000 - R$ 100.000", min: 50000, max: 100000, color: "from-blue-500 to-indigo-600" },
-    { label: "R$ 100.000 - R$ 150.000", min: 100000, max: 150000, color: "from-violet-500 to-purple-600" },
-    { label: "Acima de R$ 150.000", min: 150000, max: 999999999, color: "from-amber-500 to-orange-600" },
+  const categories = [
+    { name: "SUVs", icon: "🚙", count: 45 },
+    { name: "Sedans", icon: "🚗", count: 32 },
+    { name: "Hatches", icon: "🚕", count: 28 },
+    { name: "Picapes", icon: "🛻", count: 15 },
+    { name: "Esportivos", icon: "🏎️", count: 8 },
+    { name: "Eletricos", icon: "⚡", count: 12 },
   ]
 
   return (
@@ -84,206 +103,224 @@ export default function ClientHomePage({ vehicles, totalVehicles = 0, brands = [
       <UnifiedChat />
 
       <main className="flex-1">
-        {/* HERO SECTION - Estilo WebMotors Premium */}
-        <section className="relative min-h-[600px] bg-gradient-to-br from-slate-950 via-blue-950 to-slate-900 overflow-hidden">
-          {/* Background Effects */}
+        {/* HERO SECTION */}
+        <section className="relative min-h-[700px] overflow-hidden">
+          {/* Video/Image Background */}
           <div className="absolute inset-0">
-            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(59,130,246,0.15),transparent_50%)]" />
-            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_right,rgba(99,102,241,0.1),transparent_50%)]" />
-            <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-blue-500/50 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/95 to-slate-950/80 z-10" />
+            <div className="absolute inset-0 bg-[url('/hero-car.jpg')] bg-cover bg-center bg-no-repeat opacity-40" />
+            <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-slate-950/50 z-10" />
           </div>
 
-          {/* Grid Pattern */}
-          <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:60px_60px]" />
+          {/* Animated Gradient Orbs */}
+          <div className="absolute top-20 left-10 w-96 h-96 bg-blue-600/20 rounded-full blur-3xl animate-pulse" />
+          <div className="absolute bottom-20 right-10 w-80 h-80 bg-indigo-600/20 rounded-full blur-3xl animate-pulse delay-1000" />
 
-          <div className="container mx-auto px-4 py-16 md:py-24 relative z-10">
-            {/* Header Text */}
-            <div className="text-center mb-12">
-              <Badge className="mb-6 bg-blue-500/20 text-blue-300 border-blue-500/30 backdrop-blur-sm px-4 py-1.5 text-sm">
-                <Sparkles className="h-4 w-4 mr-2" />
-                Mais de 15 anos realizando sonhos
-              </Badge>
-              <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-4 tracking-tight">
-                Encontre o carro{" "}
-                <span className="bg-gradient-to-r from-blue-400 via-cyan-400 to-blue-400 bg-clip-text text-transparent">
-                  perfeito
-                </span>
-              </h1>
-              <p className="text-lg md:text-xl text-slate-400 max-w-2xl mx-auto">
-                Os melhores veiculos novos e seminovos com garantia, financiamento facilitado e atendimento premium
-              </p>
-            </div>
+          <div className="container mx-auto px-4 py-20 md:py-28 relative z-20">
+            <div className="grid lg:grid-cols-2 gap-12 items-center">
+              {/* Left Content */}
+              <div className="space-y-8">
+                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-500/10 border border-blue-500/20 backdrop-blur-sm">
+                  <span className="flex h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+                  <span className="text-sm text-blue-300">Mais de 5.000 clientes satisfeitos</span>
+                </div>
 
-            {/* Search Box - Estilo WebMotors */}
-            <div className="max-w-5xl mx-auto">
-              <div className="bg-white/5 backdrop-blur-xl rounded-3xl border border-white/10 p-2 shadow-2xl shadow-blue-500/10">
-                {/* Tabs */}
-                <Tabs defaultValue="buy" className="w-full">
-                  <div className="flex items-center justify-between px-4 py-3 border-b border-white/10">
-                    <TabsList className="bg-transparent gap-2">
-                      <TabsTrigger 
-                        value="buy" 
-                        className="data-[state=active]:bg-blue-600 data-[state=active]:text-white text-slate-400 px-6 py-2 rounded-xl"
-                      >
-                        <Car className="h-4 w-4 mr-2" />
-                        Comprar
-                      </TabsTrigger>
-                      <TabsTrigger 
-                        value="sell"
-                        className="data-[state=active]:bg-blue-600 data-[state=active]:text-white text-slate-400 px-6 py-2 rounded-xl"
-                      >
-                        <DollarSign className="h-4 w-4 mr-2" />
-                        Vender
-                      </TabsTrigger>
-                    </TabsList>
-                    
-                    <div className="hidden md:flex items-center gap-4 text-sm">
-                      <button 
-                        onClick={() => setSearchType("all")}
-                        className={`px-4 py-1.5 rounded-full transition-all ${searchType === "all" ? "bg-blue-600 text-white" : "text-slate-400 hover:text-white"}`}
-                      >
-                        Todos
-                      </button>
-                      <button 
-                        onClick={() => setSearchType("new")}
-                        className={`px-4 py-1.5 rounded-full transition-all ${searchType === "new" ? "bg-emerald-600 text-white" : "text-slate-400 hover:text-white"}`}
-                      >
-                        0 KM
-                      </button>
-                      <button 
-                        onClick={() => setSearchType("used")}
-                        className={`px-4 py-1.5 rounded-full transition-all ${searchType === "used" ? "bg-amber-600 text-white" : "text-slate-400 hover:text-white"}`}
-                      >
-                        Seminovos
-                      </button>
+                <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white leading-tight">
+                  Seu proximo{" "}
+                  <span className="relative">
+                    <span className="bg-gradient-to-r from-blue-400 via-cyan-400 to-blue-500 bg-clip-text text-transparent">
+                      carro
+                    </span>
+                    <svg className="absolute -bottom-2 left-0 w-full" viewBox="0 0 200 12" fill="none">
+                      <path d="M2 10C50 4 150 4 198 10" stroke="url(#gradient)" strokeWidth="3" strokeLinecap="round"/>
+                      <defs>
+                        <linearGradient id="gradient" x1="0" y1="0" x2="200" y2="0">
+                          <stop stopColor="#3b82f6"/>
+                          <stop offset="1" stopColor="#06b6d4"/>
+                        </linearGradient>
+                      </defs>
+                    </svg>
+                  </span>
+                  <br />esta aqui
+                </h1>
+
+                <p className="text-xl text-slate-400 max-w-lg">
+                  Ha mais de 15 anos conectando voce ao veiculo dos seus sonhos. 
+                  Financiamento facilitado, garantia e atendimento premium.
+                </p>
+
+                <div className="flex flex-wrap gap-4">
+                  <Link href="/veiculos">
+                    <Button size="lg" className="h-14 px-8 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-lg font-semibold rounded-2xl shadow-xl shadow-blue-600/25">
+                      <Search className="mr-2 h-5 w-5" />
+                      Ver {totalVehicles || vehicles.length} veiculos
+                    </Button>
+                  </Link>
+                  <Link href="/avaliar-veiculo">
+                    <Button size="lg" variant="outline" className="h-14 px-8 border-slate-700 text-white hover:bg-slate-800 text-lg font-semibold rounded-2xl bg-transparent">
+                      <DollarSign className="mr-2 h-5 w-5" />
+                      Vender meu carro
+                    </Button>
+                  </Link>
+                </div>
+
+                {/* Stats */}
+                <div className="grid grid-cols-3 gap-6 pt-8 border-t border-slate-800">
+                  <div>
+                    <p className="text-3xl font-bold text-white">{totalVehicles || vehicles.length}+</p>
+                    <p className="text-sm text-slate-500">Veiculos</p>
+                  </div>
+                  <div>
+                    <p className="text-3xl font-bold text-white">15+</p>
+                    <p className="text-sm text-slate-500">Anos</p>
+                  </div>
+                  <div>
+                    <p className="text-3xl font-bold text-white">98%</p>
+                    <p className="text-sm text-slate-500">Aprovacao</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Right - Search Card */}
+              <div className="lg:pl-8">
+                <div className="bg-slate-900/80 backdrop-blur-xl rounded-3xl border border-slate-800 p-6 shadow-2xl">
+                  <div className="flex items-center gap-2 mb-6">
+                    <div className="p-2 rounded-xl bg-blue-500/10">
+                      <Search className="h-5 w-5 text-blue-400" />
                     </div>
+                    <h3 className="text-lg font-semibold text-white">Busca rapida</h3>
                   </div>
 
-                  <TabsContent value="buy" className="p-4 md:p-6">
-                    <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                      <div className="space-y-2">
-                        <label className="text-xs text-slate-500 font-medium uppercase tracking-wider">Marca</label>
-                        <Select value={searchBrand} onValueChange={setSearchBrand}>
-                          <SelectTrigger className="bg-slate-800/50 border-slate-700 text-white h-12 rounded-xl">
-                            <SelectValue placeholder="Todas as marcas" />
-                          </SelectTrigger>
-                          <SelectContent className="bg-slate-800 border-slate-700">
-                            <SelectItem value="all">Todas as marcas</SelectItem>
-                            {brands.map((brand: any) => (
-                              <SelectItem key={brand.id} value={brand.id.toString()}>
-                                {brand.name}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      </div>
+                  <div className="space-y-4">
+                    {/* Type Tabs */}
+                    <div className="flex gap-2 p-1 bg-slate-800/50 rounded-xl">
+                      {[
+                        { id: "all", label: "Todos" },
+                        { id: "new", label: "0 KM" },
+                        { id: "used", label: "Seminovos" },
+                      ].map((type) => (
+                        <button
+                          key={type.id}
+                          onClick={() => setSearchType(type.id as any)}
+                          className={`flex-1 py-2.5 px-4 rounded-lg text-sm font-medium transition-all ${
+                            searchType === type.id
+                              ? "bg-blue-600 text-white shadow-lg"
+                              : "text-slate-400 hover:text-white"
+                          }`}
+                        >
+                          {type.label}
+                        </button>
+                      ))}
+                    </div>
 
-                      <div className="space-y-2">
-                        <label className="text-xs text-slate-500 font-medium uppercase tracking-wider">Modelo</label>
-                        <Input 
-                          placeholder="Digite o modelo" 
-                          className="bg-slate-800/50 border-slate-700 text-white h-12 rounded-xl placeholder:text-slate-500"
-                          value={searchModel}
-                          onChange={(e) => setSearchModel(e.target.value)}
-                        />
-                      </div>
+                    {/* Brand Select */}
+                    <div>
+                      <label className="text-xs text-slate-500 font-medium mb-1.5 block">Marca</label>
+                      <Select value={searchBrand} onValueChange={setSearchBrand}>
+                        <SelectTrigger className="h-12 bg-slate-800/50 border-slate-700 text-white rounded-xl">
+                          <SelectValue placeholder="Todas as marcas" />
+                        </SelectTrigger>
+                        <SelectContent className="bg-slate-800 border-slate-700">
+                          <SelectItem value="all">Todas as marcas</SelectItem>
+                          {brands.map((brand: any) => (
+                            <SelectItem key={brand.id} value={brand.id.toString()}>
+                              {brand.name}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
 
-                      <div className="space-y-2">
-                        <label className="text-xs text-slate-500 font-medium uppercase tracking-wider">Preco</label>
-                        <Select value={priceRange} onValueChange={setPriceRange}>
-                          <SelectTrigger className="bg-slate-800/50 border-slate-700 text-white h-12 rounded-xl">
-                            <SelectValue placeholder="Qualquer preco" />
-                          </SelectTrigger>
-                          <SelectContent className="bg-slate-800 border-slate-700">
-                            <SelectItem value="all">Qualquer preco</SelectItem>
-                            <SelectItem value="0-50000">Ate R$ 50.000</SelectItem>
-                            <SelectItem value="50000-100000">R$ 50.000 - R$ 100.000</SelectItem>
-                            <SelectItem value="100000-150000">R$ 100.000 - R$ 150.000</SelectItem>
-                            <SelectItem value="150000+">Acima de R$ 150.000</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
+                    {/* Price Select */}
+                    <div>
+                      <label className="text-xs text-slate-500 font-medium mb-1.5 block">Faixa de preco</label>
+                      <Select value={priceRange} onValueChange={setPriceRange}>
+                        <SelectTrigger className="h-12 bg-slate-800/50 border-slate-700 text-white rounded-xl">
+                          <SelectValue placeholder="Qualquer valor" />
+                        </SelectTrigger>
+                        <SelectContent className="bg-slate-800 border-slate-700">
+                          <SelectItem value="all">Qualquer valor</SelectItem>
+                          {priceRanges.map((range) => (
+                            <SelectItem key={range.value} value={range.value}>
+                              {range.label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
 
-                      <div className="flex items-end">
-                        <Link href="/veiculos" className="w-full">
-                          <Button className="w-full h-12 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 rounded-xl text-base font-semibold shadow-lg shadow-blue-600/25">
-                            <Search className="h-5 w-5 mr-2" />
-                            Ver {totalVehicles || vehicles.length} ofertas
-                          </Button>
+                    {/* Search Button */}
+                    <Link href="/veiculos" className="block">
+                      <Button className="w-full h-14 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 rounded-xl text-base font-semibold">
+                        <Search className="mr-2 h-5 w-5" />
+                        Buscar veiculos
+                      </Button>
+                    </Link>
+                  </div>
+
+                  {/* Quick Links */}
+                  <div className="mt-6 pt-6 border-t border-slate-800">
+                    <p className="text-xs text-slate-500 mb-3">Buscas populares:</p>
+                    <div className="flex flex-wrap gap-2">
+                      {["SUV", "Sedan", "Hatch", "Automatico", "Flex"].map((tag) => (
+                        <Link key={tag} href={`/veiculos?q=${tag.toLowerCase()}`}>
+                          <Badge variant="secondary" className="bg-slate-800 hover:bg-slate-700 text-slate-300 cursor-pointer">
+                            {tag}
+                          </Badge>
                         </Link>
-                      </div>
+                      ))}
                     </div>
-                  </TabsContent>
-
-                  <TabsContent value="sell" className="p-4 md:p-6">
-                    <div className="text-center py-8">
-                      <Car className="h-16 w-16 text-blue-500 mx-auto mb-4" />
-                      <h3 className="text-xl font-bold text-white mb-2">Venda seu veiculo conosco</h3>
-                      <p className="text-slate-400 mb-6 max-w-md mx-auto">
-                        Avaliamos seu carro gratuitamente e fazemos a melhor proposta do mercado
-                      </p>
-                      <Link href="/avaliar-veiculo">
-                        <Button className="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 rounded-xl px-8 py-3">
-                          Avaliar meu veiculo
-                          <ArrowRight className="ml-2 h-5 w-5" />
-                        </Button>
-                      </Link>
-                    </div>
-                  </TabsContent>
-                </Tabs>
-              </div>
-
-              {/* Quick Stats */}
-              <div className="flex flex-wrap justify-center gap-8 mt-8 text-center">
-                <div>
-                  <p className="text-3xl font-bold text-white">{totalVehicles || vehicles.length}+</p>
-                  <p className="text-sm text-slate-500">Veiculos disponiveis</p>
-                </div>
-                <div className="hidden md:block w-px h-12 bg-slate-700" />
-                <div>
-                  <p className="text-3xl font-bold text-white">15+</p>
-                  <p className="text-sm text-slate-500">Anos de mercado</p>
-                </div>
-                <div className="hidden md:block w-px h-12 bg-slate-700" />
-                <div>
-                  <p className="text-3xl font-bold text-white">5.000+</p>
-                  <p className="text-sm text-slate-500">Clientes satisfeitos</p>
-                </div>
-                <div className="hidden md:block w-px h-12 bg-slate-700" />
-                <div>
-                  <p className="text-3xl font-bold text-white">98%</p>
-                  <p className="text-sm text-slate-500">Aprovacao financiamento</p>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </section>
 
-        {/* CATEGORIAS POR FAIXA DE PRECO */}
-        <section className="py-16 bg-slate-900">
+        {/* MARCAS CAROUSEL */}
+        <section className="py-12 bg-slate-900 border-y border-slate-800">
           <div className="container mx-auto px-4">
-            <div className="flex items-center justify-between mb-8">
-              <div>
-                <h2 className="text-2xl md:text-3xl font-bold text-white">Busque por faixa de preco</h2>
-                <p className="text-slate-400 mt-1">Encontre veiculos dentro do seu orcamento</p>
-              </div>
-              <Link href="/veiculos" className="hidden md:flex items-center text-blue-400 hover:text-blue-300 transition-colors">
-                Ver todos <ChevronRight className="h-5 w-5" />
-              </Link>
+            <div className="flex items-center justify-center gap-12 overflow-hidden">
+              {brands.slice(0, 8).map((brand: any, idx: number) => (
+                <Link 
+                  key={brand.id} 
+                  href={`/veiculos?marca=${brand.id}`}
+                  className="flex-shrink-0 opacity-50 hover:opacity-100 transition-opacity grayscale hover:grayscale-0"
+                >
+                  {brand.logo_url ? (
+                    <Image src={brand.logo_url || "/placeholder.svg"} alt={brand.name} width={80} height={40} className="h-10 w-auto object-contain" />
+                  ) : (
+                    <span className="text-2xl font-bold text-slate-500 hover:text-white">{brand.name}</span>
+                  )}
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* CATEGORIAS POR PRECO */}
+        <section className="py-20 bg-slate-950">
+          <div className="container mx-auto px-4">
+            <div className="text-center mb-12">
+              <Badge className="mb-4 bg-emerald-500/10 text-emerald-400 border-emerald-500/20">
+                <DollarSign className="h-3 w-3 mr-1" /> Orcamento
+              </Badge>
+              <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Busque por faixa de preco</h2>
+              <p className="text-slate-400 max-w-2xl mx-auto">Encontre veiculos que cabem no seu bolso</p>
             </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
               {priceRanges.map((range, idx) => (
-                <Link key={idx} href={`/veiculos?priceMin=${range.min}&priceMax=${range.max}`}>
-                  <Card className="group bg-slate-800/50 border-slate-700 hover:border-blue-500/50 transition-all duration-300 overflow-hidden hover:shadow-xl hover:shadow-blue-500/10 cursor-pointer">
-                    <CardContent className="p-6 relative">
-                      <div className={`absolute inset-0 bg-gradient-to-br ${range.color} opacity-0 group-hover:opacity-10 transition-opacity`} />
-                      <DollarSign className={`h-10 w-10 mb-4 text-transparent bg-gradient-to-br ${range.color} bg-clip-text`} />
-                      <h3 className="font-bold text-white mb-1">{range.label}</h3>
-                      <p className="text-sm text-slate-500">
-                        {vehicles.filter(v => v.price >= range.min && v.price < range.max).length} veiculos
-                      </p>
-                      <ChevronRight className="absolute right-4 top-1/2 -translate-y-1/2 h-6 w-6 text-slate-600 group-hover:text-blue-400 group-hover:translate-x-1 transition-all" />
+                <Link key={idx} href={`/veiculos?preco=${range.value}`}>
+                  <Card className="group relative overflow-hidden bg-slate-900 border-slate-800 hover:border-slate-700 transition-all duration-500 cursor-pointer h-full">
+                    <div className={`absolute inset-0 bg-gradient-to-br ${range.color} opacity-0 group-hover:opacity-10 transition-opacity duration-500`} />
+                    <CardContent className="p-6 md:p-8 relative">
+                      <span className="text-4xl md:text-5xl mb-4 block">{range.icon}</span>
+                      <h3 className="text-lg md:text-xl font-bold text-white mb-2">{range.label}</h3>
+                      <div className="flex items-center text-slate-500 group-hover:text-blue-400 transition-colors">
+                        <span className="text-sm">Ver veiculos</span>
+                        <ArrowRight className="h-4 w-4 ml-1 group-hover:translate-x-1 transition-transform" />
+                      </div>
                     </CardContent>
                   </Card>
                 </Link>
@@ -292,115 +329,94 @@ export default function ClientHomePage({ vehicles, totalVehicles = 0, brands = [
           </div>
         </section>
 
-        {/* CATEGORIAS POR TIPO */}
-        <section className="py-16 bg-slate-950">
-          <div className="container mx-auto px-4">
-            <div className="flex items-center justify-between mb-8">
-              <div>
-                <h2 className="text-2xl md:text-3xl font-bold text-white">Busque por categoria</h2>
-                <p className="text-slate-400 mt-1">Escolha o estilo que combina com voce</p>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              {[
-                { name: "SUVs", icon: "🚙", desc: "Espaco e conforto", filter: "suv" },
-                { name: "Sedans", icon: "🚗", desc: "Elegancia e economia", filter: "sedan" },
-                { name: "Hatches", icon: "🚕", desc: "Praticos e ageis", filter: "hatch" },
-                { name: "Picapes", icon: "🛻", desc: "Forca e versatilidade", filter: "picape" },
-                { name: "Esportivos", icon: "🏎️", desc: "Performance pura", filter: "esportivo" },
-                { name: "Eletricos", icon: "⚡", desc: "O futuro e agora", filter: "eletrico" },
-                { name: "Luxo", icon: "✨", desc: "Exclusividade total", filter: "luxo" },
-                { name: "Economicos", icon: "💰", desc: "Menor custo/km", filter: "economico" },
-              ].map((cat, idx) => (
-                <Link key={idx} href={`/veiculos?categoria=${cat.filter}`}>
-                  <Card className="group bg-gradient-to-br from-slate-800 to-slate-800/50 border-slate-700 hover:border-blue-500/50 transition-all duration-300 cursor-pointer hover:shadow-xl hover:shadow-blue-500/10">
-                    <CardContent className="p-6 text-center">
-                      <span className="text-4xl mb-4 block group-hover:scale-110 transition-transform">{cat.icon}</span>
-                      <h3 className="font-bold text-white mb-1">{cat.name}</h3>
-                      <p className="text-sm text-slate-500">{cat.desc}</p>
-                    </CardContent>
-                  </Card>
-                </Link>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* VEICULOS EM DESTAQUE */}
+        {/* VEICULOS EM DESTAQUE - CAROUSEL */}
         {featuredVehicles.length > 0 && (
-          <section className="py-16 bg-gradient-to-b from-slate-900 to-slate-950">
+          <section className="py-20 bg-gradient-to-b from-slate-900 to-slate-950">
             <div className="container mx-auto px-4">
-              <div className="flex items-center justify-between mb-8">
+              <div className="flex items-end justify-between mb-10">
                 <div>
-                  <Badge className="mb-2 bg-amber-500/20 text-amber-400 border-amber-500/30">
-                    <Star className="h-3 w-3 mr-1 fill-amber-400" /> Selecao especial
+                  <Badge className="mb-4 bg-amber-500/10 text-amber-400 border-amber-500/20">
+                    <Star className="h-3 w-3 mr-1 fill-amber-400" /> Destaques
                   </Badge>
-                  <h2 className="text-2xl md:text-3xl font-bold text-white">Veiculos em destaque</h2>
+                  <h2 className="text-3xl md:text-4xl font-bold text-white">Veiculos em destaque</h2>
                 </div>
-                <Link href="/veiculos?destaque=true" className="hidden md:flex items-center text-blue-400 hover:text-blue-300 transition-colors">
-                  Ver todos <ChevronRight className="h-5 w-5" />
-                </Link>
+                <div className="hidden md:flex items-center gap-2">
+                  <Button variant="outline" size="icon" onClick={() => scroll("left")} className="rounded-full border-slate-700 hover:bg-slate-800 bg-transparent">
+                    <ChevronLeft className="h-5 w-5" />
+                  </Button>
+                  <Button variant="outline" size="icon" onClick={() => scroll("right")} className="rounded-full border-slate-700 hover:bg-slate-800 bg-transparent">
+                    <ChevronRight className="h-5 w-5" />
+                  </Button>
+                </div>
               </div>
 
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {featuredVehicles.map((vehicle: any, index: number) => (
-                  <Link key={vehicle.id} href={`/veiculos/${vehicle.slug}`}>
-                    <Card className="group bg-slate-800/50 border-slate-700 hover:border-blue-500/50 overflow-hidden transition-all duration-500 hover:shadow-2xl hover:shadow-blue-500/20 hover:-translate-y-1">
+              <div 
+                ref={scrollContainerRef}
+                className="flex gap-6 overflow-x-auto scrollbar-hide pb-4 -mx-4 px-4 snap-x snap-mandatory"
+                style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+              >
+                {featuredVehicles.map((vehicle: any) => (
+                  <Link 
+                    key={vehicle.id} 
+                    href={`/veiculos/${vehicle.slug}`}
+                    className="flex-shrink-0 w-[340px] snap-start"
+                  >
+                    <Card className="group bg-slate-900 border-slate-800 hover:border-blue-500/50 overflow-hidden transition-all duration-500 hover:shadow-2xl hover:shadow-blue-500/10">
                       <div className="relative aspect-[16/10] overflow-hidden">
                         {vehicle.primary_image ? (
                           <Image
                             src={vehicle.primary_image || "/placeholder.svg"}
                             alt={vehicle.name}
                             fill
-                            className="object-cover group-hover:scale-110 transition-transform duration-700"
+                            className="object-cover group-hover:scale-105 transition-transform duration-700"
                           />
                         ) : (
-                          <div className="w-full h-full bg-gradient-to-br from-slate-700 to-slate-800 flex items-center justify-center">
-                            <Car className="h-20 w-20 text-slate-600" />
+                          <div className="w-full h-full bg-gradient-to-br from-slate-800 to-slate-900 flex items-center justify-center">
+                            <Car className="h-16 w-16 text-slate-700" />
                           </div>
                         )}
-                        
                         <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent" />
                         
-                        <div className="absolute top-4 left-4 flex gap-2">
-                          <Badge className="bg-amber-500 text-white shadow-lg">
+                        {/* Badges */}
+                        <div className="absolute top-3 left-3 flex gap-2">
+                          <Badge className="bg-amber-500 text-white text-xs">
                             <Star className="h-3 w-3 mr-1 fill-white" /> Destaque
                           </Badge>
                           {vehicle.is_new && (
-                            <Badge className="bg-emerald-500 text-white shadow-lg">0 KM</Badge>
+                            <Badge className="bg-emerald-500 text-white text-xs">0 KM</Badge>
                           )}
                         </div>
 
-                        <button className="absolute top-4 right-4 p-2 rounded-full bg-black/30 backdrop-blur-sm text-white hover:bg-black/50 transition-colors">
-                          <Heart className="h-5 w-5" />
+                        {/* Favorite */}
+                        <button 
+                          onClick={(e) => { e.preventDefault(); toggleFavorite(vehicle.id) }}
+                          className="absolute top-3 right-3 p-2 rounded-full bg-black/40 backdrop-blur-sm hover:bg-black/60 transition-colors"
+                        >
+                          <Heart className={`h-4 w-4 ${favorites.includes(vehicle.id) ? "fill-red-500 text-red-500" : "text-white"}`} />
                         </button>
-
-                        <div className="absolute bottom-4 left-4 right-4">
-                          <p className="text-xs text-blue-400 font-semibold uppercase tracking-wider mb-1">{vehicle.brand_name}</p>
-                          <h3 className="text-xl font-bold text-white line-clamp-1">{vehicle.name}</h3>
-                          <div className="flex items-center gap-3 mt-2 text-xs text-slate-400">
-                            <span className="flex items-center gap-1">
-                              <Calendar className="h-3 w-3" /> {vehicle.year}
-                            </span>
-                            <span className="flex items-center gap-1">
-                              <Gauge className="h-3 w-3" /> {vehicle.mileage ? `${(vehicle.mileage / 1000).toFixed(0)}k km` : "0 km"}
-                            </span>
-                            <span className="flex items-center gap-1">
-                              <Fuel className="h-3 w-3" /> {vehicle.fuel_type}
-                            </span>
-                          </div>
-                        </div>
                       </div>
 
-                      <CardContent className="p-4">
+                      <CardContent className="p-5">
+                        <div className="mb-3">
+                          <p className="text-xs text-slate-500 mb-1">{vehicle.brand_name}</p>
+                          <h3 className="font-bold text-white text-lg truncate">{vehicle.name}</h3>
+                        </div>
+
+                        <div className="flex items-center gap-3 text-xs text-slate-500 mb-4">
+                          <span className="flex items-center gap-1">
+                            <Calendar className="h-3.5 w-3.5" /> {vehicle.year_manufacture}/{vehicle.year_model}
+                          </span>
+                          <span className="flex items-center gap-1">
+                            <Gauge className="h-3.5 w-3.5" /> {vehicle.mileage?.toLocaleString()} km
+                          </span>
+                        </div>
+
                         <div className="flex items-center justify-between">
                           <div>
-                            <p className="text-xs text-slate-500">A partir de</p>
                             <p className="text-2xl font-bold text-white">{formatCurrency(vehicle.price)}</p>
                           </div>
-                          <Button size="sm" className="bg-blue-600 hover:bg-blue-700">
-                            Ver detalhes <ArrowRight className="ml-1 h-4 w-4" />
+                          <Button size="sm" className="bg-blue-600 hover:bg-blue-700 rounded-lg">
+                            Ver mais
                           </Button>
                         </div>
                       </CardContent>
@@ -412,12 +428,130 @@ export default function ClientHomePage({ vehicles, totalVehicles = 0, brands = [
           </section>
         )}
 
-        {/* SERVICOS */}
-        <section className="py-16 bg-slate-950">
+        {/* CATEGORIAS */}
+        <section className="py-20 bg-slate-950">
           <div className="container mx-auto px-4">
             <div className="text-center mb-12">
-              <h2 className="text-2xl md:text-3xl font-bold text-white mb-2">Nossos servicos</h2>
-              <p className="text-slate-400">Tudo que voce precisa para comprar ou vender seu veiculo</p>
+              <Badge className="mb-4 bg-blue-500/10 text-blue-400 border-blue-500/20">
+                <Car className="h-3 w-3 mr-1" /> Categorias
+              </Badge>
+              <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Encontre por tipo de veiculo</h2>
+            </div>
+
+            <div className="grid grid-cols-3 md:grid-cols-6 gap-4">
+              {categories.map((cat, idx) => (
+                <Link key={idx} href={`/veiculos?tipo=${cat.name.toLowerCase()}`}>
+                  <Card className="group bg-slate-900 border-slate-800 hover:border-blue-500/30 transition-all duration-300 cursor-pointer text-center">
+                    <CardContent className="p-6">
+                      <span className="text-4xl mb-3 block group-hover:scale-110 transition-transform">{cat.icon}</span>
+                      <h3 className="font-semibold text-white text-sm">{cat.name}</h3>
+                      <p className="text-xs text-slate-500 mt-1">{cat.count} ofertas</p>
+                    </CardContent>
+                  </Card>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* TODOS OS VEICULOS - GRID DE 30 */}
+        <section className="py-20 bg-gradient-to-b from-slate-950 to-slate-900">
+          <div className="container mx-auto px-4">
+            <div className="flex items-end justify-between mb-10">
+              <div>
+                <h2 className="text-3xl md:text-4xl font-bold text-white">Nosso estoque completo</h2>
+                <p className="text-slate-400 mt-2">{allVehicles.length} veiculos disponiveis</p>
+              </div>
+              <Link href="/veiculos">
+                <Button variant="outline" className="border-slate-700 text-white hover:bg-slate-800 bg-transparent">
+                  Ver todos
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+              </Link>
+            </div>
+
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-6">
+              {allVehicles.map((vehicle: any) => (
+                <Link key={vehicle.id} href={`/veiculos/${vehicle.slug}`}>
+                  <Card className="group bg-slate-900 border-slate-800 hover:border-blue-500/50 overflow-hidden transition-all duration-300 hover:shadow-xl hover:shadow-blue-500/10 h-full">
+                    <div className="relative aspect-[4/3] overflow-hidden">
+                      {vehicle.primary_image ? (
+                        <Image
+                          src={vehicle.primary_image || "/placeholder.svg"}
+                          alt={vehicle.name}
+                          fill
+                          className="object-cover group-hover:scale-105 transition-transform duration-500"
+                        />
+                      ) : (
+                        <div className="w-full h-full bg-gradient-to-br from-slate-800 to-slate-900 flex items-center justify-center">
+                          <Car className="h-12 w-12 text-slate-700" />
+                        </div>
+                      )}
+                      
+                      {/* Badges */}
+                      <div className="absolute top-2 left-2 flex flex-col gap-1">
+                        {vehicle.is_featured && (
+                          <Badge className="bg-amber-500 text-white text-[10px] px-1.5 py-0.5">
+                            <Star className="h-2.5 w-2.5 mr-0.5 fill-white" /> Top
+                          </Badge>
+                        )}
+                        {vehicle.is_new && (
+                          <Badge className="bg-emerald-500 text-white text-[10px] px-1.5 py-0.5">0KM</Badge>
+                        )}
+                      </div>
+
+                      {/* Favorite */}
+                      <button 
+                        onClick={(e) => { e.preventDefault(); toggleFavorite(vehicle.id) }}
+                        className="absolute top-2 right-2 p-1.5 rounded-full bg-black/40 backdrop-blur-sm hover:bg-black/60 transition-colors opacity-0 group-hover:opacity-100"
+                      >
+                        <Heart className={`h-3.5 w-3.5 ${favorites.includes(vehicle.id) ? "fill-red-500 text-red-500" : "text-white"}`} />
+                      </button>
+
+                      {/* Gradient overlay */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent opacity-60" />
+                    </div>
+
+                    <CardContent className="p-3 md:p-4">
+                      <p className="text-[10px] text-slate-500 uppercase tracking-wider mb-0.5">{vehicle.brand_name}</p>
+                      <h3 className="font-bold text-white text-sm truncate mb-2">{vehicle.name}</h3>
+
+                      <div className="flex items-center gap-2 text-[10px] text-slate-500 mb-3">
+                        <span>{vehicle.year_manufacture}/{vehicle.year_model}</span>
+                        <span className="w-1 h-1 rounded-full bg-slate-600" />
+                        <span>{(vehicle.mileage / 1000).toFixed(0)}k km</span>
+                      </div>
+
+                      <div className="flex items-center justify-between">
+                        <p className="text-lg font-bold text-white">{formatCurrency(vehicle.price)}</p>
+                        <div className="p-1.5 rounded-lg bg-blue-600/10 text-blue-400 opacity-0 group-hover:opacity-100 transition-opacity">
+                          <ArrowUpRight className="h-4 w-4" />
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </Link>
+              ))}
+            </div>
+
+            {/* Load More */}
+            <div className="text-center mt-12">
+              <Link href="/veiculos">
+                <Button size="lg" className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 rounded-2xl px-12">
+                  Ver todos os {totalVehicles || vehicles.length} veiculos
+                  <ArrowRight className="ml-2 h-5 w-5" />
+                </Button>
+              </Link>
+            </div>
+          </div>
+        </section>
+
+        {/* SERVICOS */}
+        <section className="py-20 bg-slate-900">
+          <div className="container mx-auto px-4">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Nossos servicos</h2>
+              <p className="text-slate-400">Tudo que voce precisa em um so lugar</p>
             </div>
 
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -425,39 +559,39 @@ export default function ClientHomePage({ vehicles, totalVehicles = 0, brands = [
                 { 
                   icon: Calculator, 
                   title: "Financiamento", 
-                  desc: "Aprovacao em ate 24h com as melhores taxas",
-                  color: "from-blue-500 to-indigo-600",
-                  href: "/financiamento"
+                  desc: "Aprovacao em ate 30 minutos. Melhores taxas do mercado.",
+                  color: "from-blue-500 to-cyan-500",
+                  link: "/financiamento"
                 },
                 { 
                   icon: DollarSign, 
-                  title: "Vender Veiculo", 
-                  desc: "Avaliacao gratuita e pagamento a vista",
-                  color: "from-emerald-500 to-teal-600",
-                  href: "/avaliar-veiculo"
-                },
-                { 
-                  icon: FileText, 
-                  title: "Tabela FIPE", 
-                  desc: "Consulte o valor de mercado do seu carro",
-                  color: "from-violet-500 to-purple-600",
-                  href: "/tabela-fipe"
+                  title: "Venda seu carro", 
+                  desc: "Avaliacao gratuita e pagamento a vista na hora.",
+                  color: "from-emerald-500 to-teal-500",
+                  link: "/avaliar-veiculo"
                 },
                 { 
                   icon: Shield, 
                   title: "Garantia", 
-                  desc: "Todos os veiculos com garantia inclusa",
-                  color: "from-amber-500 to-orange-600",
-                  href: "/garantia"
+                  desc: "Todos os veiculos com garantia de motor e cambio.",
+                  color: "from-violet-500 to-purple-500",
+                  link: "/garantia"
+                },
+                { 
+                  icon: FileText, 
+                  title: "Documentacao", 
+                  desc: "Cuidamos de toda a burocracia para voce.",
+                  color: "from-amber-500 to-orange-500",
+                  link: "/documentacao"
                 },
               ].map((service, idx) => (
-                <Link key={idx} href={service.href}>
-                  <Card className="group bg-slate-800/30 border-slate-700 hover:border-blue-500/50 transition-all duration-300 cursor-pointer hover:shadow-xl hover:shadow-blue-500/10 h-full">
+                <Link key={idx} href={service.link}>
+                  <Card className="group bg-slate-800/50 border-slate-700 hover:border-slate-600 transition-all duration-300 cursor-pointer h-full">
                     <CardContent className="p-6">
-                      <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${service.color} flex items-center justify-center mb-4 shadow-lg group-hover:scale-110 transition-transform`}>
+                      <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${service.color} flex items-center justify-center mb-5 group-hover:scale-110 transition-transform`}>
                         <service.icon className="h-7 w-7 text-white" />
                       </div>
-                      <h3 className="font-bold text-white text-lg mb-2">{service.title}</h3>
+                      <h3 className="text-xl font-bold text-white mb-2">{service.title}</h3>
                       <p className="text-slate-400 text-sm">{service.desc}</p>
                     </CardContent>
                   </Card>
@@ -467,117 +601,97 @@ export default function ClientHomePage({ vehicles, totalVehicles = 0, brands = [
           </div>
         </section>
 
-        {/* POR QUE ESCOLHER A NACIONAL */}
-        <section className="py-20 bg-gradient-to-b from-slate-900 via-blue-950/50 to-slate-900">
-          <div className="container mx-auto px-4">
-            <div className="text-center mb-12">
-              <Badge className="mb-4 bg-blue-500/20 text-blue-300 border-blue-500/30">
-                <BadgeCheck className="h-3 w-3 mr-1" /> Confie em quem entende
-              </Badge>
-              <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Por que a Nacional Veiculos?</h2>
-              <p className="text-slate-400 max-w-2xl mx-auto">Somos especialistas em realizar o sonho do carro proprio com seguranca e transparencia</p>
-            </div>
-
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-              {[
-                { icon: Shield, title: "Garantia Total", desc: "Todos os veiculos com garantia e procedencia verificada", color: "blue" },
-                { icon: Award, title: "15 Anos de Mercado", desc: "Experiencia e credibilidade que voce pode confiar", color: "indigo" },
-                { icon: Clock, title: "Financiamento Rapido", desc: "Aprovacao em ate 24h com as melhores taxas", color: "violet" },
-                { icon: Users, title: "Atendimento VIP", desc: "Equipe especializada pronta para ajudar voce", color: "amber" },
-              ].map((item, idx) => (
-                <Card key={idx} className="bg-slate-800/30 border-slate-700 text-center p-8 hover:border-blue-500/50 hover:shadow-xl hover:shadow-blue-500/10 transition-all duration-300">
-                  <div className={`w-20 h-20 rounded-3xl bg-gradient-to-br from-${item.color}-500 to-${item.color}-600 flex items-center justify-center mx-auto mb-6 shadow-lg shadow-${item.color}-500/30`}>
-                    <item.icon className="h-10 w-10 text-white" />
-                  </div>
-                  <h3 className="font-bold text-xl text-white mb-3">{item.title}</h3>
-                  <p className="text-slate-400">{item.desc}</p>
-                </Card>
-              ))}
-            </div>
-          </div>
-        </section>
-
         {/* CTA SECTION */}
         <section className="py-20 bg-gradient-to-r from-blue-600 via-indigo-600 to-violet-600 relative overflow-hidden">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.1),transparent_50%)]" />
-          <div className="container mx-auto px-4 text-center relative z-10">
-            <h2 className="text-3xl md:text-5xl font-bold text-white mb-6">
-              Pronto para encontrar seu proximo carro?
-            </h2>
-            <p className="text-xl text-white/80 mb-10 max-w-2xl mx-auto">
-              Fale com nossos especialistas e encontre o veiculo perfeito para voce
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link href="/veiculos">
-                <Button size="lg" className="bg-white text-blue-700 hover:bg-blue-50 text-lg px-10 py-6 shadow-xl">
-                  <Car className="mr-2 h-5 w-5" />
-                  Ver Estoque
-                </Button>
-              </Link>
-              <Link href="/contato">
-                <Button size="lg" variant="outline" className="text-lg px-10 py-6 bg-white/10 hover:bg-white/20 text-white border-white/30">
-                  <Phone className="mr-2 h-5 w-5" />
-                  Falar com Vendedor
-                </Button>
-              </Link>
+          <div className="absolute inset-0 bg-[url('/pattern.svg')] opacity-10" />
+          <div className="container mx-auto px-4 relative z-10">
+            <div className="max-w-3xl mx-auto text-center">
+              <h2 className="text-3xl md:text-5xl font-bold text-white mb-6">
+                Pronto para encontrar seu proximo carro?
+              </h2>
+              <p className="text-xl text-blue-100 mb-8">
+                Fale com um de nossos consultores e encontre o veiculo ideal para voce
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Link href="/veiculos">
+                  <Button size="lg" className="h-14 px-8 bg-white text-blue-600 hover:bg-blue-50 rounded-2xl text-lg font-semibold">
+                    <Search className="mr-2 h-5 w-5" />
+                    Explorar veiculos
+                  </Button>
+                </Link>
+                <Link href="https://wa.me/5512999999999">
+                  <Button size="lg" variant="outline" className="h-14 px-8 border-white/30 text-white hover:bg-white/10 rounded-2xl text-lg font-semibold bg-transparent">
+                    <Phone className="mr-2 h-5 w-5" />
+                    Falar no WhatsApp
+                  </Button>
+                </Link>
+              </div>
             </div>
           </div>
         </section>
 
         {/* LOCALIZACAO */}
-        <section className="py-16 bg-slate-950">
+        <section className="py-20 bg-slate-950">
           <div className="container mx-auto px-4">
-            <div className="grid md:grid-cols-2 gap-12 items-center">
+            <div className="grid lg:grid-cols-2 gap-12 items-center">
               <div>
-                <Badge className="mb-4 bg-emerald-500/20 text-emerald-400 border-emerald-500/30">
+                <Badge className="mb-4 bg-blue-500/10 text-blue-400 border-blue-500/20">
                   <MapPin className="h-3 w-3 mr-1" /> Localizacao
                 </Badge>
                 <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">Venha nos visitar</h2>
                 <p className="text-slate-400 mb-8">
-                  Estamos localizados em uma regiao de facil acesso, com amplo estacionamento e estrutura completa para atende-lo da melhor forma.
+                  Estamos localizados em Taubate, com facil acesso pela Rodovia Presidente Dutra.
+                  Venha conhecer nosso showroom e fazer um test drive!
                 </p>
-                
-                <div className="space-y-4">
+
+                <div className="space-y-4 mb-8">
                   <div className="flex items-start gap-4">
-                    <div className="w-12 h-12 rounded-xl bg-blue-500/20 flex items-center justify-center flex-shrink-0">
-                      <MapPin className="h-6 w-6 text-blue-400" />
+                    <div className="p-3 rounded-xl bg-blue-500/10">
+                      <MapPin className="h-5 w-5 text-blue-400" />
                     </div>
                     <div>
                       <h4 className="font-semibold text-white">Endereco</h4>
-                      <p className="text-slate-400">Av. Brasil, 1500 - Centro, Sao Paulo - SP</p>
+                      <p className="text-slate-400">Av. Independencia, 1500 - Centro, Taubate - SP</p>
                     </div>
                   </div>
                   <div className="flex items-start gap-4">
-                    <div className="w-12 h-12 rounded-xl bg-emerald-500/20 flex items-center justify-center flex-shrink-0">
-                      <Clock className="h-6 w-6 text-emerald-400" />
+                    <div className="p-3 rounded-xl bg-emerald-500/10">
+                      <Clock className="h-5 w-5 text-emerald-400" />
                     </div>
                     <div>
-                      <h4 className="font-semibold text-white">Horario de Funcionamento</h4>
-                      <p className="text-slate-400">Segunda a Sabado: 8h as 18h</p>
+                      <h4 className="font-semibold text-white">Horario</h4>
+                      <p className="text-slate-400">Seg a Sex: 8h as 18h | Sab: 9h as 13h</p>
                     </div>
                   </div>
                   <div className="flex items-start gap-4">
-                    <div className="w-12 h-12 rounded-xl bg-amber-500/20 flex items-center justify-center flex-shrink-0">
-                      <Phone className="h-6 w-6 text-amber-400" />
+                    <div className="p-3 rounded-xl bg-amber-500/10">
+                      <Phone className="h-5 w-5 text-amber-400" />
                     </div>
                     <div>
                       <h4 className="font-semibold text-white">Telefone</h4>
-                      <p className="text-slate-400">(11) 99999-9999</p>
+                      <p className="text-slate-400">(12) 3333-4444 | (12) 99999-9999</p>
                     </div>
                   </div>
                 </div>
+
+                <Link href="https://maps.google.com" target="_blank">
+                  <Button className="bg-blue-600 hover:bg-blue-700 rounded-xl">
+                    <MapPin className="mr-2 h-4 w-4" />
+                    Abrir no Google Maps
+                  </Button>
+                </Link>
               </div>
 
-              <div className="relative aspect-video rounded-3xl overflow-hidden border border-slate-700 shadow-2xl">
-                <iframe 
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3657.1976599489994!2d-46.65390492467461!3d-23.561414261670066!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94ce59c8da0aa315%3A0x63b06e8e5d2500e8!2sAv.%20Paulista%2C%20S%C3%A3o%20Paulo%20-%20SP!5e0!3m2!1spt-BR!2sbr!4v1706540000000!5m2!1spt-BR!2sbr"
+              <div className="relative h-[400px] rounded-3xl overflow-hidden border border-slate-800">
+                <iframe
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3675.356303544976!2d-45.555932684425!3d-23.02636448494991!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjPCsDAxJzM0LjkiUyA0NcKwMzMnMTIuNSJX!5e0!3m2!1spt-BR!2sbr!4v1234567890"
                   width="100%"
                   height="100%"
                   style={{ border: 0 }}
                   allowFullScreen
                   loading="lazy"
                   referrerPolicy="no-referrer-when-downgrade"
-                  className="grayscale hover:grayscale-0 transition-all duration-500"
+                  className="grayscale"
                 />
               </div>
             </div>

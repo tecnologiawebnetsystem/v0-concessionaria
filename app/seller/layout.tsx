@@ -7,7 +7,6 @@ import { sql } from "@/lib/db"
 
 async function getSellerData(userId: string) {
   try {
-    // Buscar dados do vendedor
     const [seller] = await sql`
       SELECT s.*, 
         (SELECT COALESCE(SUM(commission_value), 0) FROM sales WHERE seller_id = s.id AND commission_paid = false) as pending_commissions,
@@ -36,7 +35,6 @@ export default async function SellerLayout({ children }: { children: React.React
     redirect("/login?redirect=/seller")
   }
 
-  // Verificar se é vendedor ou admin
   if (session.role !== "seller" && session.role !== "admin" && session.role !== "super_admin") {
     redirect("/")
   }
@@ -44,11 +42,13 @@ export default async function SellerLayout({ children }: { children: React.React
   const sellerData = await getSellerData(session.userId)
 
   return (
-    <div className="flex min-h-screen bg-gray-50">
+    <div className="flex min-h-screen bg-gradient-to-br from-slate-950 via-emerald-950/30 to-slate-900">
       <SellerSidebar />
       <div className="flex flex-1 flex-col">
         <SellerHeader session={session} sellerData={sellerData || undefined} />
-        <main className="flex-1 p-6">{children}</main>
+        <main className="flex-1 overflow-auto p-4 lg:p-6">
+          {children}
+        </main>
       </div>
     </div>
   )
