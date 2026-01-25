@@ -39,8 +39,21 @@ export function LoginForm() {
       }
 
       toast.success("Login realizado com sucesso!")
-      router.push(redirect)
-      router.refresh()
+      
+      // Redirecionar baseado no role do usuário
+      let redirectUrl = redirect
+      if (redirect === "/" || redirect === "/login") {
+        if (data.user?.role === "admin" || data.user?.role === "super_admin") {
+          redirectUrl = "/admin"
+        } else if (data.user?.role === "seller") {
+          redirectUrl = "/seller"
+        } else {
+          redirectUrl = "/minha-conta"
+        }
+      }
+      
+      // Usar window.location para garantir redirecionamento completo
+      window.location.href = redirectUrl
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Erro ao fazer login")
     } finally {
