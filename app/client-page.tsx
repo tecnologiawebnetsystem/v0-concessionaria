@@ -281,17 +281,27 @@ export default function ClientHomePage({ vehicles, totalVehicles = 0, brands = [
         <section className="py-12 bg-slate-900 border-y border-slate-800">
           <div className="container mx-auto px-4">
             <div className="flex items-center justify-center gap-12 overflow-hidden">
-              {brands.slice(0, 8).map((brand: any, idx: number) => (
+              {brands.slice(0, 8).map((brand: any) => (
                 <Link 
                   key={brand.id} 
                   href={`/veiculos?marca=${brand.id}`}
-                  className="flex-shrink-0 opacity-50 hover:opacity-100 transition-opacity grayscale hover:grayscale-0"
+                  className="flex-shrink-0 opacity-60 hover:opacity-100 transition-all duration-300 grayscale hover:grayscale-0"
                 >
                   {brand.logo_url ? (
-                    <Image src={brand.logo_url || "/placeholder.svg"} alt={brand.name} width={80} height={40} className="h-10 w-auto object-contain" />
-                  ) : (
-                    <span className="text-2xl font-bold text-slate-500 hover:text-white">{brand.name}</span>
-                  )}
+                    <img 
+                      src={brand.logo_url || "/placeholder.svg"} 
+                      alt={brand.name} 
+                      className="h-12 w-auto object-contain brightness-0 invert opacity-70 hover:opacity-100 transition-opacity"
+                      onError={(e) => {
+                        const target = e.target as HTMLImageElement
+                        target.style.display = 'none'
+                        target.nextElementSibling?.classList.remove('hidden')
+                      }}
+                    />
+                  ) : null}
+                  <span className={`text-xl font-bold text-slate-400 hover:text-white ${brand.logo_url ? 'hidden' : ''}`}>
+                    {brand.name}
+                  </span>
                 </Link>
               ))}
             </div>
