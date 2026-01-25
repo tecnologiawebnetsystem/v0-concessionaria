@@ -23,6 +23,7 @@ import {
   ChevronDown,
   LogOut,
   Building2,
+  Code2,
 } from "lucide-react"
 import { useState } from "react"
 
@@ -76,6 +77,7 @@ const navigationGroups = [
     name: "Sistema",
     items: [
       { name: "Configuracoes", href: "/admin/settings", icon: Settings },
+      { name: "API Docs", href: "/api-docs", icon: Code2 },
     ]
   },
 ]
