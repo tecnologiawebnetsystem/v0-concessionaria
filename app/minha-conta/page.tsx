@@ -1,9 +1,8 @@
+"use client"
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { sql } from "@/lib/db"
-import { getSession } from "@/lib/session"
-import { redirect } from "next/navigation"
 import Link from "next/link"
 import {
   Heart,
@@ -12,302 +11,273 @@ import {
   ClipboardList,
   Bell,
   ArrowRight,
-  Clock,
-  CheckCircle,
-  AlertCircle,
+  TrendingUp,
   Calendar,
+  DollarSign,
+  Star,
+  ChevronRight,
+  Sparkles,
+  Eye,
+  Clock,
 } from "lucide-react"
 
-async function getCustomerData(userEmail: string) {
-  try {
-    const [proposals, testDrives, evaluations] = await Promise.all([
-      sql`SELECT id, vehicle_name, status, created_at FROM proposals WHERE email = ${userEmail} ORDER BY created_at DESC LIMIT 5`,
-      sql`SELECT id, customer_name, preferred_date, preferred_time, status, message FROM test_drives WHERE customer_email = ${userEmail} ORDER BY created_at DESC LIMIT 5`,
-      sql`SELECT id, brand, model, year, status, created_at FROM vehicle_evaluations WHERE customer_email = ${userEmail} ORDER BY created_at DESC LIMIT 5`,
-    ])
-
-    const proposalStats = await sql`
-      SELECT 
-        COUNT(*) as total,
-        SUM(CASE WHEN status = 'pending' THEN 1 ELSE 0 END) as pending,
-        SUM(CASE WHEN status = 'approved' THEN 1 ELSE 0 END) as approved
-      FROM proposals WHERE email = ${userEmail}
-    `
-
-    const testDriveStats = await sql`
-      SELECT 
-        COUNT(*) as total,
-        SUM(CASE WHEN status = 'pending' THEN 1 ELSE 0 END) as pending,
-        SUM(CASE WHEN status = 'confirmed' THEN 1 ELSE 0 END) as confirmed
-      FROM test_drives WHERE customer_email = ${userEmail}
-    `
-
-    return {
-      proposals,
-      testDrives,
-      evaluations,
-      stats: {
-        proposals: proposalStats[0],
-        testDrives: testDriveStats[0],
-      },
-    }
-  } catch (error) {
-    console.error("Error fetching customer data:", error)
-    return {
-      proposals: [],
-      testDrives: [],
-      evaluations: [],
-      stats: {
-        proposals: { total: 0, pending: 0, approved: 0 },
-        testDrives: { total: 0, pending: 0, confirmed: 0 },
-      },
-    }
-  }
-}
-
-async function getUserInfo(userId: string) {
-  try {
-    const result = await sql`SELECT name, email FROM users WHERE id = ${userId}`
-    return result[0]
-  } catch {
-    return null
-  }
-}
-
-export default async function CustomerDashboard() {
-  const session = await getSession()
-  if (!session) redirect("/login")
-
-  const user = await getUserInfo(session.userId)
-  if (!user) redirect("/login")
-
-  const data = await getCustomerData(user.email)
-
-  const statusColors: Record<string, string> = {
-    pending: "bg-yellow-100 text-yellow-800",
-    approved: "bg-green-100 text-green-800",
-    rejected: "bg-red-100 text-red-800",
-    confirmed: "bg-blue-100 text-blue-800",
-    completed: "bg-gray-100 text-gray-800",
-    evaluated: "bg-green-100 text-green-800",
-  }
-
-  const statusLabels: Record<string, string> = {
-    pending: "Pendente",
-    approved: "Aprovada",
-    rejected: "Rejeitada",
-    confirmed: "Confirmado",
-    completed: "Concluído",
-    evaluated: "Avaliado",
-  }
-
+export default function CustomerDashboard() {
   return (
     <div className="space-y-6">
-      {/* Welcome Section */}
-      <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl p-6 text-white">
-        <h1 className="text-2xl font-bold mb-2">
-          Olá, {user.name?.split(" ")[0]}!
-        </h1>
-        <p className="text-blue-100">
-          Bem-vindo ao seu painel. Aqui você pode acompanhar suas propostas,
-          test drives e muito mais.
-        </p>
-      </div>
-
-      {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center gap-4">
-              <div className="bg-blue-100 dark:bg-blue-900 p-3 rounded-xl">
-                <FileText className="h-6 w-6 text-blue-600 dark:text-blue-400" />
-              </div>
-              <div>
-                <p className="text-sm text-muted-foreground">Propostas</p>
-                <p className="text-2xl font-bold">{Number(data.stats.proposals.total) || 0}</p>
-                <p className="text-xs text-muted-foreground">
-                  {Number(data.stats.proposals.pending) || 0} pendente(s)
-                </p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center gap-4">
-              <div className="bg-green-100 dark:bg-green-900 p-3 rounded-xl">
-                <Car className="h-6 w-6 text-green-600 dark:text-green-400" />
-              </div>
-              <div>
-                <p className="text-sm text-muted-foreground">Test Drives</p>
-                <p className="text-2xl font-bold">{Number(data.stats.testDrives.total) || 0}</p>
-                <p className="text-xs text-muted-foreground">
-                  {Number(data.stats.testDrives.confirmed) || 0} confirmado(s)
-                </p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center gap-4">
-              <div className="bg-amber-100 dark:bg-amber-900 p-3 rounded-xl">
-                <ClipboardList className="h-6 w-6 text-amber-600 dark:text-amber-400" />
-              </div>
-              <div>
-                <p className="text-sm text-muted-foreground">Avaliações</p>
-                <p className="text-2xl font-bold">{data.evaluations.length}</p>
-                <p className="text-xs text-muted-foreground">de veículos</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center gap-4">
-              <div className="bg-red-100 dark:bg-red-900 p-3 rounded-xl">
-                <Heart className="h-6 w-6 text-red-600 dark:text-red-400" />
-              </div>
-              <div>
-                <p className="text-sm text-muted-foreground">Favoritos</p>
-                <p className="text-2xl font-bold">0</p>
-                <p className="text-xs text-muted-foreground">veículos salvos</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Recent Activity */}
-      <div className="grid lg:grid-cols-2 gap-6">
-        {/* Recent Proposals */}
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between">
-            <CardTitle className="text-lg">Minhas Propostas</CardTitle>
-            <Link href="/minha-conta/propostas">
-              <Button variant="ghost" size="sm">
-                Ver todas <ArrowRight className="ml-1 h-4 w-4" />
-              </Button>
-            </Link>
-          </CardHeader>
-          <CardContent>
-            {data.proposals.length > 0 ? (
-              <div className="space-y-4">
-                {data.proposals.map((proposal: any) => (
-                  <div
-                    key={proposal.id}
-                    className="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-800 rounded-lg"
-                  >
-                    <div>
-                      <p className="font-medium text-sm">{proposal.vehicle_name}</p>
-                      <p className="text-xs text-muted-foreground flex items-center gap-1">
-                        <Clock className="h-3 w-3" />
-                        {new Date(proposal.created_at).toLocaleDateString("pt-BR")}
-                      </p>
-                    </div>
-                    <Badge className={statusColors[proposal.status]}>
-                      {statusLabels[proposal.status]}
-                    </Badge>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div className="text-center py-8 text-muted-foreground">
-                <FileText className="h-12 w-12 mx-auto mb-3 opacity-20" />
-                <p>Nenhuma proposta enviada</p>
-                <Link href="/veiculos">
-                  <Button variant="link" className="mt-2">
-                    Explorar veículos
-                  </Button>
-                </Link>
-              </div>
-            )}
-          </CardContent>
-        </Card>
-
-        {/* Recent Test Drives */}
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between">
-            <CardTitle className="text-lg">Meus Test Drives</CardTitle>
-            <Link href="/minha-conta/test-drives">
-              <Button variant="ghost" size="sm">
-                Ver todos <ArrowRight className="ml-1 h-4 w-4" />
-              </Button>
-            </Link>
-          </CardHeader>
-          <CardContent>
-            {data.testDrives.length > 0 ? (
-              <div className="space-y-4">
-                {data.testDrives.map((td: any) => (
-                  <div
-                    key={td.id}
-                    className="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-800 rounded-lg"
-                  >
-                    <div>
-                      <p className="font-medium text-sm line-clamp-1">{td.message?.split(":")[1]?.trim() || "Test Drive"}</p>
-                      <p className="text-xs text-muted-foreground flex items-center gap-1">
-                        <Calendar className="h-3 w-3" />
-                        {new Date(td.preferred_date).toLocaleDateString("pt-BR")} às {td.preferred_time}
-                      </p>
-                    </div>
-                    <Badge className={statusColors[td.status]}>
-                      {statusLabels[td.status]}
-                    </Badge>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div className="text-center py-8 text-muted-foreground">
-                <Car className="h-12 w-12 mx-auto mb-3 opacity-20" />
-                <p>Nenhum test drive agendado</p>
-                <Link href="/veiculos">
-                  <Button variant="link" className="mt-2">
-                    Agendar test drive
-                  </Button>
-                </Link>
-              </div>
-            )}
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Quick Actions */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-lg">Ações Rápidas</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      {/* Welcome Header */}
+      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-blue-600 via-blue-700 to-cyan-600 p-6 lg:p-8">
+        <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-10" />
+        <div className="absolute -top-24 -right-24 size-48 rounded-full bg-white/10 blur-3xl" />
+        <div className="absolute -bottom-24 -left-24 size-48 rounded-full bg-cyan-400/20 blur-3xl" />
+        
+        <div className="relative">
+          <div className="flex items-center gap-2 mb-2">
+            <Sparkles className="size-5 text-cyan-300" />
+            <span className="text-sm font-medium text-cyan-200">Bem-vindo de volta!</span>
+          </div>
+          <h1 className="text-2xl lg:text-3xl font-bold text-white mb-2">
+            Ola, Cliente!
+          </h1>
+          <p className="text-blue-100 max-w-xl">
+            Acompanhe suas propostas, test drives agendados e encontre o veiculo dos seus sonhos.
+          </p>
+          
+          <div className="flex flex-wrap gap-3 mt-6">
             <Link href="/veiculos">
-              <Button variant="outline" className="w-full h-auto py-4 flex flex-col gap-2 bg-transparent">
-                <Car className="h-6 w-6" />
-                <span className="text-xs">Ver Veículos</span>
-              </Button>
-            </Link>
-            <Link href="/minha-conta/favoritos">
-              <Button variant="outline" className="w-full h-auto py-4 flex flex-col gap-2 bg-transparent">
-                <Heart className="h-6 w-6" />
-                <span className="text-xs">Favoritos</span>
+              <Button className="bg-white text-blue-700 hover:bg-blue-50">
+                <Car className="size-4 mr-2" />
+                Explorar Veiculos
               </Button>
             </Link>
             <Link href="/minha-conta/avaliacoes">
-              <Button variant="outline" className="w-full h-auto py-4 flex flex-col gap-2 bg-transparent">
-                <ClipboardList className="h-6 w-6" />
-                <span className="text-xs">Avaliar Meu Carro</span>
-              </Button>
-            </Link>
-            <Link href="/contato">
-              <Button variant="outline" className="w-full h-auto py-4 flex flex-col gap-2 bg-transparent">
-                <Bell className="h-6 w-6" />
-                <span className="text-xs">Falar Conosco</span>
+              <Button variant="outline" className="border-white/30 text-white hover:bg-white/10 bg-transparent">
+                <ClipboardList className="size-4 mr-2" />
+                Avaliar Meu Carro
               </Button>
             </Link>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
+
+      {/* Stats Cards */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <Card className="bg-slate-800/50 border-slate-700/50 hover:bg-slate-800 transition-all">
+          <CardContent className="p-4 lg:p-6">
+            <div className="flex items-center gap-4">
+              <div className="size-12 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center shadow-lg shadow-blue-500/25">
+                <FileText className="size-6 text-white" />
+              </div>
+              <div>
+                <p className="text-2xl lg:text-3xl font-bold text-white">3</p>
+                <p className="text-sm text-slate-400">Propostas</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="bg-slate-800/50 border-slate-700/50 hover:bg-slate-800 transition-all">
+          <CardContent className="p-4 lg:p-6">
+            <div className="flex items-center gap-4">
+              <div className="size-12 rounded-xl bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center shadow-lg shadow-green-500/25">
+                <Car className="size-6 text-white" />
+              </div>
+              <div>
+                <p className="text-2xl lg:text-3xl font-bold text-white">2</p>
+                <p className="text-sm text-slate-400">Test Drives</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="bg-slate-800/50 border-slate-700/50 hover:bg-slate-800 transition-all">
+          <CardContent className="p-4 lg:p-6">
+            <div className="flex items-center gap-4">
+              <div className="size-12 rounded-xl bg-gradient-to-br from-red-500 to-pink-600 flex items-center justify-center shadow-lg shadow-red-500/25">
+                <Heart className="size-6 text-white" />
+              </div>
+              <div>
+                <p className="text-2xl lg:text-3xl font-bold text-white">5</p>
+                <p className="text-sm text-slate-400">Favoritos</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="bg-slate-800/50 border-slate-700/50 hover:bg-slate-800 transition-all">
+          <CardContent className="p-4 lg:p-6">
+            <div className="flex items-center gap-4">
+              <div className="size-12 rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center shadow-lg shadow-amber-500/25">
+                <Bell className="size-6 text-white" />
+              </div>
+              <div>
+                <p className="text-2xl lg:text-3xl font-bold text-white">1</p>
+                <p className="text-sm text-slate-400">Alertas</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Main Content Grid */}
+      <div className="grid lg:grid-cols-3 gap-6">
+        {/* Recent Proposals */}
+        <Card className="lg:col-span-2 bg-slate-800/50 border-slate-700/50">
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardTitle className="text-lg font-semibold text-white flex items-center gap-2">
+              <FileText className="size-5 text-blue-400" />
+              Minhas Propostas
+            </CardTitle>
+            <Link href="/minha-conta/propostas">
+              <Button variant="ghost" size="sm" className="text-blue-400 hover:text-blue-300 hover:bg-slate-700">
+                Ver todas <ArrowRight className="ml-1 size-4" />
+              </Button>
+            </Link>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            {[
+              { vehicle: "Honda Civic EXL 2023", price: "R$ 145.000", status: "approved", date: "22/01/2026" },
+              { vehicle: "Toyota Corolla XEi 2022", price: "R$ 128.000", status: "pending", date: "20/01/2026" },
+              { vehicle: "Volkswagen Jetta TSI 2023", price: "R$ 155.000", status: "rejected", date: "18/01/2026" },
+            ].map((proposal, i) => (
+              <div
+                key={i}
+                className="flex items-center justify-between p-4 rounded-xl bg-slate-900/50 border border-slate-700/50 hover:border-slate-600 transition-all cursor-pointer"
+              >
+                <div className="flex items-center gap-4">
+                  <div className="size-12 rounded-lg bg-slate-800 flex items-center justify-center">
+                    <Car className="size-6 text-slate-400" />
+                  </div>
+                  <div>
+                    <p className="font-medium text-white">{proposal.vehicle}</p>
+                    <p className="text-sm text-slate-400 flex items-center gap-2">
+                      <DollarSign className="size-3" />
+                      {proposal.price}
+                      <span className="text-slate-600">|</span>
+                      <Clock className="size-3" />
+                      {proposal.date}
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3">
+                  <Badge className={
+                    proposal.status === "approved" ? "bg-green-500/20 text-green-400 border-green-500/30" :
+                    proposal.status === "pending" ? "bg-yellow-500/20 text-yellow-400 border-yellow-500/30" :
+                    "bg-red-500/20 text-red-400 border-red-500/30"
+                  }>
+                    {proposal.status === "approved" ? "Aprovada" : proposal.status === "pending" ? "Pendente" : "Rejeitada"}
+                  </Badge>
+                  <ChevronRight className="size-5 text-slate-500" />
+                </div>
+              </div>
+            ))}
+          </CardContent>
+        </Card>
+
+        {/* Test Drives */}
+        <Card className="bg-slate-800/50 border-slate-700/50">
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardTitle className="text-lg font-semibold text-white flex items-center gap-2">
+              <Calendar className="size-5 text-green-400" />
+              Test Drives
+            </CardTitle>
+            <Link href="/minha-conta/test-drives">
+              <Button variant="ghost" size="sm" className="text-green-400 hover:text-green-300 hover:bg-slate-700">
+                Ver todos
+              </Button>
+            </Link>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            {[
+              { vehicle: "BMW X1 2023", date: "Amanha", time: "14:00", status: "confirmed" },
+              { vehicle: "Audi A3 2022", date: "28/01", time: "10:00", status: "pending" },
+            ].map((td, i) => (
+              <div
+                key={i}
+                className="p-4 rounded-xl bg-slate-900/50 border border-slate-700/50"
+              >
+                <div className="flex items-center justify-between mb-2">
+                  <p className="font-medium text-white">{td.vehicle}</p>
+                  <Badge className={
+                    td.status === "confirmed" ? "bg-green-500/20 text-green-400" : "bg-yellow-500/20 text-yellow-400"
+                  }>
+                    {td.status === "confirmed" ? "Confirmado" : "Pendente"}
+                  </Badge>
+                </div>
+                <p className="text-sm text-slate-400">
+                  {td.date} as {td.time}
+                </p>
+              </div>
+            ))}
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Quick Actions + Favorites */}
+      <div className="grid lg:grid-cols-2 gap-6">
+        {/* Quick Actions */}
+        <Card className="bg-slate-800/50 border-slate-700/50">
+          <CardHeader>
+            <CardTitle className="text-lg font-semibold text-white">Acoes Rapidas</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-2 gap-3">
+              {[
+                { label: "Ver Veiculos", icon: Car, href: "/veiculos", color: "from-blue-500 to-cyan-500" },
+                { label: "Favoritos", icon: Heart, href: "/minha-conta/favoritos", color: "from-red-500 to-pink-500" },
+                { label: "Avaliar Carro", icon: ClipboardList, href: "/minha-conta/avaliacoes", color: "from-amber-500 to-orange-500" },
+                { label: "Falar Conosco", icon: Bell, href: "/contato", color: "from-green-500 to-emerald-500" },
+              ].map((action) => (
+                <Link key={action.label} href={action.href}>
+                  <Button
+                    variant="outline"
+                    className="w-full h-auto py-4 flex flex-col gap-2 bg-slate-900/50 border-slate-700 hover:bg-slate-800 hover:border-slate-600 text-white"
+                  >
+                    <div className={`size-10 rounded-lg bg-gradient-to-br ${action.color} flex items-center justify-center`}>
+                      <action.icon className="size-5 text-white" />
+                    </div>
+                    <span className="text-xs">{action.label}</span>
+                  </Button>
+                </Link>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Recent Viewed */}
+        <Card className="bg-slate-800/50 border-slate-700/50">
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardTitle className="text-lg font-semibold text-white flex items-center gap-2">
+              <Eye className="size-5 text-purple-400" />
+              Vistos Recentemente
+            </CardTitle>
+            <Link href="/minha-conta/historico">
+              <Button variant="ghost" size="sm" className="text-purple-400 hover:text-purple-300 hover:bg-slate-700">
+                Ver todos
+              </Button>
+            </Link>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            {[
+              { vehicle: "Mercedes C200 2023", price: "R$ 285.000", image: "https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?w=100&h=60&fit=crop" },
+              { vehicle: "Porsche Cayenne 2022", price: "R$ 520.000", image: "https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=100&h=60&fit=crop" },
+            ].map((vehicle, i) => (
+              <div
+                key={i}
+                className="flex items-center gap-3 p-3 rounded-xl bg-slate-900/50 border border-slate-700/50 hover:border-slate-600 transition-all cursor-pointer"
+              >
+                <div className="size-14 rounded-lg bg-slate-800 overflow-hidden flex-shrink-0">
+                  <img src={vehicle.image || "/placeholder.svg"} alt={vehicle.vehicle} className="w-full h-full object-cover" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="font-medium text-white truncate">{vehicle.vehicle}</p>
+                  <p className="text-sm text-green-400">{vehicle.price}</p>
+                </div>
+                <ChevronRight className="size-5 text-slate-500 flex-shrink-0" />
+              </div>
+            ))}
+          </CardContent>
+        </Card>
+      </div>
     </div>
   )
 }

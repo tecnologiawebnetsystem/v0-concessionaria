@@ -2,14 +2,16 @@
 import { PublicHeader } from "@/components/public/public-header"
 import { PublicFooter } from "@/components/public/public-footer"
 import { UnifiedChat } from "@/components/public/unified-chat"
-import { TestDriveScheduler } from "@/components/public/test-drive-scheduler"
-import { CarEvaluation } from "@/components/public/car-evaluation"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent } from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import Link from "next/link"
 import Image from "next/image"
 import {
+  Search,
   Calendar,
   Gauge,
   Fuel,
@@ -20,10 +22,25 @@ import {
   Clock,
   Award,
   Users,
-  ChevronLeft,
   ChevronRight,
+  ChevronLeft,
+  DollarSign,
+  FileText,
+  TrendingUp,
+  Zap,
+  Heart,
+  MapPin,
+  Phone,
+  Truck,
+  Sparkles,
+  BadgeCheck,
+  Calculator,
+  Newspaper,
+  Play,
+  Eye,
+  ArrowUpRight,
 } from "lucide-react"
-import { useState } from "react"
+import { useState, useRef } from "react"
 
 function formatCurrency(value: number) {
   return new Intl.NumberFormat("pt-BR", {
@@ -36,548 +53,657 @@ function formatCurrency(value: number) {
 
 interface HomePageProps {
   vehicles: any[]
+  totalVehicles?: number
+  brands?: any[]
 }
 
-export default function ClientHomePage({ vehicles }: HomePageProps) {
-  const [currentSlide, setCurrentSlide] = useState(0)
-  const featuredVehicles = vehicles.filter((v) => v.is_featured).slice(0, 3)
+export default function ClientHomePage({ vehicles, totalVehicles = 0, brands = [] }: HomePageProps) {
+  const [searchType, setSearchType] = useState<"all" | "new" | "used">("all")
+  const [searchBrand, setSearchBrand] = useState("")
+  const [priceRange, setPriceRange] = useState("")
+  const [favorites, setFavorites] = useState<number[]>([])
+  const scrollContainerRef = useRef<HTMLDivElement>(null)
 
-  const nextSlide = () => {
-    setCurrentSlide((prev) => (prev + 1) % Math.max(featuredVehicles.length, 1))
+  const featuredVehicles = vehicles.filter((v) => v.is_featured).slice(0, 8)
+  const allVehicles = vehicles.slice(0, 30)
+
+  const toggleFavorite = (id: number) => {
+    setFavorites(prev => prev.includes(id) ? prev.filter(f => f !== id) : [...prev, id])
   }
 
-  const prevSlide = () => {
-    setCurrentSlide((prev) => (prev - 1 + Math.max(featuredVehicles.length, 1)) % Math.max(featuredVehicles.length, 1))
+  const scroll = (direction: "left" | "right") => {
+    if (scrollContainerRef.current) {
+      const scrollAmount = 400
+      scrollContainerRef.current.scrollBy({
+        left: direction === "left" ? -scrollAmount : scrollAmount,
+        behavior: "smooth"
+      })
+    }
   }
+
+  const priceRanges = [
+    { label: "Ate R$ 50 mil", value: "0-50000", color: "from-emerald-500 to-teal-500", icon: "💚" },
+    { label: "R$ 50 - 100 mil", value: "50000-100000", color: "from-blue-500 to-cyan-500", icon: "💙" },
+    { label: "R$ 100 - 150 mil", value: "100000-150000", color: "from-violet-500 to-purple-500", icon: "💜" },
+    { label: "Acima R$ 150 mil", value: "150000-999999", color: "from-amber-500 to-orange-500", icon: "🧡" },
+  ]
+
+  const categories = [
+    { name: "SUVs", icon: "🚙", count: 45 },
+    { name: "Sedans", icon: "🚗", count: 32 },
+    { name: "Hatches", icon: "🚕", count: 28 },
+    { name: "Picapes", icon: "🛻", count: 15 },
+    { name: "Esportivos", icon: "🏎️", count: 8 },
+    { name: "Eletricos", icon: "⚡", count: 12 },
+  ]
 
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="flex min-h-screen flex-col bg-slate-950">
       <PublicHeader />
       <UnifiedChat />
 
       <main className="flex-1">
-        <section className="relative bg-gradient-to-br from-blue-950 via-blue-900 to-indigo-900 text-white overflow-hidden">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(59,130,246,0.15),transparent_50%)]" />
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom_left,rgba(99,102,241,0.15),transparent_50%)]" />
-          <div className="absolute inset-0 bg-grid-white/[0.02] bg-[size:50px_50px]" />
+        {/* HERO SECTION */}
+        <section className="relative min-h-[700px] overflow-hidden">
+          {/* Video/Image Background */}
+          <div className="absolute inset-0">
+            <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/95 to-slate-950/80 z-10" />
+            <div className="absolute inset-0 bg-[url('/hero-car.jpg')] bg-cover bg-center bg-no-repeat opacity-40" />
+            <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-slate-950/50 z-10" />
+          </div>
 
-          {/* Carrossel de Carros em Destaque */}
-          {featuredVehicles.length > 0 && (
-            <div className="relative">
-              <div className="container mx-auto px-4 py-20 md:py-28">
-                <div className="grid md:grid-cols-2 gap-12 items-center">
-                  {/* Texto do Hero */}
-                  <div className="relative z-10 text-center md:text-left">
-                    <Badge className="mb-6 bg-blue-400/20 text-blue-100 border-blue-300/30 backdrop-blur-sm text-sm px-5 py-1.5">
-                      ✨ Há mais de 15 anos no mercado
-                    </Badge>
-                    <h1 className="text-5xl md:text-7xl font-bold mb-6 text-balance leading-tight bg-gradient-to-br from-white via-blue-50 to-blue-100 bg-clip-text text-transparent">
-                      {featuredVehicles[currentSlide]?.name || "Encontre Seu Carro dos Sonhos"}
-                    </h1>
-                    <p className="text-xl text-blue-100/90 mb-10 text-pretty max-w-xl leading-relaxed">
-                      {featuredVehicles[currentSlide]?.description ||
-                        "A Nacional Veículos oferece os melhores veículos com garantia e financiamento facilitado."}
-                    </p>
+          {/* Animated Gradient Orbs */}
+          <div className="absolute top-20 left-10 w-96 h-96 bg-blue-600/20 rounded-full blur-3xl animate-pulse" />
+          <div className="absolute bottom-20 right-10 w-80 h-80 bg-indigo-600/20 rounded-full blur-3xl animate-pulse delay-1000" />
 
-                    <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start mb-10">
-                      <Link href={`/veiculos/${featuredVehicles[currentSlide]?.slug}`}>
-                        <Button
-                          size="lg"
-                          className="bg-white text-blue-950 hover:bg-blue-50 text-lg px-10 py-6 shadow-2xl shadow-blue-900/30 hover:shadow-blue-900/50 transition-all"
+          <div className="container mx-auto px-4 py-20 md:py-28 relative z-20">
+            <div className="grid lg:grid-cols-2 gap-12 items-center">
+              {/* Left Content */}
+              <div className="space-y-8">
+                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-500/10 border border-blue-500/20 backdrop-blur-sm">
+                  <span className="flex h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+                  <span className="text-sm text-blue-300">Mais de 5.000 clientes satisfeitos</span>
+                </div>
+
+                <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white leading-tight">
+                  Seu proximo{" "}
+                  <span className="relative">
+                    <span className="bg-gradient-to-r from-blue-400 via-cyan-400 to-blue-500 bg-clip-text text-transparent">
+                      carro
+                    </span>
+                    <svg className="absolute -bottom-2 left-0 w-full" viewBox="0 0 200 12" fill="none">
+                      <path d="M2 10C50 4 150 4 198 10" stroke="url(#gradient)" strokeWidth="3" strokeLinecap="round"/>
+                      <defs>
+                        <linearGradient id="gradient" x1="0" y1="0" x2="200" y2="0">
+                          <stop stopColor="#3b82f6"/>
+                          <stop offset="1" stopColor="#06b6d4"/>
+                        </linearGradient>
+                      </defs>
+                    </svg>
+                  </span>
+                  <br />esta aqui
+                </h1>
+
+                <p className="text-xl text-slate-400 max-w-lg">
+                  Ha mais de 15 anos conectando voce ao veiculo dos seus sonhos. 
+                  Financiamento facilitado, garantia e atendimento premium.
+                </p>
+
+                <div className="flex flex-wrap gap-4">
+                  <Link href="/veiculos">
+                    <Button size="lg" className="h-14 px-8 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-lg font-semibold rounded-2xl shadow-xl shadow-blue-600/25">
+                      <Search className="mr-2 h-5 w-5" />
+                      Ver {totalVehicles || vehicles.length} veiculos
+                    </Button>
+                  </Link>
+                  <Link href="/minha-conta/avaliacoes">
+                    <Button size="lg" variant="outline" className="h-14 px-8 border-slate-700 text-white hover:bg-slate-800 text-lg font-semibold rounded-2xl bg-transparent">
+                      <DollarSign className="mr-2 h-5 w-5" />
+                      Vender meu carro
+                    </Button>
+                  </Link>
+                </div>
+
+                {/* Stats */}
+                <div className="grid grid-cols-3 gap-6 pt-8 border-t border-slate-800">
+                  <div>
+                    <p className="text-3xl font-bold text-white">{totalVehicles || vehicles.length}+</p>
+                    <p className="text-sm text-slate-500">Veiculos</p>
+                  </div>
+                  <div>
+                    <p className="text-3xl font-bold text-white">15+</p>
+                    <p className="text-sm text-slate-500">Anos</p>
+                  </div>
+                  <div>
+                    <p className="text-3xl font-bold text-white">98%</p>
+                    <p className="text-sm text-slate-500">Aprovacao</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Right - Search Card */}
+              <div className="lg:pl-8">
+                <div className="bg-slate-900/80 backdrop-blur-xl rounded-3xl border border-slate-800 p-6 shadow-2xl">
+                  <div className="flex items-center gap-2 mb-6">
+                    <div className="p-2 rounded-xl bg-blue-500/10">
+                      <Search className="h-5 w-5 text-blue-400" />
+                    </div>
+                    <h3 className="text-lg font-semibold text-white">Busca rapida</h3>
+                  </div>
+
+                  <div className="space-y-4">
+                    {/* Type Tabs */}
+                    <div className="flex gap-2 p-1 bg-slate-800/50 rounded-xl">
+                      {[
+                        { id: "all", label: "Todos" },
+                        { id: "new", label: "0 KM" },
+                        { id: "used", label: "Seminovos" },
+                      ].map((type) => (
+                        <button
+                          key={type.id}
+                          onClick={() => setSearchType(type.id as any)}
+                          className={`flex-1 py-2.5 px-4 rounded-lg text-sm font-medium transition-all ${
+                            searchType === type.id
+                              ? "bg-blue-600 text-white shadow-lg"
+                              : "text-slate-400 hover:text-white"
+                          }`}
                         >
-                          Ver Este Veículo
-                          <ArrowRight className="ml-2 h-5 w-5" />
-                        </Button>
-                      </Link>
-                      <Link href="/veiculos">
-                        <Button
-                          size="lg"
-                          variant="outline"
-                          className="text-lg px-10 py-6 bg-blue-500/10 hover:bg-blue-500/20 text-white border-blue-300/30 backdrop-blur-sm"
-                        >
-                          <Car className="mr-2 h-5 w-5" />
-                          Ver Todos
-                        </Button>
-                      </Link>
+                          {type.label}
+                        </button>
+                      ))}
                     </div>
 
-                    {/* Controles do Carrossel */}
-                    {featuredVehicles.length > 1 && (
-                      <div className="flex items-center gap-4 justify-center md:justify-start">
-                        <button
-                          onClick={prevSlide}
-                          className="p-3 rounded-full bg-blue-500/20 hover:bg-blue-500/30 backdrop-blur-sm border border-blue-400/30 transition-all"
-                          aria-label="Anterior"
-                        >
-                          <ChevronLeft className="h-5 w-5" />
-                        </button>
-                        <div className="flex gap-2">
-                          {featuredVehicles.map((_, idx) => (
-                            <button
-                              key={idx}
-                              onClick={() => setCurrentSlide(idx)}
-                              className={`h-2.5 rounded-full transition-all ${
-                                idx === currentSlide
-                                  ? "w-10 bg-white shadow-lg shadow-blue-400/50"
-                                  : "w-2.5 bg-white/40"
-                              }`}
-                              aria-label={`Slide ${idx + 1}`}
-                            />
+                    {/* Brand Select */}
+                    <div>
+                      <label className="text-xs text-slate-500 font-medium mb-1.5 block">Marca</label>
+                      <Select value={searchBrand} onValueChange={setSearchBrand}>
+                        <SelectTrigger className="h-12 bg-slate-800/50 border-slate-700 text-white rounded-xl">
+                          <SelectValue placeholder="Todas as marcas" />
+                        </SelectTrigger>
+                        <SelectContent className="bg-slate-800 border-slate-700">
+                          <SelectItem value="all">Todas as marcas</SelectItem>
+                          {brands.map((brand: any) => (
+                            <SelectItem key={brand.id} value={brand.id.toString()}>
+                              {brand.name}
+                            </SelectItem>
                           ))}
-                        </div>
-                        <button
-                          onClick={nextSlide}
-                          className="p-3 rounded-full bg-blue-500/20 hover:bg-blue-500/30 backdrop-blur-sm border border-blue-400/30 transition-all"
-                          aria-label="Próximo"
-                        >
-                          <ChevronRight className="h-5 w-5" />
-                        </button>
-                      </div>
-                    )}
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    {/* Price Select */}
+                    <div>
+                      <label className="text-xs text-slate-500 font-medium mb-1.5 block">Faixa de preco</label>
+                      <Select value={priceRange} onValueChange={setPriceRange}>
+                        <SelectTrigger className="h-12 bg-slate-800/50 border-slate-700 text-white rounded-xl">
+                          <SelectValue placeholder="Qualquer valor" />
+                        </SelectTrigger>
+                        <SelectContent className="bg-slate-800 border-slate-700">
+                          <SelectItem value="all">Qualquer valor</SelectItem>
+                          {priceRanges.map((range) => (
+                            <SelectItem key={range.value} value={range.value}>
+                              {range.label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    {/* Search Button */}
+                    <Link href="/veiculos" className="block">
+                      <Button className="w-full h-14 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 rounded-xl text-base font-semibold">
+                        <Search className="mr-2 h-5 w-5" />
+                        Buscar veiculos
+                      </Button>
+                    </Link>
                   </div>
 
-                  {/* Imagem do Carro em Destaque */}
-                  <div className="relative">
-                    <div className="absolute -inset-4 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-3xl blur-2xl opacity-20" />
-                    <div className="relative aspect-[4/3] rounded-3xl overflow-hidden shadow-2xl border border-blue-400/20 backdrop-blur-sm bg-gradient-to-br from-blue-900/50 to-indigo-900/50">
-                      {featuredVehicles[currentSlide]?.primary_image ? (
-                        <Image
-                          src={featuredVehicles[currentSlide].primary_image || "/placeholder.svg"}
-                          alt={featuredVehicles[currentSlide].name}
-                          fill
-                          className="object-cover"
-                          priority
-                        />
-                      ) : (
-                        <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-800 to-indigo-900">
-                          <Car className="h-32 w-32 text-white/20" />
-                        </div>
-                      )}
-
-                      {/* Badge de Preço */}
-                      <div className="absolute bottom-6 right-6 bg-white/95 backdrop-blur-md rounded-2xl p-5 shadow-2xl border border-blue-100">
-                        <p className="text-sm text-gray-600 font-semibold">A partir de</p>
-                        <p className="text-3xl font-bold bg-gradient-to-r from-blue-900 to-indigo-900 bg-clip-text text-transparent">
-                          {formatCurrency(featuredVehicles[currentSlide]?.price || 0)}
-                        </p>
-                      </div>
+                  {/* Quick Links */}
+                  <div className="mt-6 pt-6 border-t border-slate-800">
+                    <p className="text-xs text-slate-500 mb-3">Buscas populares:</p>
+                    <div className="flex flex-wrap gap-2">
+                      {["SUV", "Sedan", "Hatch", "Automatico", "Flex"].map((tag) => (
+                        <Link key={tag} href={`/veiculos?q=${tag.toLowerCase()}`}>
+                          <Badge variant="secondary" className="bg-slate-800 hover:bg-slate-700 text-slate-300 cursor-pointer">
+                            {tag}
+                          </Badge>
+                        </Link>
+                      ))}
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
-          )}
-
-          {/* Hero sem carros destacados */}
-          {featuredVehicles.length === 0 && (
-            <div className="container mx-auto px-4 py-28 text-center relative z-10">
-              <Badge className="mb-6 bg-blue-400/20 text-blue-100 border-blue-300/30 backdrop-blur-sm text-sm px-5 py-1.5">
-                ✨ Há mais de 15 anos no mercado
-              </Badge>
-              <h1 className="text-6xl md:text-8xl font-bold mb-8 text-balance max-w-5xl mx-auto bg-gradient-to-br from-white via-blue-50 to-blue-100 bg-clip-text text-transparent leading-tight">
-                Encontre Seu Carro dos Sonhos
-              </h1>
-              <p className="text-xl text-blue-100/90 mb-12 text-pretty max-w-2xl mx-auto leading-relaxed">
-                A Nacional Veículos é referência em venda de carros 0km e seminovos com garantia e financiamento
-                facilitado
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Link href="/veiculos">
-                  <Button
-                    size="lg"
-                    className="bg-white text-blue-950 hover:bg-blue-50 text-lg px-10 py-6 shadow-2xl shadow-blue-900/40"
-                  >
-                    <Car className="mr-2 h-5 w-5" />
-                    Ver Todos os Veículos
-                  </Button>
-                </Link>
-                <Link href="/contato">
-                  <Button
-                    size="lg"
-                    variant="outline"
-                    className="text-lg px-10 py-6 bg-blue-500/10 hover:bg-blue-500/20 text-white border-blue-300/30 backdrop-blur-sm"
-                  >
-                    Fale Conosco
-                    <ArrowRight className="ml-2 h-5 w-5" />
-                  </Button>
-                </Link>
-              </div>
-            </div>
-          )}
-        </section>
-
-        <section className="py-20 bg-gradient-to-b from-slate-50 to-blue-50/30">
-          <div className="container mx-auto px-4 max-w-7xl">
-            <div className="text-center mb-16">
-              <h2 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-blue-900 to-indigo-900 bg-clip-text text-transparent">
-                Por Que Escolher a Nacional Veículos?
-              </h2>
-              <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-                Somos especialistas em realizar o sonho do carro próprio com segurança e transparência
-              </p>
-            </div>
-
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-              <Card className="text-center p-8 border-2 hover:border-blue-500 hover:shadow-2xl hover:shadow-blue-500/10 transition-all duration-300 bg-gradient-to-br from-white to-blue-50/30">
-                <div className="bg-gradient-to-br from-blue-500 to-indigo-600 w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-blue-500/30">
-                  <Shield className="h-10 w-10 text-white" />
-                </div>
-                <h3 className="font-bold text-xl mb-3 text-blue-900">Garantia Total</h3>
-                <p className="text-gray-600">Todos os veículos com garantia e procedência verificada</p>
-              </Card>
-
-              <Card className="text-center p-8 border-2 hover:border-blue-500 hover:shadow-2xl hover:shadow-blue-500/10 transition-all duration-300 bg-gradient-to-br from-white to-indigo-50/30">
-                <div className="bg-gradient-to-br from-indigo-500 to-blue-600 w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-indigo-500/30">
-                  <Award className="h-10 w-10 text-white" />
-                </div>
-                <h3 className="font-bold text-xl mb-3 text-blue-900">15 Anos de Mercado</h3>
-                <p className="text-gray-600">Experiência e credibilidade que você pode confiar</p>
-              </Card>
-
-              <Card className="text-center p-8 border-2 hover:border-blue-500 hover:shadow-2xl hover:shadow-blue-500/10 transition-all duration-300 bg-gradient-to-br from-white to-blue-50/30">
-                <div className="bg-gradient-to-br from-blue-600 to-indigo-500 w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-blue-600/30">
-                  <Clock className="h-10 w-10 text-white" />
-                </div>
-                <h3 className="font-bold text-xl mb-3 text-blue-900">Financiamento Rápido</h3>
-                <p className="text-gray-600">Aprovação em até 24h com as melhores taxas do mercado</p>
-              </Card>
-
-              <Card className="text-center p-8 border-2 hover:border-blue-500 hover:shadow-2xl hover:shadow-blue-500/10 transition-all duration-300 bg-gradient-to-br from-white to-indigo-50/30">
-                <div className="bg-gradient-to-br from-indigo-600 to-blue-500 w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-indigo-600/30">
-                  <Users className="h-10 w-10 text-white" />
-                </div>
-                <h3 className="font-bold text-xl mb-3 text-blue-900">Atendimento VIP</h3>
-                <p className="text-gray-600">Equipe especializada pronta para ajudar você</p>
-              </Card>
             </div>
           </div>
         </section>
 
-        {/* Seção de Veículos em Destaque - GRANDE */}
-        {vehicles.filter((v) => v.is_featured).length > 0 && (
-          <section className="py-20 bg-gradient-to-b from-white to-slate-50">
-            <div className="container mx-auto px-4 max-w-7xl">
-              <div className="text-center mb-12">
-                <Badge className="mb-4 bg-amber-100 text-amber-800 border-amber-200 text-sm px-4 py-1">
-                  <Star className="h-3 w-3 mr-1 fill-amber-500" />
-                  Seleção Especial
-                </Badge>
-                <h2 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-blue-900 to-indigo-900 bg-clip-text text-transparent">
-                  Veículos em Destaque
-                </h2>
-                <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-                  Os melhores veículos selecionados especialmente para você
-                </p>
+        {/* MARCAS CAROUSEL */}
+        <section className="py-12 bg-slate-900 border-y border-slate-800">
+          <div className="container mx-auto px-4">
+            <div className="flex items-center justify-center gap-12 overflow-hidden">
+              {brands.slice(0, 8).map((brand: any) => (
+                <Link 
+                  key={brand.id} 
+                  href={`/veiculos?marca=${brand.id}`}
+                  className="flex-shrink-0 opacity-60 hover:opacity-100 transition-all duration-300 grayscale hover:grayscale-0"
+                >
+                  {brand.logo_url ? (
+                    <img 
+                      src={brand.logo_url || "/placeholder.svg"} 
+                      alt={brand.name} 
+                      className="h-12 w-auto object-contain brightness-0 invert opacity-70 hover:opacity-100 transition-opacity"
+                      onError={(e) => {
+                        const target = e.target as HTMLImageElement
+                        target.style.display = 'none'
+                        target.nextElementSibling?.classList.remove('hidden')
+                      }}
+                    />
+                  ) : null}
+                  <span className={`text-xl font-bold text-slate-400 hover:text-white ${brand.logo_url ? 'hidden' : ''}`}>
+                    {brand.name}
+                  </span>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* CATEGORIAS POR PRECO */}
+        <section className="py-20 bg-slate-950">
+          <div className="container mx-auto px-4">
+            <div className="text-center mb-12">
+              <Badge className="mb-4 bg-emerald-500/10 text-emerald-400 border-emerald-500/20">
+                <DollarSign className="h-3 w-3 mr-1" /> Orcamento
+              </Badge>
+              <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Busque por faixa de preco</h2>
+              <p className="text-slate-400 max-w-2xl mx-auto">Encontre veiculos que cabem no seu bolso</p>
+            </div>
+
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+              {priceRanges.map((range, idx) => (
+                <Link key={idx} href={`/veiculos?preco=${range.value}`}>
+                  <Card className="group relative overflow-hidden bg-slate-900 border-slate-800 hover:border-slate-700 transition-all duration-500 cursor-pointer h-full">
+                    <div className={`absolute inset-0 bg-gradient-to-br ${range.color} opacity-0 group-hover:opacity-10 transition-opacity duration-500`} />
+                    <CardContent className="p-6 md:p-8 relative">
+                      <span className="text-4xl md:text-5xl mb-4 block">{range.icon}</span>
+                      <h3 className="text-lg md:text-xl font-bold text-white mb-2">{range.label}</h3>
+                      <div className="flex items-center text-slate-500 group-hover:text-blue-400 transition-colors">
+                        <span className="text-sm">Ver veiculos</span>
+                        <ArrowRight className="h-4 w-4 ml-1 group-hover:translate-x-1 transition-transform" />
+                      </div>
+                    </CardContent>
+                  </Card>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* VEICULOS EM DESTAQUE - CAROUSEL */}
+        {featuredVehicles.length > 0 && (
+          <section className="py-20 bg-gradient-to-b from-slate-900 to-slate-950">
+            <div className="container mx-auto px-4">
+              <div className="flex items-end justify-between mb-10">
+                <div>
+                  <Badge className="mb-4 bg-amber-500/10 text-amber-400 border-amber-500/20">
+                    <Star className="h-3 w-3 mr-1 fill-amber-400" /> Destaques
+                  </Badge>
+                  <h2 className="text-3xl md:text-4xl font-bold text-white">Veiculos em destaque</h2>
+                </div>
+                <div className="hidden md:flex items-center gap-2">
+                  <Button variant="outline" size="icon" onClick={() => scroll("left")} className="rounded-full border-slate-700 hover:bg-slate-800 bg-transparent">
+                    <ChevronLeft className="h-5 w-5" />
+                  </Button>
+                  <Button variant="outline" size="icon" onClick={() => scroll("right")} className="rounded-full border-slate-700 hover:bg-slate-800 bg-transparent">
+                    <ChevronRight className="h-5 w-5" />
+                  </Button>
+                </div>
               </div>
 
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {vehicles
-                  .filter((v) => v.is_featured)
-                  .slice(0, 6)
-                  .map((vehicle: any, index: number) => (
-                    <Link key={vehicle.id} href={`/veiculos/${vehicle.slug}`}>
-                      <Card
-                        className={`group hover:shadow-2xl transition-all duration-500 overflow-hidden h-full border-0 hover:-translate-y-2 ${
-                          index === 0
-                            ? "md:col-span-2 lg:col-span-1 ring-2 ring-amber-400 shadow-xl shadow-amber-500/20"
-                            : "shadow-lg"
-                        }`}
-                      >
-                        <div className="relative aspect-[16/10] overflow-hidden bg-gradient-to-br from-slate-100 to-slate-200">
-                          {vehicle.primary_image ? (
-                            <Image
-                              src={vehicle.primary_image || "/placeholder.svg"}
-                              alt={vehicle.name}
-                              fill
-                              className="object-cover group-hover:scale-105 transition-transform duration-700"
-                              priority={index < 3}
-                            />
-                          ) : (
-                            <div className="w-full h-full flex items-center justify-center">
-                              <Car className="h-24 w-24 text-slate-300" />
-                            </div>
+              <div 
+                ref={scrollContainerRef}
+                className="flex gap-6 overflow-x-auto scrollbar-hide pb-4 -mx-4 px-4 snap-x snap-mandatory"
+                style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+              >
+                {featuredVehicles.map((vehicle: any) => (
+                  <Link 
+                    key={vehicle.id} 
+                    href={`/veiculos/${vehicle.slug}`}
+                    className="flex-shrink-0 w-[340px] snap-start"
+                  >
+                    <Card className="group bg-slate-900 border-slate-800 hover:border-blue-500/50 overflow-hidden transition-all duration-500 hover:shadow-2xl hover:shadow-blue-500/10">
+                      <div className="relative aspect-[16/10] overflow-hidden">
+                        {vehicle.primary_image ? (
+                          <Image
+                            src={vehicle.primary_image || "/placeholder.svg"}
+                            alt={vehicle.name}
+                            fill
+                            className="object-cover group-hover:scale-105 transition-transform duration-700"
+                          />
+                        ) : (
+                          <div className="w-full h-full bg-gradient-to-br from-slate-800 to-slate-900 flex items-center justify-center">
+                            <Car className="h-16 w-16 text-slate-700" />
+                          </div>
+                        )}
+                        <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent" />
+                        
+                        {/* Badges */}
+                        <div className="absolute top-3 left-3 flex gap-2">
+                          <Badge className="bg-amber-500 text-white text-xs">
+                            <Star className="h-3 w-3 mr-1 fill-white" /> Destaque
+                          </Badge>
+                          {vehicle.is_new && (
+                            <Badge className="bg-emerald-500 text-white text-xs">0 KM</Badge>
                           )}
-
-                          {/* Gradiente overlay */}
-                          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-
-                          {/* Badges */}
-                          <div className="absolute top-4 left-4 flex gap-2">
-                            <Badge className="bg-amber-500 text-white shadow-lg font-bold px-3 py-1">
-                              <Star className="h-3.5 w-3.5 mr-1 fill-white" />
-                              DESTAQUE
-                            </Badge>
-                            {vehicle.is_new && (
-                              <Badge className="bg-emerald-500 text-white shadow-lg font-bold px-3 py-1">0 KM</Badge>
-                            )}
-                          </div>
-
-                          {/* Info overlay */}
-                          <div className="absolute bottom-0 left-0 right-0 p-5 text-white">
-                            <p className="text-sm font-semibold text-amber-300 uppercase tracking-wider mb-1">
-                              {vehicle.brand_name}
-                            </p>
-                            <h3 className="font-bold text-2xl mb-2 line-clamp-1">{vehicle.name}</h3>
-                            <div className="flex items-center gap-4 text-sm text-white/80">
-                              <span className="flex items-center gap-1">
-                                <Calendar className="h-4 w-4" />
-                                {vehicle.year}
-                              </span>
-                              <span className="flex items-center gap-1">
-                                <Gauge className="h-4 w-4" />
-                                {vehicle.mileage ? `${(vehicle.mileage / 1000).toFixed(0)}k km` : "0 km"}
-                              </span>
-                              <span className="flex items-center gap-1">
-                                <Fuel className="h-4 w-4" />
-                                {vehicle.fuel_type}
-                              </span>
-                            </div>
-                          </div>
                         </div>
 
-                        <CardContent className="p-5 bg-white">
-                          <div className="flex items-center justify-between">
-                            <div>
-                              <p className="text-sm text-gray-500">A partir de</p>
-                              <p className="text-3xl font-bold bg-gradient-to-r from-blue-900 to-indigo-900 bg-clip-text text-transparent">
-                                {formatCurrency(vehicle.price)}
-                              </p>
-                              <p className="text-sm text-gray-500">
-                                ou <span className="font-semibold text-blue-900">{formatCurrency(vehicle.price / 60)}</span>{" "}
-                                / mês
-                              </p>
-                            </div>
-                            <Button className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 shadow-lg">
-                              Ver Mais
-                              <ArrowRight className="ml-2 h-4 w-4" />
-                            </Button>
+                        {/* Favorite */}
+                        <button 
+                          onClick={(e) => { e.preventDefault(); toggleFavorite(vehicle.id) }}
+                          className="absolute top-3 right-3 p-2 rounded-full bg-black/40 backdrop-blur-sm hover:bg-black/60 transition-colors"
+                        >
+                          <Heart className={`h-4 w-4 ${favorites.includes(vehicle.id) ? "fill-red-500 text-red-500" : "text-white"}`} />
+                        </button>
+                      </div>
+
+                      <CardContent className="p-5">
+                        <div className="mb-3">
+                          <p className="text-xs text-slate-500 mb-1">{vehicle.brand_name}</p>
+                          <h3 className="font-bold text-white text-lg truncate">{vehicle.name}</h3>
+                        </div>
+
+                        <div className="flex items-center gap-3 text-xs text-slate-500 mb-4">
+                          <span className="flex items-center gap-1">
+                            <Calendar className="h-3.5 w-3.5" /> {vehicle.year_manufacture}/{vehicle.year_model}
+                          </span>
+                          <span className="flex items-center gap-1">
+                            <Gauge className="h-3.5 w-3.5" /> {vehicle.mileage?.toLocaleString()} km
+                          </span>
+                        </div>
+
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <p className="text-2xl font-bold text-white">{formatCurrency(vehicle.price)}</p>
                           </div>
-                        </CardContent>
-                      </Card>
-                    </Link>
-                  ))}
+                          <Button size="sm" className="bg-blue-600 hover:bg-blue-700 rounded-lg">
+                            Ver mais
+                          </Button>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </Link>
+                ))}
               </div>
             </div>
           </section>
         )}
 
-        {/* Seção de Todo o Estoque */}
-        <section className="py-20 bg-gradient-to-b from-slate-50 to-blue-50/50">
-          <div className="container mx-auto px-4 max-w-7xl">
+        {/* CATEGORIAS */}
+        <section className="py-20 bg-slate-950">
+          <div className="container mx-auto px-4">
             <div className="text-center mb-12">
-              <h2 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-blue-900 to-indigo-900 bg-clip-text text-transparent">
-                Nosso Estoque Completo
-              </h2>
-              <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-                Confira todos os veículos disponíveis com as melhores condições de pagamento
-              </p>
+              <Badge className="mb-4 bg-blue-500/10 text-blue-400 border-blue-500/20">
+                <Car className="h-3 w-3 mr-1" /> Categorias
+              </Badge>
+              <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Encontre por tipo de veiculo</h2>
             </div>
 
-            {vehicles.length === 0 ? (
-              <Card className="p-16 border-2 border-dashed max-w-2xl mx-auto">
-                <div className="text-center">
-                  <Car className="h-24 w-24 text-gray-300 mx-auto mb-6" />
-                  <h3 className="text-2xl font-bold mb-3">Nenhum Veículo Cadastrado</h3>
-                  <p className="text-gray-600 mb-8">
-                    Os veículos foram adicionados com sucesso! Recarregue a página para visualizá-los.
-                  </p>
-                  <Button onClick={() => window.location.reload()} size="lg">
-                    Recarregar Página
-                  </Button>
-                </div>
-              </Card>
-            ) : (
-              <>
-                <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                  {vehicles.map((vehicle: any) => (
-                    <Link key={vehicle.id} href={`/veiculos/${vehicle.slug}`}>
-                      <Card className="group hover:shadow-2xl hover:shadow-blue-500/10 transition-all duration-300 overflow-hidden h-full border-0 shadow-lg hover:-translate-y-1 bg-white">
-                        <div className="relative aspect-[4/3] overflow-hidden bg-gradient-to-br from-slate-100 to-slate-200">
-                          {vehicle.primary_image ? (
-                            <Image
-                              src={vehicle.primary_image || "/placeholder.svg"}
-                              alt={vehicle.name}
-                              fill
-                              className="object-cover group-hover:scale-110 transition-transform duration-500"
-                            />
-                          ) : (
-                            <div className="w-full h-full flex items-center justify-center">
-                              <Car className="h-16 w-16 text-slate-300" />
-                            </div>
-                          )}
-
-                          <div className="absolute top-3 left-3 flex flex-col gap-2">
-                            {vehicle.is_new && (
-                              <Badge className="bg-emerald-500 text-white shadow-lg font-bold text-xs px-2.5 py-1">
-                                0 KM
-                              </Badge>
-                            )}
-                            {vehicle.is_featured && (
-                              <Badge className="bg-amber-500 text-white shadow-lg font-bold text-xs px-2.5 py-1">
-                                <Star className="h-3 w-3 mr-1 fill-white" />
-                                DESTAQUE
-                              </Badge>
-                            )}
-                          </div>
-
-                          {/* Preço no canto */}
-                          <div className="absolute bottom-3 right-3 bg-white/95 backdrop-blur-sm rounded-lg px-3 py-1.5 shadow-lg">
-                            <p className="text-lg font-bold text-blue-900">{formatCurrency(vehicle.price)}</p>
-                          </div>
-                        </div>
-
-                        <CardContent className="p-4">
-                          <div className="flex items-center justify-between mb-2">
-                            <p className="text-xs font-bold text-blue-600 uppercase tracking-wide">
-                              {vehicle.brand_name}
-                            </p>
-                            <Badge variant="secondary" className="text-xs font-semibold bg-slate-100">
-                              {vehicle.year}
-                            </Badge>
-                          </div>
-
-                          <h3 className="font-bold text-base mb-3 line-clamp-2 min-h-[2.5rem] group-hover:text-blue-900 transition-colors">
-                            {vehicle.name}
-                          </h3>
-
-                          <div className="flex items-center gap-2 text-xs text-gray-500 mb-4">
-                            <span className="flex items-center gap-1 bg-slate-100 px-2 py-1 rounded">
-                              <Gauge className="h-3 w-3" />
-                              {vehicle.mileage ? `${(vehicle.mileage / 1000).toFixed(0)}k` : "0"} km
-                            </span>
-                            <span className="flex items-center gap-1 bg-slate-100 px-2 py-1 rounded">
-                              <Fuel className="h-3 w-3" />
-                              {vehicle.fuel_type}
-                            </span>
-                          </div>
-
-                          <div className="flex items-center justify-between pt-3 border-t">
-                            <p className="text-xs text-gray-500">
-                              <span className="font-semibold text-blue-900">{formatCurrency(vehicle.price / 60)}</span> / mês
-                            </p>
-                            <Button
-                              size="sm"
-                              className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-xs px-4"
-                            >
-                              Ver
-                              <ArrowRight className="ml-1 h-3 w-3" />
-                            </Button>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    </Link>
-                  ))}
-                </div>
-
-                <div className="text-center mt-16">
-                  <Link href="/veiculos">
-                    <Button
-                      size="lg"
-                      className="text-lg px-12 py-6 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 shadow-xl shadow-blue-500/30"
-                    >
-                      Ver Todo o Estoque
-                      <ArrowRight className="ml-2 h-5 w-5" />
-                    </Button>
-                  </Link>
-                </div>
-              </>
-            )}
-          </div>
-        </section>
-
-        {/* Seção de Serviços - Test Drive e Avalie */}
-        <section className="py-20 bg-white dark:bg-slate-950">
-          <div className="container mx-auto px-4 max-w-7xl">
-            <div className="text-center mb-12">
-              <h2 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-blue-900 to-indigo-900 bg-clip-text text-transparent">
-                Como Podemos Ajudar?
-              </h2>
-              <p className="text-lg text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
-                Oferecemos serviços que facilitam sua experiência de compra
-              </p>
-            </div>
-
-            <div className="grid md:grid-cols-2 gap-8">
-              {/* Test Drive Card */}
-              <Card className="p-8 border-2 hover:border-blue-500 transition-all hover:shadow-xl group">
-                <div className="flex items-start gap-6">
-                  <div className="bg-gradient-to-br from-blue-500 to-indigo-600 w-16 h-16 rounded-2xl flex items-center justify-center shadow-lg shadow-blue-500/30 group-hover:scale-110 transition-transform">
-                    <Car className="h-8 w-8 text-white" />
-                  </div>
-                  <div className="flex-1">
-                    <h3 className="font-bold text-2xl mb-2 text-blue-900 dark:text-blue-100">Agende um Test Drive</h3>
-                    <p className="text-gray-600 dark:text-gray-400 mb-6">
-                      Experimente o carro dos seus sonhos antes de decidir. Agende uma visita e sinta a emoção de dirigir.
-                    </p>
-                    <TestDriveScheduler 
-                      trigger={
-                        <Button className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700">
-                          Agendar Test Drive
-                          <ArrowRight className="ml-2 h-4 w-4" />
-                        </Button>
-                      }
-                    />
-                  </div>
-                </div>
-              </Card>
-
-              {/* Avalie seu Carro Card */}
-              <Card className="p-8 border-2 hover:border-amber-500 transition-all hover:shadow-xl group">
-                <div className="flex items-start gap-6">
-                  <div className="bg-gradient-to-br from-amber-500 to-orange-600 w-16 h-16 rounded-2xl flex items-center justify-center shadow-lg shadow-amber-500/30 group-hover:scale-110 transition-transform">
-                    <Award className="h-8 w-8 text-white" />
-                  </div>
-                  <div className="flex-1">
-                    <h3 className="font-bold text-2xl mb-2 text-amber-900 dark:text-amber-100">Avalie seu Veículo</h3>
-                    <p className="text-gray-600 dark:text-gray-400 mb-6">
-                      Quer trocar de carro? Descubra quanto vale seu usado e use como entrada no financiamento.
-                    </p>
-                    <CarEvaluation 
-                      trigger={
-                        <Button className="bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700">
-                          Avaliar Meu Carro
-                          <ArrowRight className="ml-2 h-4 w-4" />
-                        </Button>
-                      }
-                    />
-                  </div>
-                </div>
-              </Card>
+            <div className="grid grid-cols-3 md:grid-cols-6 gap-4">
+              {categories.map((cat, idx) => (
+                <Link key={idx} href={`/veiculos?tipo=${cat.name.toLowerCase()}`}>
+                  <Card className="group bg-slate-900 border-slate-800 hover:border-blue-500/30 transition-all duration-300 cursor-pointer text-center">
+                    <CardContent className="p-6">
+                      <span className="text-4xl mb-3 block group-hover:scale-110 transition-transform">{cat.icon}</span>
+                      <h3 className="font-semibold text-white text-sm">{cat.name}</h3>
+                      <p className="text-xs text-slate-500 mt-1">{cat.count} ofertas</p>
+                    </CardContent>
+                  </Card>
+                </Link>
+              ))}
             </div>
           </div>
         </section>
 
-        <section className="py-24 bg-gradient-to-br from-blue-950 via-indigo-900 to-blue-900 text-white relative overflow-hidden">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(59,130,246,0.2),transparent_50%)]" />
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom_right,rgba(99,102,241,0.2),transparent_50%)]" />
-
-          <div className="container mx-auto px-4 text-center max-w-4xl relative z-10">
-            <h2 className="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-br from-white via-blue-50 to-blue-100 bg-clip-text text-transparent">
-              Pronto Para Seu Próximo Carro?
-            </h2>
-            <p className="text-xl text-blue-100/90 mb-12 max-w-2xl mx-auto leading-relaxed">
-              Entre em contato conosco e descubra as melhores condições de financiamento do mercado
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+        {/* TODOS OS VEICULOS - GRID DE 30 */}
+        <section className="py-20 bg-gradient-to-b from-slate-950 to-slate-900">
+          <div className="container mx-auto px-4">
+            <div className="flex items-end justify-between mb-10">
+              <div>
+                <h2 className="text-3xl md:text-4xl font-bold text-white">Nosso estoque completo</h2>
+                <p className="text-slate-400 mt-2">{allVehicles.length} veiculos disponiveis</p>
+              </div>
               <Link href="/veiculos">
-                <Button
-                  size="lg"
-                  className="bg-white text-blue-950 hover:bg-blue-50 text-lg px-10 py-6 shadow-2xl shadow-blue-900/40"
-                >
-                  <Car className="mr-2 h-5 w-5" />
-                  Ver Estoque Completo
+                <Button variant="outline" className="border-slate-700 text-white hover:bg-slate-800 bg-transparent">
+                  Ver todos
+                  <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
               </Link>
-              <Link href="/contato">
-                <Button
-                  size="lg"
-                  variant="outline"
-                  className="text-lg px-10 py-6 bg-blue-500/10 hover:bg-blue-500/20 border-blue-300/30 text-white backdrop-blur-sm"
-                >
-                  Falar com Consultor
+            </div>
+
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-6">
+              {allVehicles.map((vehicle: any) => (
+                <Link key={vehicle.id} href={`/veiculos/${vehicle.slug}`}>
+                  <Card className="group bg-slate-900 border-slate-800 hover:border-blue-500/50 overflow-hidden transition-all duration-300 hover:shadow-xl hover:shadow-blue-500/10 h-full">
+                    <div className="relative aspect-[4/3] overflow-hidden">
+                      {vehicle.primary_image ? (
+                        <Image
+                          src={vehicle.primary_image || "/placeholder.svg"}
+                          alt={vehicle.name}
+                          fill
+                          className="object-cover group-hover:scale-105 transition-transform duration-500"
+                        />
+                      ) : (
+                        <div className="w-full h-full bg-gradient-to-br from-slate-800 to-slate-900 flex items-center justify-center">
+                          <Car className="h-12 w-12 text-slate-700" />
+                        </div>
+                      )}
+                      
+                      {/* Badges */}
+                      <div className="absolute top-2 left-2 flex flex-col gap-1">
+                        {vehicle.is_featured && (
+                          <Badge className="bg-amber-500 text-white text-[10px] px-1.5 py-0.5">
+                            <Star className="h-2.5 w-2.5 mr-0.5 fill-white" /> Top
+                          </Badge>
+                        )}
+                        {vehicle.is_new && (
+                          <Badge className="bg-emerald-500 text-white text-[10px] px-1.5 py-0.5">0KM</Badge>
+                        )}
+                      </div>
+
+                      {/* Favorite */}
+                      <button 
+                        onClick={(e) => { e.preventDefault(); toggleFavorite(vehicle.id) }}
+                        className="absolute top-2 right-2 p-1.5 rounded-full bg-black/40 backdrop-blur-sm hover:bg-black/60 transition-colors opacity-0 group-hover:opacity-100"
+                      >
+                        <Heart className={`h-3.5 w-3.5 ${favorites.includes(vehicle.id) ? "fill-red-500 text-red-500" : "text-white"}`} />
+                      </button>
+
+                      {/* Gradient overlay */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent opacity-60" />
+                    </div>
+
+                    <CardContent className="p-3 md:p-4">
+                      <p className="text-[10px] text-slate-500 uppercase tracking-wider mb-0.5">{vehicle.brand_name}</p>
+                      <h3 className="font-bold text-white text-sm truncate mb-2">{vehicle.name}</h3>
+
+                      <div className="flex items-center gap-2 text-[10px] text-slate-500 mb-3">
+                        <span>{vehicle.year_manufacture}/{vehicle.year_model}</span>
+                        <span className="w-1 h-1 rounded-full bg-slate-600" />
+                        <span>{(vehicle.mileage / 1000).toFixed(0)}k km</span>
+                      </div>
+
+                      <div className="flex items-center justify-between">
+                        <p className="text-lg font-bold text-white">{formatCurrency(vehicle.price)}</p>
+                        <div className="p-1.5 rounded-lg bg-blue-600/10 text-blue-400 opacity-0 group-hover:opacity-100 transition-opacity">
+                          <ArrowUpRight className="h-4 w-4" />
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </Link>
+              ))}
+            </div>
+
+            {/* Load More */}
+            <div className="text-center mt-12">
+              <Link href="/veiculos">
+                <Button size="lg" className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 rounded-2xl px-12">
+                  Ver todos os {totalVehicles || vehicles.length} veiculos
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
               </Link>
+            </div>
+          </div>
+        </section>
+
+        {/* SERVICOS */}
+        <section className="py-20 bg-slate-900">
+          <div className="container mx-auto px-4">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Nossos servicos</h2>
+              <p className="text-slate-400">Tudo que voce precisa em um so lugar</p>
+            </div>
+
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {[
+                { 
+                  icon: Calculator, 
+                  title: "Financiamento", 
+                  desc: "Aprovacao em ate 30 minutos. Melhores taxas do mercado.",
+                  color: "from-blue-500 to-cyan-500",
+                  link: "/financiamento"
+                },
+                { 
+                  icon: DollarSign, 
+                  title: "Venda seu carro", 
+                  desc: "Avaliacao gratuita e pagamento a vista na hora.",
+                  color: "from-emerald-500 to-teal-500",
+                  link: "/avaliar-veiculo"
+                },
+                { 
+                  icon: Shield, 
+                  title: "Garantia", 
+                  desc: "Todos os veiculos com garantia de motor e cambio.",
+                  color: "from-violet-500 to-purple-500",
+                  link: "/garantia"
+                },
+                { 
+                  icon: FileText, 
+                  title: "Documentacao", 
+                  desc: "Cuidamos de toda a burocracia para voce.",
+                  color: "from-amber-500 to-orange-500",
+                  link: "/documentacao"
+                },
+              ].map((service, idx) => (
+                <Link key={idx} href={service.link}>
+                  <Card className="group bg-slate-800/50 border-slate-700 hover:border-slate-600 transition-all duration-300 cursor-pointer h-full">
+                    <CardContent className="p-6">
+                      <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${service.color} flex items-center justify-center mb-5 group-hover:scale-110 transition-transform`}>
+                        <service.icon className="h-7 w-7 text-white" />
+                      </div>
+                      <h3 className="text-xl font-bold text-white mb-2">{service.title}</h3>
+                      <p className="text-slate-400 text-sm">{service.desc}</p>
+                    </CardContent>
+                  </Card>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* CTA SECTION */}
+        <section className="py-20 bg-gradient-to-r from-blue-600 via-indigo-600 to-violet-600 relative overflow-hidden">
+          <div className="absolute inset-0 bg-[url('/pattern.svg')] opacity-10" />
+          <div className="container mx-auto px-4 relative z-10">
+            <div className="max-w-3xl mx-auto text-center">
+              <h2 className="text-3xl md:text-5xl font-bold text-white mb-6">
+                Pronto para encontrar seu proximo carro?
+              </h2>
+              <p className="text-xl text-blue-100 mb-8">
+                Fale com um de nossos consultores e encontre o veiculo ideal para voce
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Link href="/veiculos">
+                  <Button size="lg" className="h-14 px-8 bg-white text-blue-600 hover:bg-blue-50 rounded-2xl text-lg font-semibold">
+                    <Search className="mr-2 h-5 w-5" />
+                    Explorar veiculos
+                  </Button>
+                </Link>
+                <Link href="https://wa.me/5512999999999">
+                  <Button size="lg" variant="outline" className="h-14 px-8 border-white/30 text-white hover:bg-white/10 rounded-2xl text-lg font-semibold bg-transparent">
+                    <Phone className="mr-2 h-5 w-5" />
+                    Falar no WhatsApp
+                  </Button>
+                </Link>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* LOCALIZACAO */}
+        <section className="py-20 bg-slate-950">
+          <div className="container mx-auto px-4">
+            <div className="grid lg:grid-cols-2 gap-12 items-center">
+              <div>
+                <Badge className="mb-4 bg-blue-500/10 text-blue-400 border-blue-500/20">
+                  <MapPin className="h-3 w-3 mr-1" /> Localizacao
+                </Badge>
+                <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">Venha nos visitar</h2>
+                <p className="text-slate-400 mb-8">
+                  Estamos localizados em Taubate, com facil acesso pela Rodovia Presidente Dutra.
+                  Venha conhecer nosso showroom e fazer um test drive!
+                </p>
+
+                <div className="space-y-4 mb-8">
+                  <div className="flex items-start gap-4">
+                    <div className="p-3 rounded-xl bg-blue-500/10">
+                      <MapPin className="h-5 w-5 text-blue-400" />
+                    </div>
+                    <div>
+                      <h4 className="font-semibold text-white">Endereco</h4>
+                      <p className="text-slate-400">Av. Independencia, 1500 - Centro, Taubate - SP</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-4">
+                    <div className="p-3 rounded-xl bg-emerald-500/10">
+                      <Clock className="h-5 w-5 text-emerald-400" />
+                    </div>
+                    <div>
+                      <h4 className="font-semibold text-white">Horario</h4>
+                      <p className="text-slate-400">Seg a Sex: 8h as 18h | Sab: 9h as 13h</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-4">
+                    <div className="p-3 rounded-xl bg-amber-500/10">
+                      <Phone className="h-5 w-5 text-amber-400" />
+                    </div>
+                    <div>
+                      <h4 className="font-semibold text-white">Telefone</h4>
+                      <p className="text-slate-400">(12) 3333-4444 | (12) 99999-9999</p>
+                    </div>
+                  </div>
+                </div>
+
+                <Link href="https://maps.google.com" target="_blank">
+                  <Button className="bg-blue-600 hover:bg-blue-700 rounded-xl">
+                    <MapPin className="mr-2 h-4 w-4" />
+                    Abrir no Google Maps
+                  </Button>
+                </Link>
+              </div>
+
+              <div className="relative h-[400px] rounded-3xl overflow-hidden border border-slate-800">
+                <iframe
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3675.356303544976!2d-45.555932684425!3d-23.02636448494991!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjPCsDAxJzM0LjkiUyA0NcKwMzMnMTIuNSJX!5e0!3m2!1spt-BR!2sbr!4v1234567890"
+                  width="100%"
+                  height="100%"
+                  style={{ border: 0 }}
+                  allowFullScreen
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  className="grayscale"
+                />
+              </div>
             </div>
           </div>
         </section>
