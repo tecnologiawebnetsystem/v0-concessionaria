@@ -19,7 +19,6 @@ import {
   Trash2,
   Car,
   User,
-  Filter,
 } from "lucide-react"
 import {
   DropdownMenu,
@@ -43,6 +42,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import Link from "next/link"
 
 async function getInquiries() {
   const inquiries = await sql`
@@ -76,9 +76,9 @@ function formatDate(date: string) {
 
 function getStatusInfo(status: string) {
   const statuses: Record<string, { label: string; icon: any; className: string }> = {
-    new: { label: "Novo", icon: Clock, className: "bg-amber-100 text-amber-700 border-amber-200" },
-    contacted: { label: "Contatado", icon: AlertCircle, className: "bg-blue-100 text-blue-700 border-blue-200" },
-    closed: { label: "Fechado", icon: CheckCircle2, className: "bg-emerald-100 text-emerald-700 border-emerald-200" },
+    new: { label: "Novo", icon: Clock, className: "bg-amber-500/20 text-amber-400 border-amber-500/30" },
+    contacted: { label: "Contatado", icon: AlertCircle, className: "bg-blue-500/20 text-blue-400 border-blue-500/30" },
+    closed: { label: "Fechado", icon: CheckCircle2, className: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30" },
   }
   return statuses[status] || statuses.new
 }
@@ -87,10 +87,10 @@ export default async function InquiriesPage() {
   const { inquiries, stats } = await getInquiries()
 
   const statCards = [
-    { title: "Total de Contatos", value: stats.total, icon: MessageSquare, color: "from-blue-500 to-blue-700" },
-    { title: "Novos", value: stats.new_count, icon: Clock, color: "from-amber-500 to-amber-700" },
-    { title: "Em Atendimento", value: stats.contacted, icon: AlertCircle, color: "from-violet-500 to-violet-700" },
-    { title: "Finalizados", value: stats.closed, icon: CheckCircle2, color: "from-emerald-500 to-emerald-700" },
+    { title: "Total de Contatos", value: stats.total, icon: MessageSquare, color: "from-blue-500 to-blue-700", shadow: "shadow-blue-500/25" },
+    { title: "Novos", value: stats.new_count, icon: Clock, color: "from-amber-500 to-amber-700", shadow: "shadow-amber-500/25" },
+    { title: "Em Atendimento", value: stats.contacted, icon: AlertCircle, color: "from-violet-500 to-violet-700", shadow: "shadow-violet-500/25" },
+    { title: "Finalizados", value: stats.closed, icon: CheckCircle2, color: "from-emerald-500 to-emerald-700", shadow: "shadow-emerald-500/25" },
   ]
 
   return (
@@ -98,32 +98,22 @@ export default async function InquiriesPage() {
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900 lg:text-3xl">Contatos</h1>
-          <p className="text-slate-500">Gerencie as mensagens e solicitacoes de clientes</p>
-        </div>
-        <div className="flex gap-2">
-          <Button variant="outline">
-            <Filter className="mr-2 size-4" />
-            Filtrar
-          </Button>
-          <Button variant="outline">
-            <Archive className="mr-2 size-4" />
-            Arquivados
-          </Button>
+          <h1 className="text-2xl font-bold text-white lg:text-3xl">Contatos</h1>
+          <p className="text-slate-400">Gerencie as mensagens e solicitacoes de clientes</p>
         </div>
       </div>
 
       {/* Stats */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {statCards.map((stat) => (
-          <Card key={stat.title} className="border-0 shadow-md">
-            <CardContent className="flex items-center gap-4 p-4">
-              <div className={`rounded-xl bg-gradient-to-br ${stat.color} p-3 shadow-lg`}>
-                <stat.icon className="size-5 text-white" />
+          <Card key={stat.title} className={`bg-gradient-to-br ${stat.color} border-0 shadow-lg ${stat.shadow}`}>
+            <CardContent className="flex items-center gap-4 p-5">
+              <div className="rounded-xl bg-white/20 p-3">
+                <stat.icon className="size-6 text-white" />
               </div>
               <div>
-                <p className="text-2xl font-bold text-slate-900">{stat.value}</p>
-                <p className="text-sm text-slate-500">{stat.title}</p>
+                <p className="text-3xl font-bold text-white">{stat.value}</p>
+                <p className="text-sm text-white/70">{stat.title}</p>
               </div>
             </CardContent>
           </Card>
@@ -131,50 +121,50 @@ export default async function InquiriesPage() {
       </div>
 
       {/* Inquiries Table */}
-      <Card className="border-0 shadow-lg">
-        <CardHeader className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+      <Card className="bg-slate-800/50 border-slate-700">
+        <CardHeader className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between border-b border-slate-700">
           <div>
-            <CardTitle>Mensagens Recebidas</CardTitle>
-            <CardDescription>{inquiries.length} contatos no total</CardDescription>
+            <CardTitle className="text-white">Mensagens Recebidas</CardTitle>
+            <CardDescription className="text-slate-400">{inquiries.length} contatos no total</CardDescription>
           </div>
           <div className="flex gap-2">
             <Select defaultValue="all">
-              <SelectTrigger className="w-40">
+              <SelectTrigger className="w-40 bg-slate-900/50 border-slate-700 text-white">
                 <SelectValue placeholder="Status" />
               </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Todos</SelectItem>
-                <SelectItem value="new">Novos</SelectItem>
-                <SelectItem value="contacted">Contatados</SelectItem>
-                <SelectItem value="closed">Fechados</SelectItem>
+              <SelectContent className="bg-slate-800 border-slate-700">
+                <SelectItem value="all" className="text-slate-300">Todos</SelectItem>
+                <SelectItem value="new" className="text-slate-300">Novos</SelectItem>
+                <SelectItem value="contacted" className="text-slate-300">Contatados</SelectItem>
+                <SelectItem value="closed" className="text-slate-300">Fechados</SelectItem>
               </SelectContent>
             </Select>
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-slate-400" />
-              <Input placeholder="Buscar..." className="w-48 pl-10" />
+              <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-slate-500" />
+              <Input placeholder="Buscar..." className="w-48 pl-10 bg-slate-900/50 border-slate-700 text-white placeholder:text-slate-500" />
             </div>
           </div>
         </CardHeader>
-        <CardContent>
+        <CardContent className="p-0">
           <div className="overflow-x-auto">
             <Table>
               <TableHeader>
-                <TableRow>
-                  <TableHead>Cliente</TableHead>
-                  <TableHead>Veiculo de Interesse</TableHead>
-                  <TableHead>Mensagem</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead>Data</TableHead>
+                <TableRow className="border-slate-700 hover:bg-slate-800/50">
+                  <TableHead className="text-slate-400">Cliente</TableHead>
+                  <TableHead className="text-slate-400">Veiculo de Interesse</TableHead>
+                  <TableHead className="text-slate-400">Mensagem</TableHead>
+                  <TableHead className="text-slate-400">Status</TableHead>
+                  <TableHead className="text-slate-400">Data</TableHead>
                   <TableHead className="w-12"></TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {inquiries.length === 0 ? (
-                  <TableRow>
+                  <TableRow className="border-slate-700">
                     <TableCell colSpan={6} className="py-12 text-center">
                       <div className="flex flex-col items-center">
-                        <MessageSquare className="mb-2 size-12 text-slate-300" />
-                        <p className="text-slate-500">Nenhum contato recebido ainda</p>
+                        <MessageSquare className="mb-2 size-12 text-slate-600" />
+                        <p className="text-slate-400">Nenhum contato recebido ainda</p>
                       </div>
                     </TableCell>
                   </TableRow>
@@ -184,12 +174,12 @@ export default async function InquiriesPage() {
                     const StatusIcon = statusInfo.icon
 
                     return (
-                      <TableRow key={inquiry.id}>
+                      <TableRow key={inquiry.id} className="border-slate-700 hover:bg-slate-800/50">
                         <TableCell>
                           <div className="space-y-1">
                             <div className="flex items-center gap-2">
-                              <User className="size-4 text-slate-400" />
-                              <span className="font-medium text-slate-900">{inquiry.name}</span>
+                              <User className="size-4 text-slate-500" />
+                              <span className="font-medium text-white">{inquiry.name}</span>
                             </div>
                             <div className="flex items-center gap-2 text-sm text-slate-500">
                               <Mail className="size-3" />
@@ -206,11 +196,11 @@ export default async function InquiriesPage() {
                         <TableCell>
                           {inquiry.vehicle_name ? (
                             <div className="flex items-center gap-2">
-                              <Car className="size-4 text-blue-500" />
+                              <Car className="size-4 text-blue-400" />
                               <div>
-                                <p className="font-medium text-slate-900">{inquiry.vehicle_name}</p>
+                                <p className="font-medium text-white">{inquiry.vehicle_name}</p>
                                 {inquiry.vehicle_price && (
-                                  <p className="text-sm text-emerald-600">
+                                  <p className="text-sm text-emerald-400">
                                     {new Intl.NumberFormat("pt-BR", {
                                       style: "currency",
                                       currency: "BRL",
@@ -220,11 +210,11 @@ export default async function InquiriesPage() {
                               </div>
                             </div>
                           ) : (
-                            <span className="text-sm text-slate-400">Contato geral</span>
+                            <span className="text-sm text-slate-500">Contato geral</span>
                           )}
                         </TableCell>
                         <TableCell>
-                          <p className="max-w-xs truncate text-sm text-slate-600">
+                          <p className="max-w-xs truncate text-sm text-slate-400">
                             {inquiry.message || "Sem mensagem"}
                           </p>
                         </TableCell>
@@ -243,29 +233,29 @@ export default async function InquiriesPage() {
                         <TableCell>
                           <DropdownMenu>
                             <DropdownMenuTrigger asChild>
-                              <Button variant="ghost" size="icon">
+                              <Button variant="ghost" size="icon" className="text-slate-400 hover:text-white hover:bg-slate-700">
                                 <MoreHorizontal className="size-4" />
                               </Button>
                             </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end">
-                              <DropdownMenuItem>
+                            <DropdownMenuContent align="end" className="bg-slate-800 border-slate-700">
+                              <DropdownMenuItem className="text-slate-300 hover:text-white focus:bg-slate-700">
                                 <Eye className="mr-2 size-4" />
                                 Ver Detalhes
                               </DropdownMenuItem>
-                              <DropdownMenuItem>
+                              <DropdownMenuItem className="text-slate-300 hover:text-white focus:bg-slate-700">
                                 <Reply className="mr-2 size-4" />
                                 Responder
                               </DropdownMenuItem>
-                              <DropdownMenuItem>
+                              <DropdownMenuItem className="text-slate-300 hover:text-white focus:bg-slate-700">
                                 <CheckCircle2 className="mr-2 size-4" />
                                 Marcar como Fechado
                               </DropdownMenuItem>
-                              <DropdownMenuSeparator />
-                              <DropdownMenuItem>
+                              <DropdownMenuSeparator className="bg-slate-700" />
+                              <DropdownMenuItem className="text-slate-300 hover:text-white focus:bg-slate-700">
                                 <Archive className="mr-2 size-4" />
                                 Arquivar
                               </DropdownMenuItem>
-                              <DropdownMenuItem className="text-red-600">
+                              <DropdownMenuItem className="text-red-400 focus:bg-slate-700 focus:text-red-400">
                                 <Trash2 className="mr-2 size-4" />
                                 Excluir
                               </DropdownMenuItem>

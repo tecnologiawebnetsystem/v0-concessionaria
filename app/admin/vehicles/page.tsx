@@ -23,13 +23,13 @@ export default async function VehiclesPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Veículos</h1>
-          <p className="text-gray-600">Gerencie todos os veículos da concessionária</p>
+          <h1 className="text-3xl font-bold text-white">Veiculos</h1>
+          <p className="text-slate-400">Gerencie todos os veiculos da concessionaria</p>
         </div>
-        <Button asChild>
+        <Button asChild className="bg-blue-600 hover:bg-blue-700">
           <Link href="/admin/vehicles/new">
             <Plus className="mr-2 size-4" />
-            Adicionar Veículo
+            Adicionar Veiculo
           </Link>
         </Button>
       </div>

@@ -2,7 +2,6 @@
 
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
 import { Heart, Car, ArrowRight, Trash2, Calendar, Gauge, Fuel } from "lucide-react"
 import Link from "next/link"
 import Image from "next/image"
@@ -23,7 +22,6 @@ export default function CustomerFavoritesPage() {
   const [favorites, setFavorites] = useState<Vehicle[]>([])
 
   useEffect(() => {
-    // Load favorites from localStorage
     const storedFavorites = localStorage.getItem("vehicle_favorites")
     if (storedFavorites) {
       try {
@@ -51,11 +49,11 @@ export default function CustomerFavoritesPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold">Meus Favoritos</h1>
-          <p className="text-muted-foreground">Veículos que você salvou para ver depois</p>
+          <h1 className="text-2xl font-bold text-white">Meus Favoritos</h1>
+          <p className="text-slate-400">Veiculos que voce salvou para ver depois</p>
         </div>
         <Link href="/veiculos">
-          <Button>
+          <Button className="bg-blue-600 hover:bg-blue-700">
             <Car className="mr-2 h-4 w-4" />
             Ver Estoque
           </Button>
@@ -65,7 +63,7 @@ export default function CustomerFavoritesPage() {
       {favorites.length > 0 ? (
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {favorites.map((vehicle) => (
-            <Card key={vehicle.id} className="overflow-hidden group">
+            <Card key={vehicle.id} className="overflow-hidden group bg-slate-800/50 border-slate-700">
               <div className="relative aspect-video">
                 <Image
                   src={vehicle.image || "/placeholder.svg"}
@@ -75,14 +73,15 @@ export default function CustomerFavoritesPage() {
                 />
                 <button
                   onClick={() => removeFavorite(vehicle.id)}
-                  className="absolute top-2 right-2 p-2 bg-white/90 rounded-full hover:bg-red-100 transition-colors"
+                  type="button"
+                  className="absolute top-2 right-2 p-2 bg-black/50 rounded-full hover:bg-red-500/80 transition-colors"
                 >
-                  <Heart className="h-5 w-5 text-red-500 fill-red-500" />
+                  <Heart className="h-5 w-5 text-red-400 fill-red-400" />
                 </button>
               </div>
               <CardContent className="p-4">
-                <h3 className="font-semibold text-lg mb-2 line-clamp-1">{vehicle.name}</h3>
-                <div className="flex flex-wrap gap-2 text-xs text-muted-foreground mb-3">
+                <h3 className="font-semibold text-lg mb-2 line-clamp-1 text-white">{vehicle.name}</h3>
+                <div className="flex flex-wrap gap-2 text-xs text-slate-400 mb-3">
                   <span className="flex items-center gap-1">
                     <Calendar className="h-3 w-3" />
                     {vehicle.year}
@@ -97,11 +96,11 @@ export default function CustomerFavoritesPage() {
                   </span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <p className="text-xl font-bold text-blue-600">
+                  <p className="text-xl font-bold text-emerald-400">
                     {formatCurrency(vehicle.price)}
                   </p>
                   <Link href={`/veiculos/${vehicle.slug}`}>
-                    <Button size="sm">
+                    <Button size="sm" className="bg-blue-600 hover:bg-blue-700">
                       Ver Detalhes
                     </Button>
                   </Link>
@@ -111,16 +110,16 @@ export default function CustomerFavoritesPage() {
           ))}
         </div>
       ) : (
-        <Card>
+        <Card className="bg-slate-800/50 border-slate-700">
           <CardContent className="py-16 text-center">
-            <Heart className="h-16 w-16 mx-auto mb-4 text-muted-foreground opacity-20" />
-            <h3 className="text-lg font-semibold mb-2">Nenhum veículo favorito</h3>
-            <p className="text-muted-foreground mb-4">
-              Adicione veículos aos favoritos clicando no coração ao navegar pelo estoque.
+            <Heart className="h-16 w-16 mx-auto mb-4 text-slate-600" />
+            <h3 className="text-lg font-semibold mb-2 text-white">Nenhum veiculo favorito</h3>
+            <p className="text-slate-400 mb-4">
+              Adicione veiculos aos favoritos clicando no coracao ao navegar pelo estoque.
             </p>
             <Link href="/veiculos">
-              <Button>
-                Explorar Veículos
+              <Button className="bg-blue-600 hover:bg-blue-700">
+                Explorar Veiculos
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </Link>
@@ -132,6 +131,7 @@ export default function CustomerFavoritesPage() {
         <div className="flex justify-center">
           <Button
             variant="outline"
+            className="border-slate-600 text-slate-300 hover:bg-slate-700 bg-transparent"
             onClick={() => {
               setFavorites([])
               localStorage.removeItem("vehicle_favorites")

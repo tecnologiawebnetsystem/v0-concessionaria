@@ -156,7 +156,7 @@ export default function ClientHomePage({ vehicles, totalVehicles = 0, brands = [
                       Ver {totalVehicles || vehicles.length} veiculos
                     </Button>
                   </Link>
-                  <Link href="/avaliar-veiculo">
+                  <Link href="/minha-conta/avaliacoes">
                     <Button size="lg" variant="outline" className="h-14 px-8 border-slate-700 text-white hover:bg-slate-800 text-lg font-semibold rounded-2xl bg-transparent">
                       <DollarSign className="mr-2 h-5 w-5" />
                       Vender meu carro
