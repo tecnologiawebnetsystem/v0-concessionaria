@@ -93,7 +93,7 @@ export function AdminSidebar() {
   }
 
   return (
-    <aside className="hidden w-72 flex-col border-r border-slate-200 bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 lg:flex">
+    <aside className="hidden w-72 flex-col border-r border-slate-700/50 bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 lg:flex">
       {/* Logo */}
       <div className="flex h-20 items-center gap-3 border-b border-slate-700/50 px-6">
         <div className="flex size-10 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-blue-700 shadow-lg shadow-blue-500/30">

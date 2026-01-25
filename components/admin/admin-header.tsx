@@ -57,7 +57,7 @@ export function AdminHeader({ session }: { session: SessionData }) {
     .slice(0, 2)
 
   return (
-    <header className="sticky top-0 z-40 flex h-16 items-center justify-between border-b border-slate-200 bg-white/80 px-4 backdrop-blur-md lg:px-6">
+    <header className="sticky top-0 z-40 flex h-16 items-center justify-between border-b border-slate-700/50 bg-slate-900/80 px-4 backdrop-blur-md lg:px-6">
       {/* Mobile Menu */}
       <Sheet>
         <SheetTrigger asChild>
@@ -109,10 +109,10 @@ export function AdminHeader({ session }: { session: SessionData }) {
       {/* Search Bar */}
       <div className="hidden flex-1 items-center gap-4 lg:flex">
         <div className="relative max-w-md flex-1">
-          <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-slate-400" />
+          <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-slate-500" />
           <Input 
             placeholder="Buscar veiculos, clientes, vendas..."
-            className="h-10 border-slate-200 bg-slate-50 pl-10 focus:bg-white"
+            className="h-10 border-slate-700 bg-slate-800/50 pl-10 text-white placeholder:text-slate-500 focus:bg-slate-800 focus:border-blue-500"
           />
         </div>
       </div>
@@ -122,8 +122,8 @@ export function AdminHeader({ session }: { session: SessionData }) {
         {/* Notifications */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon" className="relative">
-              <Bell className="size-5 text-slate-600" />
+            <Button variant="ghost" size="icon" className="relative hover:bg-slate-800">
+              <Bell className="size-5 text-slate-400" />
               {notifications > 0 && (
                 <Badge className="absolute -right-1 -top-1 size-5 justify-center rounded-full bg-red-500 p-0 text-xs">
                   {notifications}
@@ -162,24 +162,24 @@ export function AdminHeader({ session }: { session: SessionData }) {
         </DropdownMenu>
 
         {/* Quick Links */}
-        <Button variant="ghost" size="icon" asChild className="hidden md:flex">
+        <Button variant="ghost" size="icon" asChild className="hidden md:flex hover:bg-slate-800">
           <Link href="/" target="_blank">
-            <ExternalLink className="size-5 text-slate-600" />
+            <ExternalLink className="size-5 text-slate-400" />
           </Link>
         </Button>
 
         {/* User Menu */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="relative flex items-center gap-3 rounded-full pl-2 pr-4">
-              <Avatar className="size-8 border-2 border-blue-100">
+            <Button variant="ghost" className="relative flex items-center gap-3 rounded-full pl-2 pr-4 hover:bg-slate-800">
+              <Avatar className="size-8 border-2 border-blue-500/30">
                 <AvatarFallback className="bg-gradient-to-br from-blue-500 to-blue-700 text-sm font-semibold text-white">
                   {initials}
                 </AvatarFallback>
               </Avatar>
               <div className="hidden text-left md:block">
-                <p className="text-sm font-medium text-slate-900">{session.name}</p>
-                <p className="text-xs text-slate-500">
+                <p className="text-sm font-medium text-white">{session.name}</p>
+                <p className="text-xs text-slate-400">
                   {session.role === "super_admin" ? "Super Admin" : "Administrador"}
                 </p>
               </div>
