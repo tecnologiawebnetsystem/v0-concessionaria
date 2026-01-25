@@ -6,18 +6,26 @@ import { generateVehicleListSchema, generateFAQSchema } from "@/lib/seo"
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://nacionalveiculos.com.br"
 
 async function getHomeData() {
-  const vehicles = await sql`
-    SELECT v.*, b.name as brand_name, c.name as category_name,
-    (SELECT url FROM vehicle_images WHERE vehicle_id = v.id AND is_primary = true LIMIT 1) as primary_image
-    FROM vehicles v
-    LEFT JOIN brands b ON v.brand_id = b.id
-    LEFT JOIN vehicle_categories c ON v.category_id = c.id
-    WHERE v.published = true
-    ORDER BY v.is_featured DESC, v.created_at DESC
-    LIMIT 12
-  `
+  const [vehicles, totalResult, brands] = await Promise.all([
+    sql`
+      SELECT v.*, b.name as brand_name, c.name as category_name,
+      (SELECT url FROM vehicle_images WHERE vehicle_id = v.id AND is_primary = true LIMIT 1) as primary_image
+      FROM vehicles v
+      LEFT JOIN brands b ON v.brand_id = b.id
+      LEFT JOIN vehicle_categories c ON v.category_id = c.id
+      WHERE v.published = true
+      ORDER BY v.is_featured DESC, v.created_at DESC
+      LIMIT 12
+    `,
+    sql`SELECT COUNT(*) as total FROM vehicles WHERE published = true`,
+    sql`SELECT id, name, logo_url FROM brands WHERE is_active = true ORDER BY name`
+  ])
 
-  return { vehicles }
+  return { 
+    vehicles, 
+    totalVehicles: totalResult[0]?.total || 0,
+    brands 
+  }
 }
 
 export const metadata: Metadata = {
@@ -83,7 +91,7 @@ const homeFaqs = [
 ]
 
 export default async function HomePage() {
-  const { vehicles } = await getHomeData()
+  const { vehicles, totalVehicles, brands } = await getHomeData()
   
   // Generate structured data
   const vehicleListSchema = generateVehicleListSchema(vehicles)
@@ -101,7 +109,7 @@ export default async function HomePage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
       />
-      <ClientHomePage vehicles={vehicles} />
+      <ClientHomePage vehicles={vehicles} totalVehicles={totalVehicles} brands={brands} />
     </>
   )
 }
