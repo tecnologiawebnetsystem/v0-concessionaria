@@ -3,7 +3,7 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/* Updated theme with sophisticated blue gradient tones for Nacional Veículos */
+/* Updated theme with sophisticated blue gradient tones for GT Veículos */
 :root {
   --background: oklch(0.99 0.002 250);
   --foreground: oklch(0.145 0 0);

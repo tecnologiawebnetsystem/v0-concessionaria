@@ -1,7 +1,7 @@
 // SEO Utilities - Schema.org Structured Data Generators
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://nacionalveiculos.com.br"
-const SITE_NAME = "Nacional Veículos"
+const SITE_NAME = "GT Veículos"
 const SITE_PHONE = "(12) 3456-7890"
 const SITE_ADDRESS = {
   street: "Av. Independência, 1500",
@@ -18,7 +18,7 @@ export function generateOrganizationSchema() {
     "@type": "AutoDealer",
     "@id": `${SITE_URL}/#organization`,
     name: SITE_NAME,
-    alternateName: "Nacional Veículos Taubaté",
+    alternateName: "GT Veículos Taubaté",
     url: SITE_URL,
     logo: {
       "@type": "ImageObject",
@@ -201,7 +201,7 @@ export function generateBlogPostStructuredData(post: any, authorName: string) {
     } : undefined,
     author: {
       "@type": "Person",
-      name: authorName || "Nacional Veículos",
+      name: authorName || "GT Veículos",
       url: SITE_URL
     },
     publisher: {

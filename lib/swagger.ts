@@ -1,9 +1,9 @@
 export const swaggerSpec = {
   openapi: "3.0.3",
   info: {
-    title: "Nacional Veiculos API",
+    title: "GT Veículos API",
     description: `
-## API da Concessionaria Nacional Veiculos
+## API da Concessionaria GT Veículos
 
 Esta API permite gerenciar todos os recursos da concessionaria, incluindo:
 - **Autenticacao** - Login, registro e gerenciamento de sessao

@@ -44,7 +44,7 @@ const botResponses: Record<string, { response: string; quickReplies?: string[] }
     quickReplies: ["Simular financiamento", "Formas de pagamento"]
   },
   "localização da loja": {
-    response: "Estamos localizados em:\n\n**Nacional Veículos**\nAv. Independência, 1500\nCentro - Taubaté/SP\nCEP: 12020-000\n\n📍 Fácil acesso pela Dutra\n🅿️ Estacionamento gratuito",
+    response: "Estamos localizados em:\n\n**GT Veículos**\nAv. Independência, 1500\nCentro - Taubaté/SP\nCEP: 12020-000\n\n📍 Fácil acesso pela Dutra\n🅿️ Estacionamento gratuito",
     quickReplies: ["Horário de funcionamento", "Falar no WhatsApp"]
   },
   "carros mais vendidos": {
@@ -52,7 +52,7 @@ const botResponses: Record<string, { response: string; quickReplies?: string[] }
     quickReplies: ["Ver estoque completo", "Agendar test drive"]
   },
   "default": {
-    response: "Olá! Sou o assistente virtual da **Nacional Veículos**.\n\nPosso ajudar você com:\n• Informações sobre veículos\n• Financiamento e pagamento\n• Agendamento de test drive\n• Avaliação do seu usado\n• Localização e horários\n\nComo posso ajudar?",
+    response: "Olá! Sou o assistente virtual da **GT Veículos**.\n\nPosso ajudar você com:\n• Informações sobre veículos\n• Financiamento e pagamento\n• Agendamento de test drive\n• Avaliação do seu usado\n• Localização e horários\n\nComo posso ajudar?",
     quickReplies: ["Ver veículos disponíveis", "Financiamento disponível", "Localização da loja"]
   }
 }
@@ -92,7 +92,7 @@ function getBotResponse(message: string): { response: string; quickReplies?: str
   }
   if (normalizedMessage.includes("oi") || normalizedMessage.includes("olá") || normalizedMessage.includes("boa")) {
     return {
-      response: "Olá! Seja bem-vindo à **Nacional Veículos**! 👋\n\nSou seu assistente virtual. O que você gostaria de saber?",
+      response: "Olá! Seja bem-vindo à **GT Veículos**! 👋\n\nSou seu assistente virtual. O que você gostaria de saber?",
       quickReplies: ["Ver veículos disponíveis", "Financiamento disponível", "Horário de funcionamento"]
     }
   }
@@ -109,7 +109,7 @@ export function UnifiedChat({ phoneNumber = "5511999999999" }: { phoneNumber?: s
     {
       id: "welcome",
       role: "assistant",
-      content: "Olá! Sou o assistente virtual da **Nacional Veículos**. Como posso ajudar você hoje?",
+      content: "Olá! Sou o assistente virtual da **GT Veículos**. Como posso ajudar você hoje?",
       timestamp: new Date(),
       quickReplies: quickQuestions.slice(0, 4)
     }
@@ -132,7 +132,7 @@ export function UnifiedChat({ phoneNumber = "5511999999999" }: { phoneNumber?: s
   }, [view])
 
   const handleWhatsAppClick = (message?: string) => {
-    const defaultMessage = "Olá! Vim do site da Nacional Veículos e gostaria de mais informações."
+    const defaultMessage = "Olá! Vim do site da GT Veículos e gostaria de mais informações."
     const encodedMessage = encodeURIComponent(message || defaultMessage)
     window.open(`https://wa.me/${phoneNumber}?text=${encodedMessage}`, "_blank")
   }

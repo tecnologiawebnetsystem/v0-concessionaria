@@ -37,8 +37,8 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "Nacional Veículos - Concessionária de Carros em Taubaté | Seminovos e 0km",
-    template: "%s | Nacional Veículos Taubaté"
+    default: "GT Veículos - Concessionária de Carros em Taubaté | Seminovos e 0km",
+    template: "%s | GT Veículos Taubaté"
   },
   description: "Concessionária de veículos em Taubaté. Mais de 15 anos oferecendo carros seminovos e 0km com garantia, financiamento facilitado e as melhores condições. Visite-nos!",
   keywords: [
@@ -52,9 +52,9 @@ export const metadata: Metadata = {
     "concessionária são josé dos campos",
     "carros com garantia"
   ],
-  authors: [{ name: "Nacional Veículos", url: SITE_URL }],
-  creator: "Nacional Veículos",
-  publisher: "Nacional Veículos",
+  authors: [{ name: "GT Veículos", url: SITE_URL }],
+  creator: "GT Veículos",
+  publisher: "GT Veículos",
   formatDetection: {
     email: true,
     address: true,
@@ -64,22 +64,22 @@ export const metadata: Metadata = {
   classification: "Business",
   referrer: "origin-when-cross-origin",
   generator: "Next.js",
-  applicationName: "Nacional Veículos",
+  applicationName: "GT Veículos",
   
   // Open Graph
   openGraph: {
     type: "website",
     locale: "pt_BR",
     url: SITE_URL,
-    siteName: "Nacional Veículos",
-    title: "Nacional Veículos - Concessionária de Carros em Taubaté",
+    siteName: "GT Veículos",
+    title: "GT Veículos - Concessionária de Carros em Taubaté",
     description: "Concessionária de veículos em Taubaté. Carros seminovos e 0km com garantia e financiamento facilitado.",
     images: [
       {
         url: `${SITE_URL}/og-image.jpg`,
         width: 1200,
         height: 630,
-        alt: "Nacional Veículos - Concessionária em Taubaté",
+        alt: "GT Veículos - Concessionária em Taubaté",
         type: "image/jpeg"
       }
     ]
@@ -88,7 +88,7 @@ export const metadata: Metadata = {
   // Twitter Card
   twitter: {
     card: "summary_large_image",
-    title: "Nacional Veículos - Concessionária em Taubaté",
+    title: "GT Veículos - Concessionária em Taubaté",
     description: "Carros seminovos e 0km com garantia e financiamento facilitado.",
     images: [`${SITE_URL}/og-image.jpg`],
     creator: "@nacionalveiculos",
@@ -147,7 +147,7 @@ export const metadata: Metadata = {
     "msapplication-TileColor": "#1e3a8a",
     "apple-mobile-web-app-capable": "yes",
     "apple-mobile-web-app-status-bar-style": "black-translucent",
-    "apple-mobile-web-app-title": "Nacional Veículos"
+    "apple-mobile-web-app-title": "GT Veículos"
   }
 }
 

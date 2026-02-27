@@ -103,7 +103,7 @@ export function AdminSidebar() {
         </div>
         <div>
           <Link href="/admin" className="text-lg font-bold text-white">
-            Nacional Veiculos
+            GT Veículos
           </Link>
           <p className="text-xs text-slate-400">Painel Administrativo</p>
         </div>

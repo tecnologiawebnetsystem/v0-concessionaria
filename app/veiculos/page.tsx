@@ -105,18 +105,18 @@ export async function generateMetadata({ searchParams }: { searchParams: Promise
   const { categoria, marca, busca } = params
   
   let title = "Veiculos Seminovos e 0km"
-  let description = "Encontre o carro dos seus sonhos na Nacional Veiculos."
+  let description = "Encontre o carro dos seus sonhos na GT Veículos."
 
   if (categoria) {
     const categoryName = categoria.charAt(0).toUpperCase() + categoria.slice(1).replace(/-/g, ' ')
     title = `${categoryName} - Veiculos`
-    description = `Encontre os melhores ${categoryName} na Nacional Veiculos.`
+    description = `Encontre os melhores ${categoryName} na GT Veículos.`
   }
 
   if (marca) {
     const brandName = marca.charAt(0).toUpperCase() + marca.slice(1)
     title = `${brandName} - Veiculos`
-    description = `Veiculos ${brandName} na Nacional Veiculos.`
+    description = `Veiculos ${brandName} na GT Veículos.`
   }
 
   if (busca) {

@@ -2,8 +2,8 @@ import type { MetadataRoute } from "next"
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "Nacional Veículos - Concessionária de Carros em Taubaté",
-    short_name: "Nacional Veículos",
+    name: "GT Veículos - Concessionária de Carros em Taubaté",
+    short_name: "GT Veículos",
     description: "Concessionária de veículos novos e seminovos em Taubaté. Carros com garantia e financiamento facilitado.",
     start_url: "/",
     scope: "/",

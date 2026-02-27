@@ -402,7 +402,7 @@ export function OnlineProposal({ open, onOpenChange, vehicleName, vehiclePrice, 
               />
               <Label htmlFor="acceptTerms" className="text-xs text-gray-500 cursor-pointer">
                 Li e aceito os termos de uso e política de privacidade. Autorizo o contato da 
-                Nacional Veículos para tratar desta proposta.
+                GT Veículos para tratar desta proposta.
               </Label>
             </div>
 

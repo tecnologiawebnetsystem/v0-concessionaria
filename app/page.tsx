@@ -29,7 +29,7 @@ async function getHomeData() {
 }
 
 export const metadata: Metadata = {
-  title: "Nacional Veiculos Taubate - Carros Seminovos e 0km com Garantia",
+  title: "GT Veículos Taubate - Carros Seminovos e 0km com Garantia",
   description: "Concessionaria de veiculos em Taubate. Ha mais de 15 anos oferecendo carros seminovos e 0km com garantia, financiamento facilitado e atendimento personalizado. Visite-nos!",
   keywords: [
     "concessionaria taubate",
@@ -42,22 +42,22 @@ export const metadata: Metadata = {
     "concessionaria sao jose dos campos"
   ],
   openGraph: {
-    title: "Nacional Veiculos - Concessionaria de Carros em Taubate",
+    title: "GT Veículos - Concessionaria de Carros em Taubate",
     description: "Ha mais de 15 anos oferecendo os melhores veiculos com garantia e financiamento facilitado. Visite nossa loja!",
     url: SITE_URL,
     type: "website",
     locale: "pt_BR",
-    siteName: "Nacional Veiculos",
+    siteName: "GT Veículos",
     images: [{
       url: `${SITE_URL}/og-image.jpg`,
       width: 1200,
       height: 630,
-      alt: "Nacional Veiculos - Concessionaria em Taubate"
+      alt: "GT Veículos - Concessionaria em Taubate"
     }]
   },
   twitter: {
     card: "summary_large_image",
-    title: "Nacional Veiculos - Carros Seminovos e 0km em Taubate",
+    title: "GT Veículos - Carros Seminovos e 0km em Taubate",
     description: "Concessionaria de veiculos com garantia e financiamento facilitado.",
     images: [`${SITE_URL}/og-image.jpg`]
   },
@@ -69,7 +69,7 @@ export const metadata: Metadata = {
 // FAQ data for SEO
 const homeFaqs = [
   {
-    question: "Quais formas de pagamento a Nacional Veiculos aceita?",
+    question: "Quais formas de pagamento a GT Veículos aceita?",
     answer: "Aceitamos pagamento a vista, cartao de credito, financiamento bancario e consorcio. Trabalhamos com os principais bancos para oferecer as melhores taxas de financiamento."
   },
   {
@@ -81,11 +81,11 @@ const homeFaqs = [
     answer: "Sim! Oferecemos test drive gratuito em todos os nossos veiculos. Basta agendar pelo telefone, WhatsApp ou diretamente em nosso site."
   },
   {
-    question: "A Nacional Veiculos aceita meu carro como parte do pagamento?",
+    question: "A GT Veículos aceita meu carro como parte do pagamento?",
     answer: "Sim, aceitamos seu veiculo usado como parte do pagamento. Fazemos avaliacao gratuita e oferecemos o melhor valor de mercado."
   },
   {
-    question: "Onde a Nacional Veiculos esta localizada?",
+    question: "Onde a GT Veículos esta localizada?",
     answer: "Estamos localizados na Av. Independencia, 1500 - Taubate, SP. Funcionamos de segunda a sexta das 8h as 18h e sabados das 9h as 13h."
   }
 ]

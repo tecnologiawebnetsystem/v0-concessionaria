@@ -8,7 +8,7 @@ export function WhatsAppFloat({ phoneNumber = "5511999999999" }: { phoneNumber?:
   const [isOpen, setIsOpen] = useState(false)
 
   const handleWhatsAppClick = (message?: string) => {
-    const defaultMessage = "Olá! Vim do site da Nacional Veículos e gostaria de mais informações."
+    const defaultMessage = "Olá! Vim do site da GT Veículos e gostaria de mais informações."
     const encodedMessage = encodeURIComponent(message || defaultMessage)
     window.open(`https://wa.me/${phoneNumber}?text=${encodedMessage}`, "_blank")
   }

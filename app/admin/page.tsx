@@ -98,7 +98,7 @@ export default async function AdminDashboard() {
                 <Sparkles className="h-8 w-8 text-cyan-400" />
                 Dashboard
               </h1>
-              <p className="text-blue-200/70 mt-1">Bem-vindo ao painel de controle da Nacional Veiculos</p>
+              <p className="text-blue-200/70 mt-1">Bem-vindo ao painel de controle da GT Veículos</p>
             </div>
             <div className="flex items-center gap-3">
               <Badge className="bg-emerald-500/20 text-emerald-400 border-emerald-500/30 px-3 py-1.5">

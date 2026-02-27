@@ -72,7 +72,7 @@ export function AdminHeader({ session }: { session: SessionData }) {
                 <span className="text-lg font-bold text-white">NV</span>
               </div>
               <div>
-                <p className="font-bold text-white">Nacional Veiculos</p>
+                <p className="font-bold text-white">GT Veículos</p>
                 <p className="text-xs text-slate-400">Painel Admin</p>
               </div>
             </div>

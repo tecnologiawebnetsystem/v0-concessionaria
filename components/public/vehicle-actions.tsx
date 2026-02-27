@@ -64,7 +64,7 @@ export function VehicleActions({ vehicle, showLabels = false, size = "default", 
 
   const handleShare = (platform: string) => {
     const url = `${window.location.origin}/veiculos/${vehicle.slug}`
-    const text = `Confira este ${vehicle.name} na Nacional Veículos!`
+    const text = `Confira este ${vehicle.name} na GT Veículos!`
     
     switch (platform) {
       case "whatsapp":

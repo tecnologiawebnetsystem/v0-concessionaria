@@ -12,8 +12,8 @@ import { Phone, Mail, MessageCircle, Clock, MapPin, Send, Car, Shield, Award } f
 import type { Metadata } from "next"
 
 export const metadata: Metadata = {
-  title: "Contato - Nacional Veículos Taubaté",
-  description: "Entre em contato com a Nacional Veículos em Taubaté. Telefone, WhatsApp, endereço e formulário de contato.",
+  title: "Contato - GT Veículos Taubaté",
+  description: "Entre em contato com a GT Veículos em Taubaté. Telefone, WhatsApp, endereço e formulário de contato.",
   keywords: "contato nacional veículos, concessionária taubaté telefone, endereço nacional veículos"
 }
 

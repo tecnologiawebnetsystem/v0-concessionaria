@@ -44,7 +44,7 @@ const botResponses: Record<string, { response: string; quickReplies?: string[] }
     quickReplies: ["Simular financiamento", "Formas de pagamento"]
   },
   "localização da loja": {
-    response: "Estamos localizados em:\n\n**Nacional Veículos**\nAv. Independência, 1500\nCentro - Taubaté/SP\nCEP: 12020-000\n\n📍 Fácil acesso pela Dutra\n🅿️ Estacionamento gratuito\n\nVenha nos visitar!",
+    response: "Estamos localizados em:\n\n**GT Veículos**\nAv. Independência, 1500\nCentro - Taubaté/SP\nCEP: 12020-000\n\n📍 Fácil acesso pela Dutra\n🅿️ Estacionamento gratuito\n\nVenha nos visitar!",
     quickReplies: ["Ver no mapa", "Horário de funcionamento"]
   },
   "carros mais vendidos": {
@@ -76,7 +76,7 @@ const botResponses: Record<string, { response: string; quickReplies?: string[] }
     quickReplies: ["Horário de funcionamento", "Ver veículos disponíveis"]
   },
   "default": {
-    response: "Olá! Sou o assistente virtual da **Nacional Veículos**.\n\nPosso ajudar você com:\n• Informações sobre veículos\n• Financiamento e pagamento\n• Agendamento de test drive\n• Avaliação do seu usado\n• Localização e horários\n\nComo posso ajudar?",
+    response: "Olá! Sou o assistente virtual da **GT Veículos**.\n\nPosso ajudar você com:\n• Informações sobre veículos\n• Financiamento e pagamento\n• Agendamento de test drive\n• Avaliação do seu usado\n• Localização e horários\n\nComo posso ajudar?",
     quickReplies: ["Ver veículos disponíveis", "Financiamento disponível", "Localização da loja"]
   }
 }
@@ -121,7 +121,7 @@ function getBotResponse(message: string): { response: string; quickReplies?: str
   }
   if (normalizedMessage.includes("oi") || normalizedMessage.includes("olá") || normalizedMessage.includes("boa")) {
     return {
-      response: "Olá! Seja bem-vindo à **Nacional Veículos**! 👋\n\nSou seu assistente virtual e estou aqui para ajudar.\n\nO que você gostaria de saber?",
+      response: "Olá! Seja bem-vindo à **GT Veículos**! 👋\n\nSou seu assistente virtual e estou aqui para ajudar.\n\nO que você gostaria de saber?",
       quickReplies: ["Ver veículos disponíveis", "Financiamento disponível", "Horário de funcionamento"]
     }
   }
@@ -135,7 +135,7 @@ export function Chatbot() {
     {
       id: "welcome",
       role: "assistant",
-      content: "Olá! Sou o assistente virtual da **Nacional Veículos** em Taubaté. Como posso ajudar você hoje?",
+      content: "Olá! Sou o assistente virtual da **GT Veículos** em Taubaté. Como posso ajudar você hoje?",
       timestamp: new Date(),
       quickReplies: quickQuestions.slice(0, 4)
     }
@@ -225,7 +225,7 @@ export function Chatbot() {
                 </div>
                 <div>
                   <CardTitle className="text-base font-semibold">Assistente Virtual</CardTitle>
-                  <p className="text-xs text-blue-100">Nacional Veículos</p>
+                  <p className="text-xs text-blue-100">GT Veículos</p>
                 </div>
               </div>
               <Button

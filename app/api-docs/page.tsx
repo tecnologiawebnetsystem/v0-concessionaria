@@ -44,7 +44,7 @@ export default function APIDocsPage() {
               </svg>
             </div>
             <div>
-              <h1 className="text-3xl font-bold">Nacional Veiculos API</h1>
+              <h1 className="text-3xl font-bold">GT Veículos API</h1>
               <p className="text-blue-200">Documentacao completa da API REST</p>
             </div>
           </div>
