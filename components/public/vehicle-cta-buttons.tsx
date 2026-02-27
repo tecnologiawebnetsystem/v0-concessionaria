@@ -28,7 +28,7 @@ export function VehicleCTAButtons({
   const handleShare = async () => {
     const shareData = {
       title: vehicleName,
-      text: `Confira este ${vehicleName} na Nacional Veículos!`,
+      text: `Confira este ${vehicleName} na GT Veículos!`,
       url: window.location.href,
     }
 

@@ -53,11 +53,11 @@ export function PublicFooter() {
           <div className="col-span-2 lg:col-span-1">
             <div className="mb-6 flex items-center gap-3">
               <div className="flex size-11 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-cyan-500 shadow-lg shadow-blue-500/30">
-                <span className="text-xl font-bold text-white">N</span>
+                <span className="text-xl font-bold text-white">GT</span>
               </div>
               <div className="flex flex-col">
-                <span className="text-lg font-bold leading-tight text-white">Nacional</span>
-                <span className="text-xs font-medium leading-tight text-blue-400">Veiculos Premium</span>
+                <span className="text-lg font-bold leading-tight text-white">GT</span>
+                <span className="text-xs font-medium leading-tight text-blue-400">Veículos Premium</span>
               </div>
             </div>
             <p className="mb-6 text-sm leading-relaxed text-slate-400">
@@ -220,7 +220,7 @@ export function PublicFooter() {
         <div className="mt-12 border-t border-slate-800 pt-8">
           <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
             <p className="text-xs sm:text-sm text-slate-500 text-center sm:text-left">
-              © {currentYear} Nacional Veiculos. Todos os direitos reservados.
+              © {currentYear} GT Veículos. Todos os direitos reservados.
               <span className="hidden sm:inline"> | </span>
               <br className="sm:hidden" />
               CNPJ: 12.345.678/0001-90

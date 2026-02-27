@@ -13,8 +13,8 @@ import type { Metadata } from "next"
 const sql = neon(process.env.DATABASE_URL!)
 
 export const metadata: Metadata = {
-  title: "Blog - Nacional Veículos Taubaté | Dicas e Notícias sobre Carros",
-  description: "Blog da Nacional Veículos em Taubaté. Dicas de compra, manutenção, financiamento e as últimas novidades do mercado automotivo.",
+  title: "Blog - GT Veículos Taubaté | Dicas e Notícias sobre Carros",
+  description: "Blog da GT Veículos em Taubaté. Dicas de compra, manutenção, financiamento e as últimas novidades do mercado automotivo.",
   keywords: "blog carros taubaté, dicas automotivas, nacional veículos blog, comprar carro taubaté",
 }
 
@@ -85,7 +85,7 @@ export default async function BlogPage() {
             <div className="text-center">
               <Badge className="mb-4 bg-blue-400/20 text-blue-100 border-blue-300/30">
                 <BookOpen className="h-3 w-3 mr-1" />
-                Blog Nacional Veículos
+                Blog GT Veículos
               </Badge>
               <h1 className="text-4xl md:text-5xl font-bold mb-4 text-balance">
                 Dicas e Notícias Automotivas

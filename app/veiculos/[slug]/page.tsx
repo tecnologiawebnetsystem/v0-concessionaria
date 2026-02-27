@@ -77,7 +77,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     title: `${vehicle.brand_name} ${vehicle.name} ${vehicle.year_model} - ${price}`,
     description: `Compre ${vehicle.brand_name} ${vehicle.name} ${vehicle.year_model} por ${price}. ${vehicle.mileage?.toLocaleString()} km. ${vehicle.fuel_type}. Garantia e financiamento facilitado.`,
     openGraph: {
-      title: `${vehicle.brand_name} ${vehicle.name} - Nacional Veiculos`,
+      title: `${vehicle.brand_name} ${vehicle.name} - GT Veículos`,
       images: primaryImage ? [{ url: primaryImage, width: 1200, height: 630 }] : [],
     },
   }

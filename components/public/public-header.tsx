@@ -142,14 +142,14 @@ export function PublicHeader() {
           {/* Logo */}
           <Link href="/" className="flex items-center gap-3 flex-shrink-0">
             <div className="relative flex size-11 lg:size-12 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-cyan-500 shadow-lg shadow-blue-500/30">
-              <span className="text-xl lg:text-2xl font-bold text-white">N</span>
+              <span className="text-xl lg:text-2xl font-bold text-white">GT</span>
             </div>
             <div className="flex flex-col">
               <span className="text-lg lg:text-xl font-bold leading-tight text-white">
-                Nacional
+                GT
               </span>
               <span className="text-[10px] lg:text-xs font-medium leading-tight text-slate-400">
-                Veiculos Premium
+                Veículos Premium
               </span>
             </div>
           </Link>
@@ -282,9 +282,9 @@ export function PublicHeader() {
                   <div className="flex items-center justify-between">
                     <SheetTitle className="flex items-center gap-3">
                       <div className="flex size-10 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-cyan-500">
-                        <span className="text-xl font-bold text-white">N</span>
+                        <span className="text-xl font-bold text-white">GT</span>
                       </div>
-                      <span className="text-white">Nacional Veiculos</span>
+                      <span className="text-white">GT Veículos</span>
                     </SheetTitle>
                   </div>
                 </SheetHeader>

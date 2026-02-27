@@ -14,11 +14,11 @@ interface StoreMapProps {
 export function StoreMap({ className, showFullInfo = true }: StoreMapProps) {
   const [mapLoaded, setMapLoaded] = useState(false)
 
-  // Coordenadas de Taubaté - Nacional Veículos
+  // Coordenadas de Taubaté - GT Veículos
   const latitude = -23.0226
   const longitude = -45.5561
   const address = "Av. Independência, 1500 - Centro, Taubaté - SP"
-  const encodedAddress = encodeURIComponent("Nacional Veículos, Av. Independência, 1500, Centro, Taubaté, SP")
+  const encodedAddress = encodeURIComponent("GT Veículos, Av. Independência, 1500, Centro, Taubaté, SP")
   
   const openInGoogleMaps = () => {
     window.open(`https://www.google.com/maps/search/?api=1&query=${encodedAddress}`, "_blank")
@@ -149,7 +149,7 @@ export function StoreMap({ className, showFullInfo = true }: StoreMapProps) {
 // Compact version for embedding in other pages
 export function StoreMapCompact() {
   const openDirections = () => {
-    const encodedAddress = encodeURIComponent("Nacional Veículos, Av. Independência, 1500, Centro, Taubaté, SP")
+    const encodedAddress = encodeURIComponent("GT Veículos, Av. Independência, 1500, Centro, Taubaté, SP")
     window.open(`https://www.google.com/maps/dir/?api=1&destination=${encodedAddress}`, "_blank")
   }
 

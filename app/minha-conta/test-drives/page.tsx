@@ -161,7 +161,7 @@ export default async function CustomerTestDrivesPage() {
                             </span>
                             <span className="flex items-center gap-1">
                               <MapPin className="h-4 w-4" />
-                              Nacional Veículos - Taubaté
+                              GT Veículos - Taubaté
                             </span>
                           </div>
                           {td.message && !td.message.includes("Interesse em:") && (

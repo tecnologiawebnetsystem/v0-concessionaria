@@ -30,7 +30,7 @@ export function WhyChooseUs() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mb-12 text-center">
           <h2 className="text-balance text-3xl font-bold text-gray-900 sm:text-4xl">
-            Por Que Escolher a Nacional Veículos?
+            Por Que Escolher a GT Veículos?
           </h2>
           <p className="mx-auto mt-4 max-w-2xl text-pretty text-lg text-gray-600">
             Mais de 20 anos de experiência no mercado automotivo

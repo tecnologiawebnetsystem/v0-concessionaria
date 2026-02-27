@@ -39,7 +39,7 @@ export function CustomerSidebar() {
           <Car className="size-5 text-white" />
         </div>
         <div>
-          <h1 className="font-bold text-white">Nacional Veiculos</h1>
+          <h1 className="font-bold text-white">GT Veículos</h1>
           <p className="text-[10px] text-slate-400">Area do Cliente</p>
         </div>
       </div>

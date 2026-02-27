@@ -49,7 +49,7 @@ function SidebarContent() {
           </div>
           <div>
             <h1 className="text-lg font-bold text-white">Portal Vendedor</h1>
-            <p className="text-xs text-slate-500">Nacional Veiculos</p>
+            <p className="text-xs text-slate-500">GT Veículos</p>
           </div>
         </Link>
       </div>

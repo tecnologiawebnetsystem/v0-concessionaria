@@ -37,7 +37,7 @@ ON CONFLICT (slug) DO NOTHING;
 
 -- Insert site settings
 INSERT INTO site_settings (key, value, type, category) VALUES
-('site_name', 'Nacional Veículos', 'text', 'general'),
+('site_name', 'GT Veículos', 'text', 'general'),
 ('site_description', 'A melhor concessionária de veículos do Brasil', 'text', 'general'),
 ('site_email', 'contato@nacionalveiculos.com.br', 'text', 'contact'),
 ('site_phone', '(11) 1234-5678', 'text', 'contact'),
