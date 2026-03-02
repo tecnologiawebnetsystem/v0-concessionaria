@@ -34,14 +34,14 @@ export function HeroSection({ banners }: { banners: any[] }) {
 
   if (banners.length === 0) {
     return (
-      <section className="relative bg-gradient-to-br from-blue-950 via-blue-900 to-blue-800 py-20 lg:py-32">
+      <section className="relative bg-gradient-to-br from-gray-950 via-gray-900 to-red-950 py-20 lg:py-32">
         <div className="absolute inset-0 bg-[url('/luxury-car-showroom.png')] bg-cover bg-center opacity-10" />
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center text-white">
             <h1 className="text-balance text-5xl font-extrabold tracking-tight sm:text-6xl lg:text-7xl">
               Encontre Seu Carro Ideal
             </h1>
-            <p className="mx-auto mt-6 max-w-3xl text-pretty text-xl leading-relaxed text-blue-100">
+            <p className="mx-auto mt-6 max-w-3xl text-pretty text-xl leading-relaxed text-gray-300">
               As melhores ofertas de veículos seminovos e 0km com garantia, financiamento facilitado e atendimento
               personalizado
             </p>
@@ -87,7 +87,7 @@ export function HeroSection({ banners }: { banners: any[] }) {
                 <Button
                   size="lg"
                   asChild
-                  className="mt-6 h-12 w-full bg-blue-900 text-base font-semibold hover:bg-blue-800"
+                  className="mt-6 h-12 w-full bg-red-600 text-white text-base font-semibold hover:bg-red-700"
                 >
                   <Link href="/veiculos">
                     <Search className="mr-2 size-5" />
@@ -98,8 +98,8 @@ export function HeroSection({ banners }: { banners: any[] }) {
             </div>
 
             <div className="mt-12 flex flex-wrap justify-center gap-4">
-              <div className="flex items-center gap-2 text-blue-100">
-                <div className="flex size-10 items-center justify-center rounded-full bg-blue-800">
+              <div className="flex items-center gap-2 text-gray-200">
+                <div className="flex size-10 items-center justify-center rounded-full bg-red-700">
                   <span className="text-lg font-bold">✓</span>
                 </div>
                 <span className="text-sm font-medium">Garantia de Qualidade</span>

@@ -74,10 +74,10 @@ export function Footer() {
               <li className="flex items-center gap-2">
                 <Mail className="h-4 w-4 flex-shrink-0" />
                 <a
-                  href="mailto:contato@nacionalveiculos.com.br"
+                  href="mailto:contato@gtveiculos.com.br"
                   className="text-primary-foreground/80 hover:text-primary-foreground"
                 >
-                  contato@nacionalveiculos.com.br
+                  contato@gtveiculos.com.br
                 </a>
               </li>
             </ul>
@@ -89,7 +89,7 @@ export function Footer() {
             <p className="text-primary-foreground/80 text-sm mb-4">Siga-nos nas redes sociais</p>
             <div className="flex gap-3">
               <a
-                href="https://facebook.com/nacionalveiculos"
+                href="https://facebook.com/gtveiculos"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-10 h-10 rounded-full bg-primary-foreground/10 hover:bg-primary-foreground/20 flex items-center justify-center transition-colors"
@@ -97,7 +97,7 @@ export function Footer() {
                 <Facebook className="h-5 w-5" />
               </a>
               <a
-                href="https://instagram.com/nacionalveiculos"
+                href="https://instagram.com/gtveiculos"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-10 h-10 rounded-full bg-primary-foreground/10 hover:bg-primary-foreground/20 flex items-center justify-center transition-colors"
@@ -105,7 +105,7 @@ export function Footer() {
                 <Instagram className="h-5 w-5" />
               </a>
               <a
-                href="https://youtube.com/nacionalveiculos"
+                href="https://youtube.com/gtveiculos"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-10 h-10 rounded-full bg-primary-foreground/10 hover:bg-primary-foreground/20 flex items-center justify-center transition-colors"

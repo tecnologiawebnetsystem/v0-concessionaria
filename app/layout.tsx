@@ -20,7 +20,7 @@ const geistMono = Geist_Mono({
   variable: "--font-geist-mono"
 })
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://nacionalveiculos.com.br"
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://gtveiculos.com.br"
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -28,8 +28,8 @@ export const viewport: Viewport = {
   maximumScale: 5,
   userScalable: true,
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#1e3a8a" },
-    { media: "(prefers-color-scheme: dark)", color: "#1e40af" }
+    { media: "(prefers-color-scheme: light)", color: "#dc2626" },
+    { media: "(prefers-color-scheme: dark)", color: "#b91c1c" }
   ],
   colorScheme: "light dark"
 }
@@ -47,7 +47,7 @@ export const metadata: Metadata = {
     "carros 0km taubaté",
     "financiamento de veículos",
     "comprar carro taubaté",
-    "nacional veículos",
+    "gt veículos",
     "carros usados vale do paraíba",
     "concessionária são josé dos campos",
     "carros com garantia"
@@ -91,8 +91,8 @@ export const metadata: Metadata = {
     title: "GT Veículos - Concessionária em Taubaté",
     description: "Carros seminovos e 0km com garantia e financiamento facilitado.",
     images: [`${SITE_URL}/og-image.jpg`],
-    creator: "@nacionalveiculos",
-    site: "@nacionalveiculos"
+    creator: "@gtveiculos",
+    site: "@gtveiculos"
   },
   
   // Robots
@@ -144,7 +144,7 @@ export const metadata: Metadata = {
   
   // Other
   other: {
-    "msapplication-TileColor": "#1e3a8a",
+    "msapplication-TileColor": "#dc2626",
     "apple-mobile-web-app-capable": "yes",
     "apple-mobile-web-app-status-bar-style": "black-translucent",
     "apple-mobile-web-app-title": "GT Veículos"

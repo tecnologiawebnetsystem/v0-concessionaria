@@ -39,9 +39,9 @@ export function WhyChooseUs() {
 
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
           {features.map((feature, index) => (
-            <Card key={index} className="border-0 bg-blue-50 text-center">
+            <Card key={index} className="border-0 bg-red-50 text-center">
               <CardContent className="p-6">
-                <div className="mx-auto mb-4 flex size-16 items-center justify-center rounded-full bg-blue-900">
+                <div className="mx-auto mb-4 flex size-16 items-center justify-center rounded-full bg-gray-900">
                   <feature.icon className="size-8 text-white" />
                 </div>
                 <h3 className="mb-2 text-lg font-bold text-gray-900">{feature.title}</h3>
