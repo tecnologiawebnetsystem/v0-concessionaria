@@ -32,9 +32,9 @@ export function CustomerSidebar() {
   const pathname = usePathname()
 
   return (
-    <aside className="hidden lg:flex lg:flex-col lg:w-72 lg:fixed lg:inset-y-0 bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900 border-r border-gray-700/50">
+    <aside className="hidden lg:flex lg:flex-col lg:w-72 lg:fixed lg:inset-y-0 bg-black border-r border-gray-800/60">
       {/* Logo */}
-      <div className="flex h-16 items-center gap-3 px-6 border-b border-gray-700/50">
+      <div className="flex h-16 items-center gap-3 px-6 border-b border-gray-800/60">
         <div className="flex size-10 items-center justify-center rounded-xl bg-gradient-to-br from-red-600 to-red-700 shadow-lg shadow-red-600/30">
           <Car className="size-5 text-white" />
         </div>
@@ -95,7 +95,7 @@ export function CustomerSidebar() {
       </div>
 
       {/* Logout */}
-      <div className="p-4 border-t border-gray-700/50">
+      <div className="p-4 border-t border-gray-800/60">
         <Link
           href="/logout"
           className="flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-xl text-red-400 hover:bg-red-500/10 transition-colors"

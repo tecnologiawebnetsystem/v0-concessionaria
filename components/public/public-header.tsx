@@ -104,12 +104,12 @@ export function PublicHeader() {
       className={cn(
         "sticky top-0 z-50 w-full transition-all duration-300",
         isScrolled 
-          ? "bg-gray-950/95 backdrop-blur-xl shadow-lg shadow-black/20 border-b border-gray-800/50" 
-          : "bg-transparent"
+          ? "bg-black/95 backdrop-blur-xl shadow-lg shadow-black/20 border-b border-gray-800/50" 
+          : "bg-black"
       )}
     >
       {/* Top bar */}
-      <div className="hidden lg:block border-b border-gray-800/50 bg-gray-950/80">
+      <div className="hidden lg:block border-b border-gray-800/50 bg-black">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-2 text-sm">
           <div className="flex items-center gap-6">
             <a 

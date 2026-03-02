@@ -57,7 +57,7 @@ export function AdminHeader({ session }: { session: SessionData }) {
     .slice(0, 2)
 
   return (
-    <header className="sticky top-0 z-40 flex h-16 items-center justify-between border-b border-gray-700/50 bg-gray-900/80 px-4 backdrop-blur-md lg:px-6">
+    <header className="sticky top-0 z-40 flex h-16 items-center justify-between border-b border-gray-800/60 bg-black/95 px-4 backdrop-blur-md lg:px-6">
       {/* Mobile Menu */}
       <Sheet>
         <SheetTrigger asChild>
@@ -66,7 +66,7 @@ export function AdminHeader({ session }: { session: SessionData }) {
           </Button>
         </SheetTrigger>
         <SheetContent side="left" className="w-72 p-0">
-          <div className="flex h-full flex-col bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900">
+          <div className="flex h-full flex-col bg-black">
             <div className="flex h-16 items-center gap-3 border-b border-gray-700/50 px-6">
               <div className="flex size-10 items-center justify-center rounded-xl bg-gradient-to-br from-red-600 to-red-700">
                 <span className="text-lg font-bold text-white">GV</span>

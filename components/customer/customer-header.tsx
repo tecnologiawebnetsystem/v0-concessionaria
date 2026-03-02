@@ -31,7 +31,7 @@ export function CustomerHeader() {
   const pathname = usePathname()
 
   return (
-    <header className="sticky top-0 z-40 flex h-16 items-center justify-between border-b border-gray-700/50 bg-gray-900/80 px-4 backdrop-blur-xl lg:px-6">
+    <header className="sticky top-0 z-40 flex h-16 items-center justify-between border-b border-gray-800/60 bg-black/95 px-4 backdrop-blur-xl lg:px-6">
       {/* Mobile menu */}
       <Sheet>
         <SheetTrigger asChild>

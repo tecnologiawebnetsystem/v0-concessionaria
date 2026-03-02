@@ -132,13 +132,13 @@ export function SellerSidebar() {
             <Menu className="h-5 w-5" />
           </Button>
         </SheetTrigger>
-        <SheetContent side="left" className="p-0 w-72 bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900 border-gray-700">
+        <SheetContent side="left" className="p-0 w-72 bg-black border-gray-800/60">
           <SidebarContent />
         </SheetContent>
       </Sheet>
 
       {/* Desktop Sidebar */}
-      <aside className="hidden w-72 flex-col border-r border-gray-700/50 bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 lg:flex">
+      <aside className="hidden w-72 flex-col border-r border-gray-800/60 bg-black lg:flex">
         <SidebarContent />
       </aside>
     </>

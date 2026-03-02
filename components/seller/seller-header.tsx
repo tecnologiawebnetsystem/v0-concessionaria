@@ -48,7 +48,7 @@ export function SellerHeader({ session, sellerData }: SellerHeaderProps) {
     .slice(0, 2)
 
   return (
-    <header className="sticky top-0 z-40 flex h-16 items-center justify-between border-b border-gray-700/50 bg-gray-900/80 px-4 backdrop-blur-md lg:px-6">
+    <header className="sticky top-0 z-40 flex h-16 items-center justify-between border-b border-gray-800/60 bg-black/95 px-4 backdrop-blur-md lg:px-6">
       {/* Left Section */}
       <div className="flex items-center gap-4 lg:ml-0 ml-12">
         <div className="hidden md:block">

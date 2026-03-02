@@ -95,9 +95,9 @@ export function AdminSidebar() {
   }
 
   return (
-    <aside className="hidden w-72 flex-col border-r border-gray-700/50 bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900 lg:flex">
+    <aside className="hidden w-72 flex-col border-r border-gray-800/60 bg-black lg:flex">
       {/* Logo */}
-      <div className="flex h-20 items-center gap-3 border-b border-gray-700/50 px-6">
+      <div className="flex h-20 items-center gap-3 border-b border-gray-800/60 px-6">
         <div className="flex size-10 items-center justify-center rounded-xl bg-gradient-to-br from-red-600 to-red-700 shadow-lg shadow-red-600/30">
           <Building2 className="size-6 text-white" />
         </div>
@@ -162,7 +162,7 @@ export function AdminSidebar() {
       </nav>
 
       {/* Footer */}
-      <div className="border-t border-gray-700/50 p-4">
+      <div className="border-t border-gray-800/60 p-4">
         <Link
           href="/"
           className="flex items-center gap-3 rounded-xl px-4 py-2.5 text-sm font-medium text-gray-300 transition-colors hover:bg-gray-700/50 hover:text-white"
