@@ -23,7 +23,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { VehicleGalleryClient } from "@/components/public/vehicle-gallery-client"
 import { FinancingCalculatorClient } from "@/components/public/financing-calculator-client"
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://nacionalveiculos.com.br"
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://gtveiculos.com.br"
 
 async function getVehicle(slug: string) {
   const [vehicle] = await sql`
@@ -114,7 +114,7 @@ export default async function VehicleDetailPage({ params }: { params: Promise<{ 
   const features = vehicle.features ? (Array.isArray(vehicle.features) ? vehicle.features : []) : []
 
   return (
-    <div className="flex min-h-screen flex-col bg-slate-950">
+    <div className="flex min-h-screen flex-col bg-gray-950">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       
@@ -123,9 +123,9 @@ export default async function VehicleDetailPage({ params }: { params: Promise<{ 
       
       <main className="flex-1">
         {/* Breadcrumb */}
-        <div className="bg-slate-900 border-b border-slate-800">
+        <div className="bg-gray-900 border-b border-gray-800">
           <div className="container mx-auto px-4 py-4">
-            <nav className="flex items-center gap-2 text-sm text-slate-400">
+            <nav className="flex items-center gap-2 text-sm text-gray-400">
               <Link href="/" className="hover:text-white transition-colors">Inicio</Link>
               <ChevronRight className="h-4 w-4" />
               <Link href="/veiculos" className="hover:text-white transition-colors">Veiculos</Link>
@@ -149,9 +149,9 @@ export default async function VehicleDetailPage({ params }: { params: Promise<{ 
               {/* Quick Specs Bar */}
               <div className="grid grid-cols-3 md:grid-cols-6 gap-4">
                 {specs.map((spec, idx) => (
-                  <div key={idx} className="bg-slate-900 rounded-xl p-4 text-center border border-slate-800">
-                    <spec.icon className="h-5 w-5 text-blue-400 mx-auto mb-2" />
-                    <p className="text-xs text-slate-500 mb-1">{spec.label}</p>
+                  <div key={idx} className="bg-gray-900 rounded-xl p-4 text-center border border-gray-800">
+                    <spec.icon className="h-5 w-5 text-red-400 mx-auto mb-2" />
+                    <p className="text-xs text-gray-500 mb-1">{spec.label}</p>
                     <p className="text-sm font-semibold text-white">{spec.value}</p>
                   </div>
                 ))}
@@ -159,20 +159,20 @@ export default async function VehicleDetailPage({ params }: { params: Promise<{ 
 
               {/* Tabs */}
               <Tabs defaultValue="specs" className="w-full">
-                <TabsList className="w-full bg-slate-900 border border-slate-800 p-1 rounded-xl">
-                  <TabsTrigger value="specs" className="flex-1 data-[state=active]:bg-blue-600 rounded-lg">
+                <TabsList className="w-full bg-gray-900 border border-gray-800 p-1 rounded-xl">
+                  <TabsTrigger value="specs" className="flex-1 data-[state=active]:bg-red-600 rounded-lg">
                     Especificacoes
                   </TabsTrigger>
-                  <TabsTrigger value="features" className="flex-1 data-[state=active]:bg-blue-600 rounded-lg">
+                  <TabsTrigger value="features" className="flex-1 data-[state=active]:bg-red-600 rounded-lg">
                     Equipamentos
                   </TabsTrigger>
-                  <TabsTrigger value="financing" className="flex-1 data-[state=active]:bg-blue-600 rounded-lg">
+                  <TabsTrigger value="financing" className="flex-1 data-[state=active]:bg-red-600 rounded-lg">
                     Financiamento
                   </TabsTrigger>
                 </TabsList>
 
                 <TabsContent value="specs" className="mt-6">
-                  <Card className="bg-slate-900 border-slate-800">
+                  <Card className="bg-gray-900 border-gray-800">
                     <CardHeader>
                       <CardTitle className="text-white">Ficha Tecnica</CardTitle>
                     </CardHeader>
@@ -192,17 +192,17 @@ export default async function VehicleDetailPage({ params }: { params: Promise<{ 
                           { label: "Final da Placa", value: vehicle.plate_end || "-" },
                           { label: "Carroceria", value: vehicle.body_type || "-" },
                         ].map((item, idx) => (
-                          <div key={idx} className="flex justify-between py-3 border-b border-slate-800 last:border-0">
-                            <span className="text-slate-400">{item.label}</span>
+                          <div key={idx} className="flex justify-between py-3 border-b border-gray-800 last:border-0">
+                            <span className="text-gray-400">{item.label}</span>
                             <span className="text-white font-medium">{item.value}</span>
                           </div>
                         ))}
                       </div>
 
                       {vehicle.description && (
-                        <div className="mt-6 pt-6 border-t border-slate-800">
+                        <div className="mt-6 pt-6 border-t border-gray-800">
                           <h4 className="text-white font-semibold mb-3">Descricao</h4>
-                          <p className="text-slate-400 leading-relaxed">{vehicle.description}</p>
+                          <p className="text-gray-400 leading-relaxed">{vehicle.description}</p>
                         </div>
                       )}
                     </CardContent>
@@ -210,7 +210,7 @@ export default async function VehicleDetailPage({ params }: { params: Promise<{ 
                 </TabsContent>
 
                 <TabsContent value="features" className="mt-6">
-                  <Card className="bg-slate-900 border-slate-800">
+                  <Card className="bg-gray-900 border-gray-800">
                     <CardHeader>
                       <CardTitle className="text-white">Equipamentos e Opcionais</CardTitle>
                     </CardHeader>
@@ -218,16 +218,16 @@ export default async function VehicleDetailPage({ params }: { params: Promise<{ 
                       {features.length > 0 ? (
                         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-3">
                           {features.map((feature: string, idx: number) => (
-                            <div key={idx} className="flex items-center gap-3 p-3 bg-slate-800/50 rounded-lg">
+                            <div key={idx} className="flex items-center gap-3 p-3 bg-gray-800/50 rounded-lg">
                               <div className="p-1.5 rounded-full bg-emerald-500/20">
                                 <Check className="h-4 w-4 text-emerald-400" />
                               </div>
-                              <span className="text-slate-300 text-sm">{feature}</span>
+                              <span className="text-gray-300 text-sm">{feature}</span>
                             </div>
                           ))}
                         </div>
                       ) : (
-                        <p className="text-slate-500 text-center py-8">
+                        <p className="text-gray-500 text-center py-8">
                           Informacoes de equipamentos nao disponiveis para este veiculo.
                         </p>
                       )}
@@ -247,12 +247,12 @@ export default async function VehicleDetailPage({ params }: { params: Promise<{ 
             {/* Right Column - Price and Contact */}
             <div className="space-y-6">
               {/* Price Card */}
-              <Card className="bg-gradient-to-br from-slate-900 to-slate-800 border-slate-700 sticky top-24">
+              <Card className="bg-gradient-to-br from-gray-900 to-gray-800 border-gray-700 sticky top-24">
                 <CardContent className="p-6">
                   {/* Vehicle Title */}
                   <div className="mb-6">
                     <div className="flex items-center gap-2 mb-2">
-                      <Badge className="bg-blue-600">{vehicle.brand_name}</Badge>
+                      <Badge className="bg-red-600">{vehicle.brand_name}</Badge>
                       {vehicle.is_featured && (
                         <Badge className="bg-amber-500">
                           <Star className="h-3 w-3 mr-1 fill-white" /> Destaque
@@ -261,12 +261,12 @@ export default async function VehicleDetailPage({ params }: { params: Promise<{ 
                       {vehicle.is_new && <Badge className="bg-emerald-500">0 KM</Badge>}
                     </div>
                     <h1 className="text-2xl font-bold text-white">{vehicle.name}</h1>
-                    <p className="text-slate-400">{vehicle.year_manufacture}/{vehicle.year_model} - {vehicle.mileage ? `${formatNumber(vehicle.mileage)} km` : "0 km"}</p>
+                    <p className="text-gray-400">{vehicle.year_manufacture}/{vehicle.year_model} - {vehicle.mileage ? `${formatNumber(vehicle.mileage)} km` : "0 km"}</p>
                   </div>
 
                   {/* Price */}
-                  <div className="mb-6 p-4 bg-slate-800/50 rounded-xl">
-                    <p className="text-sm text-slate-400 mb-1">Preco a vista</p>
+                  <div className="mb-6 p-4 bg-gray-800/50 rounded-xl">
+                    <p className="text-sm text-gray-400 mb-1">Preco a vista</p>
                     <p className="text-4xl font-bold text-white">{formatPrice(Number(vehicle.price))}</p>
                     <p className="text-sm text-emerald-400 mt-1">
                       ou parcelas a partir de {formatPrice(Number(vehicle.price) / 48)}/mes
@@ -281,7 +281,7 @@ export default async function VehicleDetailPage({ params }: { params: Promise<{ 
                         Chamar no WhatsApp
                       </Button>
                     </Link>
-                    <Button variant="outline" className="w-full h-12 border-slate-700 text-white hover:bg-slate-800 bg-transparent">
+                    <Button variant="outline" className="w-full h-12 border-gray-700 text-white hover:bg-gray-800 bg-transparent">
                       <Phone className="mr-2 h-5 w-5" />
                       (12) 3333-4444
                     </Button>
@@ -289,39 +289,39 @@ export default async function VehicleDetailPage({ params }: { params: Promise<{ 
 
                   {/* Quick Actions */}
                   <div className="flex gap-2 mb-6">
-                    <Button variant="outline" size="sm" className="flex-1 border-slate-700 text-slate-300 hover:bg-slate-800 bg-transparent">
+                    <Button variant="outline" size="sm" className="flex-1 border-gray-700 text-gray-300 hover:bg-gray-800 bg-transparent">
                       <Heart className="mr-1 h-4 w-4" /> Favoritar
                     </Button>
-                    <Button variant="outline" size="sm" className="flex-1 border-slate-700 text-slate-300 hover:bg-slate-800 bg-transparent">
+                    <Button variant="outline" size="sm" className="flex-1 border-gray-700 text-gray-300 hover:bg-gray-800 bg-transparent">
                       <Share2 className="mr-1 h-4 w-4" /> Compartilhar
                     </Button>
                   </div>
 
                   {/* Trust Badges */}
-                  <div className="space-y-3 pt-6 border-t border-slate-700">
+                  <div className="space-y-3 pt-6 border-t border-gray-700">
                     <div className="flex items-center gap-3 text-sm">
-                      <div className="p-2 rounded-lg bg-blue-500/10">
-                        <Shield className="h-4 w-4 text-blue-400" />
+                      <div className="p-2 rounded-lg bg-red-500/10">
+                        <Shield className="h-4 w-4 text-red-400" />
                       </div>
-                      <span className="text-slate-300">Garantia de motor e cambio</span>
+                      <span className="text-gray-300">Garantia de motor e cambio</span>
                     </div>
                     <div className="flex items-center gap-3 text-sm">
                       <div className="p-2 rounded-lg bg-emerald-500/10">
                         <Award className="h-4 w-4 text-emerald-400" />
                       </div>
-                      <span className="text-slate-300">Veiculo revisado e vistoriado</span>
+                      <span className="text-gray-300">Veiculo revisado e vistoriado</span>
                     </div>
                     <div className="flex items-center gap-3 text-sm">
                       <div className="p-2 rounded-lg bg-amber-500/10">
                         <FileText className="h-4 w-4 text-amber-400" />
                       </div>
-                      <span className="text-slate-300">Documentacao em dia</span>
+                      <span className="text-gray-300">Documentacao em dia</span>
                     </div>
                   </div>
 
                   {/* Views */}
-                  <div className="mt-6 pt-6 border-t border-slate-700 text-center">
-                    <p className="text-sm text-slate-500">
+                  <div className="mt-6 pt-6 border-t border-gray-700 text-center">
+                    <p className="text-sm text-gray-500">
                       <Eye className="inline h-4 w-4 mr-1" />
                       {vehicle.views_count || 0} visualizacoes
                     </p>
@@ -330,17 +330,17 @@ export default async function VehicleDetailPage({ params }: { params: Promise<{ 
               </Card>
 
               {/* Location Card */}
-              <Card className="bg-slate-900 border-slate-800">
+              <Card className="bg-gray-900 border-gray-800">
                 <CardContent className="p-6">
                   <h3 className="font-semibold text-white mb-4 flex items-center gap-2">
-                    <MapPin className="h-5 w-5 text-blue-400" />
+                      <MapPin className="h-5 w-5 text-red-400" />
                     Localizacao
                   </h3>
-                  <p className="text-slate-400 text-sm mb-4">
+                  <p className="text-gray-400 text-sm mb-4">
                     Av. Independencia, 1500<br />
                     Centro - Taubate, SP
                   </p>
-                  <div className="flex items-center gap-2 text-sm text-slate-500">
+                  <div className="flex items-center gap-2 text-sm text-gray-500">
                     <Clock className="h-4 w-4" />
                     <span>Seg-Sex: 8h-18h | Sab: 9h-13h</span>
                   </div>
@@ -354,14 +354,14 @@ export default async function VehicleDetailPage({ params }: { params: Promise<{ 
             <section className="mt-16">
               <div className="flex items-center justify-between mb-8">
                 <h2 className="text-2xl font-bold text-white">Veiculos Similares</h2>
-                <Link href="/veiculos" className="text-blue-400 hover:text-blue-300 flex items-center gap-1">
+                <Link href="/veiculos" className="text-red-400 hover:text-red-300 flex items-center gap-1">
                   Ver todos <ArrowRight className="h-4 w-4" />
                 </Link>
               </div>
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
                 {similarVehicles.map((v: any) => (
                   <Link key={v.id} href={`/veiculos/${v.slug}`}>
-                    <Card className="group bg-slate-900 border-slate-800 hover:border-blue-500/50 overflow-hidden transition-all">
+                    <Card className="group bg-gray-900 border-gray-800 hover:border-red-500/50 overflow-hidden transition-all">
                       <div className="relative aspect-[4/3] overflow-hidden">
                         <Image
                           src={v.primary_image || "/placeholder.svg"}
@@ -371,9 +371,9 @@ export default async function VehicleDetailPage({ params }: { params: Promise<{ 
                         />
                       </div>
                       <CardContent className="p-3">
-                        <p className="text-xs text-slate-500">{v.brand_name}</p>
+                        <p className="text-xs text-gray-500">{v.brand_name}</p>
                         <h3 className="font-semibold text-white text-sm truncate">{v.name}</h3>
-                        <p className="text-blue-400 font-bold mt-1">{formatPrice(Number(v.price))}</p>
+                        <p className="text-red-400 font-bold mt-1">{formatPrice(Number(v.price))}</p>
                       </CardContent>
                     </Card>
                   </Link>

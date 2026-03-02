@@ -2,7 +2,7 @@ import { sql } from "@/lib/db"
 import type { MetadataRoute } from "next"
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://nacionalveiculos.com.br"
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://gtveiculos.com.br"
 
   // Get all published vehicles
   const vehicles = await sql`

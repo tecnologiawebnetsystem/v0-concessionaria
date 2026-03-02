@@ -30,12 +30,12 @@ A API usa autenticacao baseada em cookies HTTP-only. Apos o login, um token JWT 
     version: "1.0.0",
     contact: {
       name: "Suporte Tecnico",
-      email: "suporte@nacionalveiculos.com.br",
-      url: "https://nacionalveiculos.com.br"
+      email: "suporte@gtveiculos.com.br",
+      url: "https://gtveiculos.com.br"
     },
     license: {
       name: "Proprietaria",
-      url: "https://nacionalveiculos.com.br/termos"
+      url: "https://gtveiculos.com.br/termos"
     }
   },
   servers: [
@@ -114,7 +114,7 @@ A API usa autenticacao baseada em cookies HTTP-only. Apos o login, um token JWT 
                 type: "object",
                 required: ["email", "password"],
                 properties: {
-                  email: { type: "string", format: "email", example: "admin@nacionalveiculos.com.br" },
+                  email: { type: "string", format: "email",               example: "admin@gtveiculos.com.br" },
                   password: { type: "string", example: "admin123" }
                 }
               }

@@ -15,7 +15,7 @@ const sql = neon(process.env.DATABASE_URL!)
 export const metadata: Metadata = {
   title: "Blog - GT Veículos Taubaté | Dicas e Notícias sobre Carros",
   description: "Blog da GT Veículos em Taubaté. Dicas de compra, manutenção, financiamento e as últimas novidades do mercado automotivo.",
-  keywords: "blog carros taubaté, dicas automotivas, nacional veículos blog, comprar carro taubaté",
+  keywords: "blog carros taubaté, dicas automotivas, GT veículos blog, comprar carro taubaté",
 }
 
 async function getBlogPosts() {
@@ -80,17 +80,17 @@ export default async function BlogPage() {
       
       <main className="flex-1">
         {/* Hero Section */}
-        <section className="bg-gradient-to-br from-blue-950 via-blue-900 to-indigo-900 text-white py-16">
+        <section className="bg-gradient-to-br from-gray-950 via-gray-900 to-red-950 text-white py-16">
           <div className="container mx-auto px-4 max-w-7xl">
             <div className="text-center">
-              <Badge className="mb-4 bg-blue-400/20 text-blue-100 border-blue-300/30">
+              <Badge className="mb-4 bg-red-500/20 text-red-200 border-red-400/30">
                 <BookOpen className="h-3 w-3 mr-1" />
                 Blog GT Veículos
               </Badge>
               <h1 className="text-4xl md:text-5xl font-bold mb-4 text-balance">
                 Dicas e Notícias Automotivas
               </h1>
-              <p className="text-lg text-blue-100/90 max-w-2xl mx-auto mb-8">
+              <p className="text-lg text-gray-300 max-w-2xl mx-auto mb-8">
                 Tudo sobre carros, manutenção, financiamento e as melhores dicas para você fazer a escolha certa em Taubaté
               </p>
               
@@ -108,17 +108,17 @@ export default async function BlogPage() {
 
         {/* Categories */}
         {categories.length > 0 && (
-          <section className="py-8 bg-slate-50 border-b">
+          <section className="py-8 bg-gray-50 border-b">
             <div className="container mx-auto px-4 max-w-7xl">
               <div className="flex flex-wrap gap-2 justify-center">
-                <Badge variant="outline" className="px-4 py-2 bg-blue-600 text-white border-blue-600">
+                <Badge variant="outline" className="px-4 py-2 bg-red-600 text-white border-red-600">
                   Todos
                 </Badge>
                 {categories.map((cat: any) => (
                   <Badge 
                     key={cat.id} 
                     variant="outline" 
-                    className="px-4 py-2 hover:bg-blue-50 cursor-pointer transition-colors"
+                    className="px-4 py-2 hover:bg-red-50 cursor-pointer transition-colors"
                   >
                     {cat.name} ({cat.post_count})
                   </Badge>
@@ -132,12 +132,12 @@ export default async function BlogPage() {
         {featuredPosts.length > 0 && (
           <section className="py-12 bg-white">
             <div className="container mx-auto px-4 max-w-7xl">
-              <h2 className="text-2xl font-bold mb-8 text-blue-900">Artigos em Destaque</h2>
+              <h2 className="text-2xl font-bold mb-8 text-red-700">Artigos em Destaque</h2>
               <div className="grid md:grid-cols-3 gap-6">
                 {featuredPosts.map((post: any, index: number) => (
                   <Link key={post.id} href={`/blog/${post.slug}`}>
                     <Card className={`overflow-hidden hover:shadow-xl transition-all hover:-translate-y-1 h-full ${index === 0 ? 'md:col-span-2 md:row-span-2' : ''}`}>
-                      <div className={`relative ${index === 0 ? 'h-64 md:h-full' : 'h-48'} bg-gradient-to-br from-blue-100 to-indigo-100`}>
+                      <div className={`relative ${index === 0 ? 'h-64 md:h-full' : 'h-48'} bg-gradient-to-br from-red-100 to-gray-200`}>
                         {post.featured_image ? (
                           <Image
                             src={post.featured_image || "/placeholder.svg"}
@@ -147,7 +147,7 @@ export default async function BlogPage() {
                           />
                         ) : (
                           <div className="w-full h-full flex items-center justify-center">
-                            <BookOpen className="h-16 w-16 text-blue-300" />
+                            <BookOpen className="h-16 w-16 text-red-300" />
                           </div>
                         )}
                         <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
@@ -177,9 +177,9 @@ export default async function BlogPage() {
         )}
 
         {/* All Posts */}
-        <section className="py-12 bg-gradient-to-b from-slate-50 to-white">
+        <section className="py-12 bg-gradient-to-b from-gray-50 to-white">
           <div className="container mx-auto px-4 max-w-7xl">
-            <h2 className="text-2xl font-bold mb-8 text-blue-900">Todos os Artigos</h2>
+            <h2 className="text-2xl font-bold mb-8 text-red-700">Todos os Artigos</h2>
             
             {posts.length === 0 ? (
               <Card className="p-12 text-center">
@@ -217,7 +217,7 @@ export default async function BlogPage() {
                             </Badge>
                           ))}
                         </div>
-                        <h3 className="text-lg font-bold line-clamp-2 group-hover:text-blue-600 transition-colors">
+                        <h3 className="text-lg font-bold line-clamp-2 group-hover:text-red-600 transition-colors">
                           {post.title}
                         </h3>
                       </CardHeader>
@@ -235,7 +235,7 @@ export default async function BlogPage() {
                             {post.views_count || 0}
                           </span>
                         </div>
-                        <span className="text-blue-600 font-medium flex items-center gap-1">
+                        <span className="text-red-600 font-medium flex items-center gap-1">
                           Ler mais <ArrowRight className="h-3 w-3" />
                         </span>
                       </CardFooter>

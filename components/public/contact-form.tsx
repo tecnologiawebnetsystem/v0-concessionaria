@@ -118,7 +118,7 @@ export function ContactForm({ vehicle }: { vehicle: any }) {
               />
             </div>
 
-            <Button type="submit" className="w-full bg-blue-900 hover:bg-blue-800" disabled={isLoading}>
+            <Button type="submit" className="w-full bg-red-600 hover:bg-red-700" disabled={isLoading}>
               {isLoading ? (
                 <>
                   <Loader2 className="mr-2 size-4 animate-spin" />
@@ -136,17 +136,17 @@ export function ContactForm({ vehicle }: { vehicle: any }) {
           <div className="mt-6 space-y-3 border-t pt-6">
             <a
               href="tel:+5511123456789"
-              className="flex items-center gap-3 text-sm text-gray-700 transition-colors hover:text-blue-900"
+              className="flex items-center gap-3 text-sm text-gray-700 transition-colors hover:text-red-700"
             >
               <Phone className="size-5" />
               (11) 1234-5678
             </a>
             <a
-              href="mailto:contato@nacionalveiculos.com.br"
-              className="flex items-center gap-3 text-sm text-gray-700 transition-colors hover:text-blue-900"
+              href="mailto:contato@gtveiculos.com.br"
+              className="flex items-center gap-3 text-sm text-gray-700 transition-colors hover:text-red-700"
             >
               <Mail className="size-5" />
-              contato@nacionalveiculos.com.br
+              contato@gtveiculos.com.br
             </a>
           </div>
         </CardContent>

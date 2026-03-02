@@ -52,7 +52,7 @@ const sellersData = [
   {
     id: 1,
     name: "Marcos Vendedor",
-    email: "marcos.vendedor@nacionalveiculos.com.br",
+    email: "marcos.vendedor@gtveiculos.com.br",
     phone: "(12) 98789-0123",
     photo: "https://randomuser.me/api/portraits/men/45.jpg",
     cpf: "123.456.789-00",
@@ -69,7 +69,7 @@ const sellersData = [
   {
     id: 2,
     name: "Ana Silva",
-    email: "ana.silva@nacionalveiculos.com.br",
+    email: "ana.silva@gtveiculos.com.br",
     phone: "(12) 99876-5432",
     photo: "https://randomuser.me/api/portraits/women/32.jpg",
     cpf: "987.654.321-00",
@@ -86,7 +86,7 @@ const sellersData = [
   {
     id: 3,
     name: "Carlos Santos",
-    email: "carlos.santos@nacionalveiculos.com.br",
+    email: "carlos.santos@gtveiculos.com.br",
     phone: "(12) 98765-4321",
     photo: "https://randomuser.me/api/portraits/men/67.jpg",
     cpf: "456.789.123-00",
@@ -103,7 +103,7 @@ const sellersData = [
   {
     id: 4,
     name: "Fernanda Costa",
-    email: "fernanda.costa@nacionalveiculos.com.br",
+    email: "fernanda.costa@gtveiculos.com.br",
     phone: "(12) 97654-3210",
     photo: "https://randomuser.me/api/portraits/women/55.jpg",
     cpf: "789.123.456-00",
@@ -163,7 +163,7 @@ export default function AdminSellersPage() {
         </div>
         <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
           <DialogTrigger asChild>
-            <Button className="bg-blue-600 hover:bg-blue-700">
+            <Button className="bg-red-600 hover:bg-red-700">
               <Plus className="mr-2 h-4 w-4" />
               Novo Vendedor
             </Button>
@@ -190,7 +190,7 @@ export default function AdminSellersPage() {
                   type="email"
                   value={newSeller.email}
                   onChange={(e) => setNewSeller({...newSeller, email: e.target.value})}
-                  placeholder="email@nacionalveiculos.com.br"
+                  placeholder="email@gtveiculos.com.br"
                 />
               </div>
               <div className="grid grid-cols-2 gap-4">
@@ -226,7 +226,7 @@ export default function AdminSellersPage() {
             </div>
             <DialogFooter>
               <Button variant="outline" onClick={() => setIsAddDialogOpen(false)}>Cancelar</Button>
-              <Button onClick={handleAddSeller} className="bg-blue-600 hover:bg-blue-700">Cadastrar</Button>
+              <Button onClick={handleAddSeller} className="bg-red-600 hover:bg-red-700">Cadastrar</Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>
@@ -237,7 +237,7 @@ export default function AdminSellersPage() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Vendedores Ativos</CardTitle>
-            <Users className="h-4 w-4 text-blue-600" />
+                <Users className="h-4 w-4 text-red-600" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{totalSellers}</div>
