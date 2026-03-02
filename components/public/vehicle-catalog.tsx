@@ -36,11 +36,11 @@ export function VehicleCatalog({ vehicles }: { vehicles: any[] }) {
                   className="size-full object-cover transition-transform duration-300 group-hover:scale-105"
                 />
                 {vehicle.is_new && <Badge className="absolute left-4 top-4 bg-green-600">0km</Badge>}
-                {vehicle.is_featured && <Badge className="absolute right-4 top-4 bg-blue-600">Destaque</Badge>}
+                {vehicle.is_featured && <Badge className="absolute right-4 top-4 bg-red-600">Destaque</Badge>}
               </div>
               <CardContent className="p-6">
                 <div className="mb-3">
-                  <p className="text-sm font-medium text-blue-900">{vehicle.brand_name}</p>
+                  <p className="text-sm font-medium text-red-700">{vehicle.brand_name}</p>
                   <h3 className="text-lg font-bold text-gray-900">{vehicle.name}</h3>
                   <p className="text-sm text-gray-600">{vehicle.category_name}</p>
                 </div>
@@ -72,7 +72,7 @@ export function VehicleCatalog({ vehicles }: { vehicles: any[] }) {
 
                 <div className="border-t pt-4">
                   <p className="text-sm text-gray-600">A partir de</p>
-                  <p className="text-2xl font-bold text-blue-900">
+                  <p className="text-2xl font-bold text-red-700">
                     {new Intl.NumberFormat("pt-BR", {
                       style: "currency",
                       currency: "BRL",

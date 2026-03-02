@@ -53,9 +53,9 @@ export function VehicleGallery({
             <div className="text-center text-white">
               <Lock className="mx-auto mb-4 size-16" />
               <h3 className="mb-2 text-2xl font-bold">Ver Todas as Fotos</h3>
-              <p className="mb-6 text-blue-100">Crie uma conta gratuita para acessar {images.length - 1} fotos</p>
+              <p className="mb-6 text-gray-200">Crie uma conta gratuita para acessar {images.length - 1} fotos</p>
               <div className="flex flex-col justify-center gap-3 sm:flex-row">
-                <Button size="lg" asChild className="bg-white text-blue-900 hover:bg-blue-50">
+                <Button size="lg" asChild className="bg-white text-gray-900 hover:bg-gray-100">
                   <Link href={`/registro?redirect=${encodeURIComponent(window.location.pathname)}`}>
                     Criar Conta Grátis
                   </Link>
@@ -105,7 +105,7 @@ export function VehicleGallery({
               onClick={() => setCurrentIndex(index)}
               className={cn(
                 "relative h-20 w-28 flex-shrink-0 overflow-hidden rounded-lg border-2 transition-all",
-                index === currentIndex ? "border-blue-600 ring-2 ring-blue-600" : "border-transparent opacity-60",
+                index === currentIndex ? "border-red-600 ring-2 ring-red-600" : "border-transparent opacity-60",
               )}
             >
               <img src={image.url || "/placeholder.svg"} alt="" className="size-full object-cover" />
@@ -115,8 +115,8 @@ export function VehicleGallery({
       )}
 
       {!isAuthenticated && images.length > 1 && (
-        <div className="border-t bg-blue-50 p-4 text-center">
-          <p className="text-sm text-blue-900">
+              <div className="border-t bg-gray-50 p-4 text-center">
+                <p className="text-sm text-gray-900">
             <Lock className="mr-1 inline size-4" />
             Mais {images.length - 1} {images.length - 1 === 1 ? "foto disponível" : "fotos disponíveis"}. Faça login
             para ver todas.

@@ -26,13 +26,13 @@ export function VehicleDetails({ vehicle }: { vehicle: any }) {
         <CardHeader>
           <div className="flex flex-wrap items-start justify-between gap-4">
             <div>
-              <p className="text-sm font-medium text-blue-900">{vehicle.brand_name}</p>
+              <p className="text-sm font-medium text-red-700">{vehicle.brand_name}</p>
               <CardTitle className="text-3xl">{vehicle.name}</CardTitle>
               <p className="text-gray-600">{vehicle.category_name}</p>
             </div>
             <div className="text-right">
               <p className="text-sm text-gray-600">A partir de</p>
-              <p className="text-3xl font-bold text-blue-900">
+              <p className="text-3xl font-bold text-red-700">
                 {new Intl.NumberFormat("pt-BR", {
                   style: "currency",
                   currency: "BRL",
@@ -60,8 +60,8 @@ export function VehicleDetails({ vehicle }: { vehicle: any }) {
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {specs.map((spec, index) => (
               <div key={index} className="flex items-center gap-3">
-                <div className="flex size-10 items-center justify-center rounded-lg bg-blue-100">
-                  <spec.icon className="size-5 text-blue-900" />
+                <div className="flex size-10 items-center justify-center rounded-lg bg-red-100">
+                  <spec.icon className="size-5 text-red-700" />
                 </div>
                 <div>
                   <p className="text-sm text-gray-600">{spec.label}</p>

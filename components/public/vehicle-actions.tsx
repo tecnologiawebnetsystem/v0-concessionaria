@@ -104,7 +104,7 @@ export function VehicleActions({ vehicle, showLabels = false, size = "default", 
       <Button
         variant="outline"
         size="icon"
-        className={`${buttonSize} ${isInCompare(vehicle.id) ? "bg-blue-50 border-blue-200 text-blue-500" : "bg-white/80 backdrop-blur-sm"}`}
+        className={`${buttonSize} ${isInCompare(vehicle.id) ? "bg-red-50 border-red-200 text-red-500" : "bg-white/80 backdrop-blur-sm"}`}
         onClick={handleCompare}
         title={isInCompare(vehicle.id) ? "Já na comparação" : "Adicionar à comparação"}
       >
@@ -131,7 +131,7 @@ export function VehicleActions({ vehicle, showLabels = false, size = "default", 
             WhatsApp
           </DropdownMenuItem>
           <DropdownMenuItem onClick={() => handleShare("facebook")} className="cursor-pointer">
-            <svg className="h-4 w-4 mr-2 text-blue-600" fill="currentColor" viewBox="0 0 24 24">
+            <svg className="h-4 w-4 mr-2 text-gray-600" fill="currentColor" viewBox="0 0 24 24">
               <path d="M18.77 7.46H14.5v-1.9c0-.9.6-1.1 1-1.1h3V.5h-4.33C10.24.5 9.5 3.44 9.5 5.32v2.15h-3v4h3v12h5v-12h3.85l.42-4z"/>
             </svg>
             Facebook
