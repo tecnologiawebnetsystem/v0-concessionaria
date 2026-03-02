@@ -55,8 +55,8 @@ export default function ContatoPage() {
                   <h3 className="font-bold text-lg mb-2">WhatsApp</h3>
                   <p className="text-muted-foreground mb-4">Atendimento rápido e prático</p>
                   <Button asChild className="w-full bg-green-600 hover:bg-green-700">
-                    <a href="https://wa.me/5512999999999" target="_blank" rel="noopener noreferrer">
-                      (12) 99999-9999
+                    <a href="https://wa.me/5512974063079" target="_blank" rel="noopener noreferrer">
+                      (12) 97406-3079
                     </a>
                   </Button>
                 </CardContent>

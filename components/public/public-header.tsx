@@ -120,7 +120,7 @@ export function PublicHeader() {
               <span>(12) 3456-7890</span>
             </a>
             <a 
-              href="https://wa.me/5512987654321" 
+              href="https://wa.me/5512974063079" 
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-2 text-gray-400 hover:text-green-400 transition-colors"
@@ -259,7 +259,7 @@ export function PublicHeader() {
               asChild
               className="text-green-400 hover:bg-gray-800"
             >
-              <a href="https://wa.me/5512987654321">
+              <a href="https://wa.me/5512974063079">
                 <MessageCircle className="size-5" />
               </a>
             </Button>
@@ -389,7 +389,7 @@ export function PublicHeader() {
                         </a>
                       </Button>
                       <Button size="sm" asChild className="w-full bg-green-600 hover:bg-green-500 text-white">
-                        <a href="https://wa.me/5512987654321" target="_blank" rel="noopener noreferrer">
+                        <a href="https://wa.me/5512974063079" target="_blank" rel="noopener noreferrer">
                           <MessageCircle className="size-4 mr-2" />
                           WhatsApp
                         </a>

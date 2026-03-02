@@ -4,7 +4,7 @@ import { MessageCircle, X } from "lucide-react"
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 
-export function WhatsAppFloat({ phoneNumber = "5511999999999" }: { phoneNumber?: string }) {
+export function WhatsAppFloat({ phoneNumber = "5512974063079" }: { phoneNumber?: string }) {
   const [isOpen, setIsOpen] = useState(false)
 
   const handleWhatsAppClick = (message?: string) => {

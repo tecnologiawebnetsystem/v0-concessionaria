@@ -275,7 +275,7 @@ export default async function VehicleDetailPage({ params }: { params: Promise<{ 
 
                   {/* Action Buttons */}
                   <div className="space-y-3 mb-6">
-                    <Link href={`https://wa.me/5512999999999?text=Olá! Tenho interesse no ${vehicle.brand_name} ${vehicle.name}`} target="_blank" className="block">
+                    <Link href={`https://wa.me/5512974063079?text=Olá! Tenho interesse no ${vehicle.brand_name} ${vehicle.name}`} target="_blank" className="block">
                       <Button className="w-full h-12 bg-emerald-600 hover:bg-emerald-700 text-lg font-semibold">
                         <MessageCircle className="mr-2 h-5 w-5" />
                         Chamar no WhatsApp

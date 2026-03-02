@@ -629,7 +629,7 @@ export default function ClientHomePage({ vehicles, totalVehicles = 0, brands = [
                     Explorar veiculos
                   </Button>
                 </Link>
-                <Link href="https://wa.me/5512999999999">
+                <Link href="https://wa.me/5512974063079">
                   <Button size="lg" variant="outline" className="h-14 px-8 border-white/30 text-white hover:bg-white/10 rounded-2xl text-lg font-semibold bg-transparent">
                     <Phone className="mr-2 h-5 w-5" />
                     Falar no WhatsApp

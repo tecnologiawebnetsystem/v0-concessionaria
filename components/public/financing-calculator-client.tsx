@@ -168,7 +168,7 @@ export function FinancingCalculatorClient({ vehiclePrice, vehicleName }: Financi
 
         {/* CTA */}
         <Link 
-          href={`https://wa.me/5512999999999?text=Olá! Gostaria de simular o financiamento do ${vehicleName}. Entrada: ${formatCurrency(calculations.downPayment)}, Parcelas: ${months}x de ${formatCurrency(calculations.monthlyPayment)}`}
+          href={`https://wa.me/5512974063079?text=Olá! Gostaria de simular o financiamento do ${vehicleName}. Entrada: ${formatCurrency(calculations.downPayment)}, Parcelas: ${months}x de ${formatCurrency(calculations.monthlyPayment)}`}
           target="_blank"
           className="block"
         >

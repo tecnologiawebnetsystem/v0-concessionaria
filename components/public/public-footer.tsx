@@ -36,7 +36,7 @@ export function PublicFooter() {
                 </Link>
               </Button>
               <Button asChild size="lg" variant="outline" className="border-gray-600 text-white hover:bg-gray-800 bg-transparent">
-                <a href="https://wa.me/5512987654321" target="_blank" rel="noopener noreferrer">
+                <a href="https://wa.me/5512974063079" target="_blank" rel="noopener noreferrer">
                   Fale Conosco
                   <ArrowRight className="size-4 ml-2" />
                 </a>
