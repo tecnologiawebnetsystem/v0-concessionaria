@@ -34,7 +34,6 @@ export default function ComparePage() {
     { label: "Categoria", key: "category_name", format: (v: any) => v.category_name || "-" },
   ]
 
-  // Find best values for comparison
   const getBestValue = (key: string) => {
     if (compareList.length < 2) return null
     if (key === "price") {
@@ -57,17 +56,17 @@ export default function ComparePage() {
       <PublicHeader />
       <WhatsAppFloat />
 
-      <main className="flex-1 bg-gradient-to-b from-slate-50 to-white">
+      <main className="flex-1 bg-gradient-to-b from-gray-50 to-white">
         <div className="container mx-auto px-4 py-8 max-w-7xl">
           {/* Header */}
           <div className="flex items-center justify-between mb-8">
             <div>
-              <Link href="/veiculos" className="text-sm text-blue-600 hover:underline flex items-center gap-1 mb-2">
+              <Link href="/veiculos" className="text-sm text-red-600 hover:underline flex items-center gap-1 mb-2">
                 <ArrowLeft className="h-4 w-4" />
                 Voltar para veículos
               </Link>
               <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-3">
-                <Scale className="h-8 w-8 text-blue-600" />
+                <Scale className="h-8 w-8 text-red-600" />
                 Comparar Veículos
               </h1>
               <p className="text-gray-600 mt-1">Compare até 3 veículos lado a lado</p>
@@ -90,7 +89,7 @@ export default function ComparePage() {
               <p className="text-gray-500 mb-6">
                 Você precisa de pelo menos 2 veículos para fazer uma comparação
               </p>
-              <Button asChild>
+              <Button asChild className="bg-red-600 hover:bg-red-700">
                 <Link href="/veiculos">
                   <Plus className="h-4 w-4 mr-2" />
                   Adicionar Veículos
@@ -126,9 +125,9 @@ export default function ComparePage() {
                       )}
                     </div>
                     <div className="p-4">
-                      <Badge className="mb-2 bg-blue-100 text-blue-800">{vehicle.brand_name}</Badge>
+                      <Badge className="mb-2 bg-red-100 text-red-800">{vehicle.brand_name}</Badge>
                       <h3 className="font-bold text-lg">{vehicle.name}</h3>
-                      <p className="text-2xl font-bold text-blue-900 mt-2">
+                      <p className="text-2xl font-bold text-red-700 mt-2">
                         {formatCurrency(vehicle.price)}
                       </p>
                     </div>
@@ -149,7 +148,7 @@ export default function ComparePage() {
 
               {/* Comparison Table */}
               <Card className="overflow-hidden">
-                <div className="p-4 bg-blue-900 text-white">
+                <div className="p-4 bg-gray-900 text-white">
                   <h3 className="font-bold text-lg">Comparativo de Especificações</h3>
                 </div>
                 <div className="divide-y">
@@ -168,7 +167,7 @@ export default function ComparePage() {
                             } ${bestId === vehicle.id ? "bg-green-50" : ""}`}
                           >
                             <span className="text-xs text-gray-500 mb-1 hidden md:block">{spec.label}</span>
-                            <span className={`font-semibold ${spec.highlight ? "text-xl text-blue-900" : ""} flex items-center gap-2`}>
+                            <span className={`font-semibold ${spec.highlight ? "text-xl text-red-700" : ""} flex items-center gap-2`}>
                               {spec.format(vehicle)}
                               {bestId === vehicle.id && (
                                 <Badge className="bg-green-500 text-xs">Melhor</Badge>
@@ -186,11 +185,11 @@ export default function ComparePage() {
               </Card>
 
               {/* CTA */}
-              <Card className="p-6 bg-gradient-to-r from-blue-900 to-indigo-900 text-white">
+              <Card className="p-6 bg-gradient-to-r from-gray-900 to-red-900 text-white">
                 <div className="flex flex-col md:flex-row items-center justify-between gap-4">
                   <div>
                     <h3 className="text-xl font-bold">Ficou interessado?</h3>
-                    <p className="text-blue-100">Entre em contato para mais informações ou agende uma visita</p>
+                    <p className="text-gray-300">Entre em contato para mais informações ou agende uma visita</p>
                   </div>
                   <div className="flex gap-3">
                     <Button variant="outline" className="bg-transparent border-white text-white hover:bg-white/10">

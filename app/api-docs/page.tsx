@@ -23,9 +23,9 @@ export default function APIDocsPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-slate-950 flex items-center justify-center">
+      <div className="min-h-screen bg-gray-950 flex items-center justify-center">
         <div className="text-center">
-          <div className="inline-block h-12 w-12 animate-spin rounded-full border-4 border-solid border-blue-500 border-r-transparent"></div>
+          <div className="inline-block h-12 w-12 animate-spin rounded-full border-4 border-solid border-red-500 border-r-transparent"></div>
           <p className="mt-4 text-white text-lg">Carregando documentacao...</p>
         </div>
       </div>
@@ -35,35 +35,35 @@ export default function APIDocsPage() {
   return (
     <div className="min-h-screen bg-white">
       {/* Custom Header */}
-      <div className="bg-gradient-to-r from-slate-900 via-blue-900 to-slate-900 text-white py-8 px-6">
+      <div className="bg-gradient-to-r from-gray-900 via-red-900 to-gray-900 text-white py-8 px-6">
         <div className="max-w-7xl mx-auto">
           <div className="flex items-center gap-4 mb-4">
-            <div className="p-3 bg-blue-500/20 rounded-xl">
-              <svg className="w-8 h-8 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="p-3 bg-red-500/20 rounded-xl">
+                <svg className="w-8 h-8 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
               </svg>
             </div>
             <div>
               <h1 className="text-3xl font-bold">GT Veículos API</h1>
-              <p className="text-blue-200">Documentacao completa da API REST</p>
+              <p className="text-red-200">Documentacao completa da API REST</p>
             </div>
           </div>
           
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
             <div className="bg-white/10 backdrop-blur rounded-lg p-4">
-              <p className="text-blue-200 text-sm">Versao</p>
+              <p className="text-red-200 text-sm">Versao</p>
               <p className="text-xl font-semibold">1.0.0</p>
             </div>
             <div className="bg-white/10 backdrop-blur rounded-lg p-4">
-              <p className="text-blue-200 text-sm">Base URL</p>
+              <p className="text-red-200 text-sm">Base URL</p>
               <p className="text-xl font-semibold">/api</p>
             </div>
             <div className="bg-white/10 backdrop-blur rounded-lg p-4">
-              <p className="text-blue-200 text-sm">Autenticacao</p>
+              <p className="text-red-200 text-sm">Autenticacao</p>
               <p className="text-xl font-semibold">Cookie JWT</p>
             </div>
             <div className="bg-white/10 backdrop-blur rounded-lg p-4">
-              <p className="text-blue-200 text-sm">Formato</p>
+              <p className="text-red-200 text-sm">Formato</p>
               <p className="text-xl font-semibold">JSON</p>
             </div>
           </div>
@@ -72,7 +72,7 @@ export default function APIDocsPage() {
             <a 
               href="/api/docs" 
               target="_blank"
-              className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition"
+              className="inline-flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg transition"
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
@@ -81,7 +81,7 @@ export default function APIDocsPage() {
             </a>
             <a 
               href="/" 
-              className="inline-flex items-center gap-2 bg-slate-700 hover:bg-slate-600 text-white px-4 py-2 rounded-lg transition"
+              className="inline-flex items-center gap-2 bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded-lg transition"
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />

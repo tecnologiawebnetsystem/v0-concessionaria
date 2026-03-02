@@ -26,7 +26,7 @@ export default async function VehiclesPage() {
           <h1 className="text-3xl font-bold text-white">Veiculos</h1>
           <p className="text-slate-400">Gerencie todos os veiculos da concessionaria</p>
         </div>
-        <Button asChild className="bg-blue-600 hover:bg-blue-700">
+        <Button asChild className="bg-red-600 hover:bg-red-700">
           <Link href="/admin/vehicles/new">
             <Plus className="mr-2 size-4" />
             Adicionar Veiculo
