@@ -57,7 +57,7 @@ export function AdminHeader({ session }: { session: SessionData }) {
     .slice(0, 2)
 
   return (
-    <header className="sticky top-0 z-40 flex h-16 items-center justify-between border-b border-slate-700/50 bg-slate-900/80 px-4 backdrop-blur-md lg:px-6">
+    <header className="sticky top-0 z-40 flex h-16 items-center justify-between border-b border-gray-700/50 bg-gray-900/80 px-4 backdrop-blur-md lg:px-6">
       {/* Mobile Menu */}
       <Sheet>
         <SheetTrigger asChild>
@@ -66,14 +66,14 @@ export function AdminHeader({ session }: { session: SessionData }) {
           </Button>
         </SheetTrigger>
         <SheetContent side="left" className="w-72 p-0">
-          <div className="flex h-full flex-col bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900">
-            <div className="flex h-16 items-center gap-3 border-b border-slate-700/50 px-6">
-              <div className="flex size-10 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-blue-700">
-                <span className="text-lg font-bold text-white">NV</span>
+          <div className="flex h-full flex-col bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900">
+            <div className="flex h-16 items-center gap-3 border-b border-gray-700/50 px-6">
+              <div className="flex size-10 items-center justify-center rounded-xl bg-gradient-to-br from-red-600 to-red-700">
+                <span className="text-lg font-bold text-white">GV</span>
               </div>
               <div>
                 <p className="font-bold text-white">GT Veículos</p>
-                <p className="text-xs text-slate-400">Painel Admin</p>
+                  <p className="text-xs text-gray-400">Painel Admin</p>
               </div>
             </div>
             <nav className="flex-1 overflow-y-auto p-4">
@@ -95,7 +95,7 @@ export function AdminHeader({ session }: { session: SessionData }) {
                   <Link
                     key={item.href}
                     href={item.href}
-                    className="block rounded-lg px-4 py-2 text-sm text-slate-300 hover:bg-slate-700/50 hover:text-white"
+                    className="block rounded-lg px-4 py-2 text-sm text-gray-300 hover:bg-gray-700/50 hover:text-white"
                   >
                     {item.name}
                   </Link>
@@ -112,7 +112,7 @@ export function AdminHeader({ session }: { session: SessionData }) {
           <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-slate-500" />
           <Input 
             placeholder="Buscar veiculos, clientes, vendas..."
-            className="h-10 border-slate-700 bg-slate-800/50 pl-10 text-white placeholder:text-slate-500 focus:bg-slate-800 focus:border-blue-500"
+            className="h-10 border-gray-700 bg-gray-800/50 pl-10 text-white placeholder:text-gray-500 focus:bg-gray-800 focus:border-red-500"
           />
         </div>
       </div>
@@ -122,7 +122,7 @@ export function AdminHeader({ session }: { session: SessionData }) {
         {/* Notifications */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon" className="relative hover:bg-slate-800">
+            <Button variant="ghost" size="icon" className="relative hover:bg-gray-800">
               <Bell className="size-5 text-slate-400" />
               {notifications > 0 && (
                 <Badge className="absolute -right-1 -top-1 size-5 justify-center rounded-full bg-red-500 p-0 text-xs">
@@ -155,14 +155,14 @@ export function AdminHeader({ session }: { session: SessionData }) {
               </DropdownMenuItem>
             </div>
             <DropdownMenuSeparator />
-            <DropdownMenuItem className="justify-center text-blue-600">
+            <DropdownMenuItem className="justify-center text-red-600">
               Ver todas as notificacoes
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
 
         {/* Quick Links */}
-        <Button variant="ghost" size="icon" asChild className="hidden md:flex hover:bg-slate-800">
+          <Button variant="ghost" size="icon" asChild className="hidden md:flex hover:bg-gray-800">
           <Link href="/" target="_blank">
             <ExternalLink className="size-5 text-slate-400" />
           </Link>
@@ -171,15 +171,15 @@ export function AdminHeader({ session }: { session: SessionData }) {
         {/* User Menu */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="relative flex items-center gap-3 rounded-full pl-2 pr-4 hover:bg-slate-800">
-              <Avatar className="size-8 border-2 border-blue-500/30">
-                <AvatarFallback className="bg-gradient-to-br from-blue-500 to-blue-700 text-sm font-semibold text-white">
+            <Button variant="ghost" className="relative flex items-center gap-3 rounded-full pl-2 pr-4 hover:bg-gray-800">
+              <Avatar className="size-8 border-2 border-red-500/30">
+                <AvatarFallback className="bg-gradient-to-br from-red-600 to-red-700 text-sm font-semibold text-white">
                   {initials}
                 </AvatarFallback>
               </Avatar>
               <div className="hidden text-left md:block">
                 <p className="text-sm font-medium text-white">{session.name}</p>
-                <p className="text-xs text-slate-400">
+                <p className="text-xs text-gray-400">
                   {session.role === "super_admin" ? "Super Admin" : "Administrador"}
                 </p>
               </div>
