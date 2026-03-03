@@ -131,7 +131,7 @@ export default function SobrePage() {
                     Ver Nosso Estoque
                   </Link>
                 </Button>
-                <Button asChild variant="outline" size="lg" className="border-gray-600 text-gray-200 hover:bg-gray-800 hover:text-white h-14 px-8 text-base">
+                <Button asChild size="lg" className="bg-transparent border border-gray-500 text-white hover:bg-gray-800 hover:border-gray-400 h-14 px-8 text-base font-semibold">
                   <Link href="/contato">
                     <Phone className="h-5 w-5 mr-2" />
                     Falar Conosco
