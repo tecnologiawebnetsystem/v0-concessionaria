@@ -88,6 +88,21 @@ const nextConfig = {
         destination: '/veiculos',
         permanent: true,
       },
+      {
+        source: '/entrar',
+        destination: '/login',
+        permanent: true,
+      },
+      {
+        source: '/cadastrar',
+        destination: '/registro',
+        permanent: true,
+      },
+      {
+        source: '/logout',
+        destination: '/',
+        permanent: false,
+      },
     ]
   },
 
