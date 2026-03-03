@@ -1,6 +1,7 @@
 "use client"
 
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
 import {
@@ -30,6 +31,12 @@ const navigation = [
 
 export function CustomerSidebar() {
   const pathname = usePathname()
+  const router = useRouter()
+
+  async function handleLogout() {
+    await fetch("/api/auth/logout", { method: "POST" })
+    router.push("/entrar")
+  }
 
   return (
     <aside className="hidden lg:flex lg:flex-col lg:w-72 lg:fixed lg:inset-y-0 bg-black border-r border-gray-800/60">
@@ -96,13 +103,13 @@ export function CustomerSidebar() {
 
       {/* Logout */}
       <div className="p-4 border-t border-gray-800/60">
-        <Link
-          href="/logout"
-          className="flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-xl text-red-400 hover:bg-red-500/10 transition-colors"
+        <button
+          onClick={handleLogout}
+          className="flex w-full items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-xl text-red-400 hover:bg-red-500/10 transition-colors"
         >
           <LogOut className="size-5" />
           Sair da Conta
-        </Link>
+        </button>
       </div>
     </aside>
   )

@@ -1,6 +1,7 @@
 "use client"
 
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
@@ -29,6 +30,12 @@ const navigation = [
 
 export function CustomerHeader() {
   const pathname = usePathname()
+  const router = useRouter()
+
+  async function handleLogout() {
+    await fetch("/api/auth/logout", { method: "POST" })
+    router.push("/entrar")
+  }
 
   return (
     <header className="sticky top-0 z-40 flex h-16 items-center justify-between border-b border-gray-800/60 bg-black/95 px-4 backdrop-blur-xl lg:px-6">
@@ -80,13 +87,13 @@ export function CustomerHeader() {
             </nav>
             <div className="p-4 border-t border-gray-700/50">
               <SheetClose asChild>
-                <Link
-                  href="/logout"
-                  className="flex items-center gap-3 px-3 py-3 text-sm font-medium rounded-xl text-red-400 hover:bg-red-500/10 transition-colors"
+                <button
+                  onClick={handleLogout}
+                  className="flex w-full items-center gap-3 px-3 py-3 text-sm font-medium rounded-xl text-red-400 hover:bg-red-500/10 transition-colors"
                 >
                   <LogOut className="size-5" />
                   Sair da Conta
-                </Link>
+                </button>
               </SheetClose>
             </div>
           </div>
@@ -195,10 +202,10 @@ export function CustomerHeader() {
             </DropdownMenuItem>
             <DropdownMenuSeparator className="bg-gray-700" />
             <DropdownMenuItem asChild>
-              <Link href="/logout" className="cursor-pointer text-red-400 hover:text-red-300 focus:text-red-300 focus:bg-red-500/10">
+              <button onClick={handleLogout} className="w-full cursor-pointer text-red-400 hover:text-red-300 focus:text-red-300 focus:bg-red-500/10">
                 <LogOut className="mr-2 size-4" />
                 Sair
-              </Link>
+              </button>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
