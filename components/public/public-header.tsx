@@ -20,7 +20,8 @@ import {
   GitCompare,
   Settings,
   X,
-  Sparkles
+  Sparkles,
+  Instagram
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import {
@@ -127,6 +128,15 @@ export function PublicHeader() {
             >
               <MessageCircle className="size-4" />
               <span>WhatsApp</span>
+            </a>
+            <a
+              href="https://instagram.com/gtveiculostaubate"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 text-gray-400 hover:text-pink-400 transition-colors"
+            >
+              <Instagram className="size-4" />
+              <span>@gtveiculostaubate</span>
             </a>
           </div>
           <div className="flex items-center gap-2 text-xs text-gray-500">
@@ -385,17 +395,23 @@ export function PublicHeader() {
 
                   {/* Bottom actions */}
                   <div className="p-4 border-t border-gray-800/50 space-y-3">
-                    <div className="grid grid-cols-2 gap-2">
+                    <div className="grid grid-cols-3 gap-2">
                       <Button variant="outline" size="sm" asChild className="w-full border-gray-800 text-white hover:bg-gray-800 bg-transparent">
                         <a href="tel:+5512974063079">
-                          <Phone className="size-4 mr-2" />
+                          <Phone className="size-4 mr-1" />
                           Ligar
                         </a>
                       </Button>
                       <Button size="sm" asChild className="w-full bg-green-600 hover:bg-green-500 text-white">
                         <a href="https://wa.me/5512974063079" target="_blank" rel="noopener noreferrer">
-                          <MessageCircle className="size-4 mr-2" />
-                          WhatsApp
+                          <MessageCircle className="size-4 mr-1" />
+                          Zap
+                        </a>
+                      </Button>
+                      <Button size="sm" variant="outline" asChild className="w-full border-pink-500/30 text-pink-400 hover:bg-pink-500/10 bg-transparent">
+                        <a href="https://instagram.com/gtveiculostaubate" target="_blank" rel="noopener noreferrer">
+                          <Instagram className="size-4 mr-1" />
+                          Insta
                         </a>
                       </Button>
                     </div>

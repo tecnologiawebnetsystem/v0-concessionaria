@@ -10,6 +10,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Sheet, SheetContent, SheetTrigger, SheetClose, SheetHeader, SheetTitle } from "@/components/ui/sheet"
 import { Slider } from "@/components/ui/slider"
+import { AISearch } from "@/components/public/ai-search"
 import {
   Search,
   SlidersHorizontal,
@@ -51,6 +52,7 @@ interface VehiclesPageClientProps {
 
 export function VehiclesPageClient({ vehicles, brands, categories, currentFilters }: VehiclesPageClientProps) {
   const [search, setSearch] = useState(currentFilters.busca || "")
+  const [aiMode, setAiMode] = useState(false)
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid")
   const [sortBy, setSortBy] = useState(currentFilters.ordenar || "")
   const [priceRange, setPriceRange] = useState([0, 500000])
@@ -96,6 +98,29 @@ export function VehiclesPageClient({ vehicles, brands, categories, currentFilter
 
           {/* Search Bar */}
           <div className="max-w-3xl mx-auto">
+            {/* Toggle Busca Normal / IA */}
+            <div className="flex gap-2 mb-3 bg-gray-800/60 rounded-xl p-1 border border-gray-700">
+              <button
+                onClick={() => setAiMode(false)}
+                className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-lg text-sm font-medium transition-all ${!aiMode ? "bg-red-600 text-white shadow" : "text-gray-400 hover:text-gray-200"}`}
+              >
+                <Search className="size-4" />
+                Busca por filtros
+              </button>
+              <button
+                onClick={() => setAiMode(true)}
+                className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-lg text-sm font-medium transition-all ${aiMode ? "bg-red-600 text-white shadow" : "text-gray-400 hover:text-gray-200"}`}
+              >
+                <Sparkles className="size-4" />
+                Busca com IA
+              </button>
+            </div>
+
+            {aiMode ? (
+              <div className="bg-gray-800/50 rounded-xl border border-gray-700 p-4">
+                <AISearch />
+              </div>
+            ) : (
             <div className="flex gap-3">
               <div className="relative flex-1">
                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 size-5 text-slate-500" />
@@ -171,6 +196,7 @@ export function VehiclesPageClient({ vehicles, brands, categories, currentFilter
                 </SheetContent>
               </Sheet>
             </div>
+            )}
           </div>
         </div>
       </section>
