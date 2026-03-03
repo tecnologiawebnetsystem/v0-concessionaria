@@ -1,6 +1,6 @@
 import type React from "react"
 import type { Metadata, Viewport } from "next"
-import { Geist, Geist_Mono } from "next/font/google"
+import { Inter, Sora } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
 import { Toaster } from "sonner"
 import { VehicleProvider } from "@/contexts/vehicle-context"
@@ -8,16 +8,18 @@ import { ThemeProvider } from "@/components/theme-provider"
 import { generateOrganizationSchema, generateWebSiteSchema } from "@/lib/seo"
 import "./globals.css"
 
-const geistSans = Geist({ 
+const inter = Inter({
   subsets: ["latin"],
   display: "swap",
-  variable: "--font-geist-sans"
+  variable: "--font-inter",
+  weight: ["400", "500", "600", "700"],
 })
 
-const geistMono = Geist_Mono({ 
+const sora = Sora({
   subsets: ["latin"],
   display: "swap",
-  variable: "--font-geist-mono"
+  variable: "--font-sora",
+  weight: ["600", "700", "800"],
 })
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://gtveiculos.com.br"
@@ -163,7 +165,7 @@ export default function RootLayout({
     <html 
       lang="pt-BR" 
       suppressHydrationWarning
-      className={`${geistSans.variable} ${geistMono.variable}`}
+      className={`${inter.variable} ${sora.variable}`}
     >
       <head>
         {/* Preconnect to external domains for performance */}

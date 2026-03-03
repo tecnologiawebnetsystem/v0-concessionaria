@@ -1,465 +1,370 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useMemo } from "react"
 import Link from "next/link"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
-import { Card, CardContent } from "@/components/ui/card"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Sheet, SheetContent, SheetTrigger, SheetClose, SheetHeader, SheetTitle } from "@/components/ui/sheet"
+import { Sheet, SheetContent, SheetTrigger, SheetTitle, SheetClose } from "@/components/ui/sheet"
 import { Slider } from "@/components/ui/slider"
 import { AISearch } from "@/components/public/ai-search"
 import {
-  Search,
-  SlidersHorizontal,
-  Car,
-  Fuel,
-  Calendar,
-  Gauge,
-  Heart,
-  ChevronRight,
-  Grid3X3,
-  List,
-  X,
-  Sparkles,
-  ArrowUpDown,
+  Search, SlidersHorizontal, Car, Fuel, Calendar, Gauge,
+  Heart, ArrowRight, Grid3X3, List, X, Sparkles, Star,
+  ChevronDown, ChevronUp, Check,
 } from "lucide-react"
 
 interface Vehicle {
-  id: string
-  name: string
-  slug: string
-  brand_name: string
-  category_name: string
-  year: number
-  price: number
-  mileage: number
-  fuel_type: string
-  transmission: string
-  primary_image: string
-  is_featured: boolean
-  condition: string
+  id: string; name: string; slug: string; brand_name: string
+  category_name: string; year: number; year_manufacture: number; year_model: number
+  price: number; mileage: number; fuel_type: string; transmission: string
+  primary_image: string; is_featured: boolean; condition: string
 }
 
 interface VehiclesPageClientProps {
-  vehicles: Vehicle[]
-  brands: any[]
-  categories: any[]
-  currentFilters: any
+  vehicles: Vehicle[]; brands: any[]; categories: any[]; currentFilters: any
+}
+
+function formatCurrency(v: number) {
+  return new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL", minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(v)
+}
+
+function VehicleCard({ vehicle, view }: { vehicle: Vehicle; view: "grid" | "list" }) {
+  const [fav, setFav] = useState(false)
+  const [imgErr, setImgErr] = useState(false)
+
+  if (view === "list") {
+    return (
+      <Link href={`/veiculos/${vehicle.slug}`} className="group block">
+        <article className="flex gap-4 bg-card rounded-2xl border border-border hover:border-primary/30 overflow-hidden hover-lift transition-colors p-3">
+          <div className="relative w-40 h-28 flex-shrink-0 rounded-xl overflow-hidden bg-muted">
+            {vehicle.primary_image && !imgErr ? (
+              <Image src={vehicle.primary_image} alt={vehicle.name} fill className="object-cover group-hover:scale-105 transition-transform duration-500" onError={() => setImgErr(true)} />
+            ) : (
+              <div className="w-full h-full flex items-center justify-center"><Car className="h-8 w-8 text-muted-foreground/30" /></div>
+            )}
+          </div>
+          <div className="flex-1 min-w-0 py-1">
+            <div className="flex items-start justify-between gap-2">
+              <div className="min-w-0">
+                <p className="text-xs text-muted-foreground font-medium uppercase tracking-wide">{vehicle.brand_name}</p>
+                <h3 className="font-display font-semibold text-foreground leading-snug group-hover:text-primary transition-colors truncate">{vehicle.name}</h3>
+              </div>
+              <p className="font-display font-bold text-primary text-lg flex-shrink-0">{formatCurrency(vehicle.price)}</p>
+            </div>
+            <div className="flex items-center gap-4 mt-2 text-xs text-muted-foreground">
+              <span className="flex items-center gap-1"><Calendar className="h-3.5 w-3.5" />{vehicle.year_manufacture || vehicle.year}</span>
+              <span className="flex items-center gap-1"><Gauge className="h-3.5 w-3.5" />{vehicle.mileage > 0 ? `${Number(vehicle.mileage).toLocaleString("pt-BR")} km` : "0 km"}</span>
+              <span className="flex items-center gap-1 capitalize"><Fuel className="h-3.5 w-3.5" />{vehicle.fuel_type || "—"}</span>
+              <span>{vehicle.transmission || "—"}</span>
+            </div>
+          </div>
+        </article>
+      </Link>
+    )
+  }
+
+  return (
+    <Link href={`/veiculos/${vehicle.slug}`} className="group block">
+      <article className="bg-card rounded-2xl overflow-hidden border border-border hover-lift hover:border-primary/30 transition-colors duration-300">
+        <div className="relative aspect-[16/10] overflow-hidden bg-muted">
+          {vehicle.primary_image && !imgErr ? (
+            <Image src={vehicle.primary_image} alt={vehicle.name} fill className="object-cover group-hover:scale-105 transition-transform duration-500" onError={() => setImgErr(true)} />
+          ) : (
+            <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-muted to-muted/60">
+              <Car className="h-14 w-14 text-muted-foreground/30" />
+            </div>
+          )}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
+          <div className="absolute top-3 left-3 flex gap-1.5">
+            {vehicle.is_featured && <span className="badge-featured flex items-center gap-1"><Star className="h-3 w-3 fill-amber-500" /> Destaque</span>}
+            {vehicle.condition === "new" && <span className="badge-new">0 KM</span>}
+          </div>
+          <button onClick={(e) => { e.preventDefault(); setFav(f => !f) }} className="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center shadow-sm hover:scale-110 transition-transform" aria-label="Favoritar">
+            <Heart className={`h-4 w-4 ${fav ? "fill-red-500 text-red-500" : "text-gray-600"}`} />
+          </button>
+          <div className="absolute bottom-3 left-3">
+            <p className="text-white font-display font-bold text-lg drop-shadow">{formatCurrency(vehicle.price)}</p>
+          </div>
+        </div>
+        <div className="p-4">
+          <p className="text-xs text-muted-foreground font-medium mb-0.5 uppercase tracking-wide">{vehicle.brand_name}</p>
+          <h3 className="font-display font-semibold text-foreground text-base line-clamp-1 group-hover:text-primary transition-colors">{vehicle.name}</h3>
+          <div className="flex items-center gap-3 mt-2.5 text-xs text-muted-foreground">
+            <span className="flex items-center gap-1"><Calendar className="h-3.5 w-3.5" />{vehicle.year_manufacture || vehicle.year}</span>
+            {vehicle.mileage !== undefined && <span className="flex items-center gap-1"><Gauge className="h-3.5 w-3.5" />{vehicle.mileage > 0 ? `${Number(vehicle.mileage).toLocaleString("pt-BR")} km` : "0 km"}</span>}
+            {vehicle.fuel_type && <span className="flex items-center gap-1 capitalize"><Fuel className="h-3.5 w-3.5" />{vehicle.fuel_type}</span>}
+          </div>
+          <div className="mt-3 pt-3 border-t border-border flex items-center justify-between">
+            <span className="text-xs text-muted-foreground">{vehicle.transmission || "Consulte"}</span>
+            <span className="text-xs font-semibold text-primary flex items-center gap-1 group-hover:gap-2 transition-all">Ver detalhes <ArrowRight className="h-3.5 w-3.5" /></span>
+          </div>
+        </div>
+      </article>
+    </Link>
+  )
+}
+
+function FilterSection({ title, children, defaultOpen = true }: { title: string; children: React.ReactNode; defaultOpen?: boolean }) {
+  const [open, setOpen] = useState(defaultOpen)
+  return (
+    <div className="border-b border-border last:border-0 py-4">
+      <button onClick={() => setOpen(o => !o)} className="flex items-center justify-between w-full text-sm font-semibold text-foreground hover:text-primary transition-colors">
+        {title}
+        {open ? <ChevronUp className="h-4 w-4 text-muted-foreground" /> : <ChevronDown className="h-4 w-4 text-muted-foreground" />}
+      </button>
+      {open && <div className="mt-3">{children}</div>}
+    </div>
+  )
 }
 
 export function VehiclesPageClient({ vehicles, brands, categories, currentFilters }: VehiclesPageClientProps) {
   const [search, setSearch] = useState(currentFilters.busca || "")
   const [aiMode, setAiMode] = useState(false)
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid")
-  const [sortBy, setSortBy] = useState(currentFilters.ordenar || "")
+  const [sortBy, setSortBy] = useState(currentFilters.ordenar || "relevancia")
   const [priceRange, setPriceRange] = useState([0, 500000])
+  const [selectedBrands, setSelectedBrands] = useState<string[]>(currentFilters.marca ? [currentFilters.marca] : [])
+  const [selectedFuel, setSelectedFuel] = useState<string[]>([])
+  const [selectedTransmission, setSelectedTransmission] = useState<string[]>([])
 
-  const filteredVehicles = vehicles.filter(v => {
-    if (search && !v.name.toLowerCase().includes(search.toLowerCase()) && 
-        !v.brand_name?.toLowerCase().includes(search.toLowerCase())) {
-      return false
-    }
-    return true
-  })
+  const maxPrice = useMemo(() => Math.max(...vehicles.map(v => Number(v.price)), 500000), [vehicles])
 
-  const sortedVehicles = [...filteredVehicles].sort((a, b) => {
-    switch (sortBy) {
-      case "menor-preco": return a.price - b.price
-      case "maior-preco": return b.price - a.price
-      case "mais-novo": return b.year - a.year
-      case "menor-km": return a.mileage - b.mileage
-      default: return 0
-    }
-  })
+  const toggleFilter = (arr: string[], setArr: (v: string[]) => void, val: string) => {
+    setArr(arr.includes(val) ? arr.filter(v => v !== val) : [...arr, val])
+  }
+
+  const filtered = useMemo(() => {
+    return vehicles.filter(v => {
+      if (search && !v.name?.toLowerCase().includes(search.toLowerCase()) && !v.brand_name?.toLowerCase().includes(search.toLowerCase())) return false
+      if (selectedBrands.length > 0 && !selectedBrands.includes(String((v as any).brand_id || v.brand_name))) return false
+      if (Number(v.price) < priceRange[0] || Number(v.price) > priceRange[1]) return false
+      if (selectedFuel.length > 0 && !selectedFuel.includes(v.fuel_type?.toLowerCase())) return false
+      if (selectedTransmission.length > 0 && !selectedTransmission.includes(v.transmission?.toLowerCase())) return false
+      return true
+    })
+  }, [vehicles, search, selectedBrands, priceRange, selectedFuel, selectedTransmission])
+
+  const sorted = useMemo(() => {
+    return [...filtered].sort((a, b) => {
+      switch (sortBy) {
+        case "menor-preco": return Number(a.price) - Number(b.price)
+        case "maior-preco": return Number(b.price) - Number(a.price)
+        case "mais-novo": return (b.year_manufacture || b.year) - (a.year_manufacture || a.year)
+        case "menor-km": return Number(a.mileage) - Number(b.mileage)
+        default: return (b.is_featured ? 1 : 0) - (a.is_featured ? 1 : 0)
+      }
+    })
+  }, [filtered, sortBy])
+
+  const activeFiltersCount = selectedBrands.length + selectedFuel.length + selectedTransmission.length + (priceRange[1] < maxPrice ? 1 : 0)
+
+  const clearFilters = () => {
+    setSelectedBrands([]); setSelectedFuel([]); setSelectedTransmission([]); setPriceRange([0, maxPrice]); setSearch("")
+  }
+
+  const fuelTypes = [...new Set(vehicles.map(v => v.fuel_type?.toLowerCase()).filter(Boolean))]
+  const transmissions = [...new Set(vehicles.map(v => v.transmission?.toLowerCase()).filter(Boolean))]
+
+  const FilterPanel = () => (
+    <div className="space-y-0">
+      {/* Header painel */}
+      <div className="flex items-center justify-between pb-4 border-b border-border mb-1">
+        <h2 className="font-display font-bold text-foreground">Filtros</h2>
+        {activeFiltersCount > 0 && (
+          <button onClick={clearFilters} className="text-xs text-primary hover:underline flex items-center gap-1">
+            <X className="h-3.5 w-3.5" /> Limpar ({activeFiltersCount})
+          </button>
+        )}
+      </div>
+
+      <FilterSection title="Preco">
+        <div className="space-y-3">
+          <Slider value={priceRange} onValueChange={setPriceRange} min={0} max={maxPrice} step={5000} className="w-full" />
+          <div className="flex items-center justify-between text-xs text-muted-foreground">
+            <span>{formatCurrency(priceRange[0])}</span>
+            <span>{formatCurrency(priceRange[1])}</span>
+          </div>
+        </div>
+      </FilterSection>
+
+      <FilterSection title="Marca">
+        <div className="space-y-1.5 max-h-48 overflow-y-auto">
+          {brands.map((b: any) => (
+            <label key={b.id} className="flex items-center gap-2.5 cursor-pointer group">
+              <div className={`w-4 h-4 rounded border flex items-center justify-center transition-colors ${selectedBrands.includes(String(b.id)) ? "bg-primary border-primary" : "border-border group-hover:border-primary"}`}>
+                {selectedBrands.includes(String(b.id)) && <Check className="h-2.5 w-2.5 text-white" />}
+              </div>
+              <input type="checkbox" className="sr-only" checked={selectedBrands.includes(String(b.id))} onChange={() => toggleFilter(selectedBrands, setSelectedBrands, String(b.id))} />
+              <span className="text-sm text-foreground">{b.name}</span>
+            </label>
+          ))}
+        </div>
+      </FilterSection>
+
+      {fuelTypes.length > 0 && (
+        <FilterSection title="Combustivel">
+          <div className="flex flex-wrap gap-2">
+            {fuelTypes.map((f) => (
+              <button key={f} onClick={() => toggleFilter(selectedFuel, setSelectedFuel, f!)} className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition-all capitalize ${selectedFuel.includes(f!) ? "bg-primary text-white border-primary" : "border-border text-muted-foreground hover:border-primary hover:text-primary"}`}>
+                {f}
+              </button>
+            ))}
+          </div>
+        </FilterSection>
+      )}
+
+      {transmissions.length > 0 && (
+        <FilterSection title="Cambio" defaultOpen={false}>
+          <div className="flex flex-wrap gap-2">
+            {transmissions.map((t) => (
+              <button key={t} onClick={() => toggleFilter(selectedTransmission, setSelectedTransmission, t!)} className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition-all capitalize ${selectedTransmission.includes(t!) ? "bg-primary text-white border-primary" : "border-border text-muted-foreground hover:border-primary hover:text-primary"}`}>
+                {t}
+              </button>
+            ))}
+          </div>
+        </FilterSection>
+      )}
+    </div>
+  )
 
   return (
-    <main className="flex-1" id="main-content">
-      {/* Hero Section */}
-      <section className="relative overflow-hidden py-12 lg:py-16">
-        <div className="absolute inset-0 bg-gradient-to-r from-red-600/20 via-transparent to-red-600/20" />
-        <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-5" />
-        
-        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-8">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-red-500/10 border border-red-500/20 mb-4">
-              <Sparkles className="size-4 text-red-400" />
-              <span className="text-sm font-medium text-red-400">{vehicles.length} veiculos disponiveis</span>
-            </div>
-            <h1 className="text-3xl lg:text-5xl font-bold text-white mb-4">
-              Encontre seu <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-400 to-red-600">Veiculo Ideal</span>
-            </h1>
-            <p className="text-slate-400 max-w-2xl mx-auto">
-              Explore nossa colecao de veiculos seminovos e 0km com as melhores condicoes de financiamento.
-            </p>
-          </div>
+    <main className="flex-1 bg-background" id="main-content">
+      {/* Hero compacto */}
+      <section className="bg-gray-950 pt-10 pb-8">
+        <div className="container mx-auto px-4">
+          <h1 className="font-display text-3xl md:text-4xl font-bold text-white mb-6">
+            {sorted.length > 0 ? `${sorted.length} veiculos encontrados` : "Nosso estoque"}
+          </h1>
 
-          {/* Search Bar */}
-          <div className="max-w-3xl mx-auto">
-            {/* Toggle Busca Normal / IA */}
-            <div className="flex gap-2 mb-3 bg-gray-800/60 rounded-xl p-1 border border-gray-700">
-              <button
-                onClick={() => setAiMode(false)}
-                className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-lg text-sm font-medium transition-all ${!aiMode ? "bg-red-600 text-white shadow" : "text-gray-400 hover:text-gray-200"}`}
-              >
-                <Search className="size-4" />
-                Busca por filtros
+          {/* Toggle Busca */}
+          <div className="max-w-3xl">
+            <div className="flex gap-1.5 p-1 bg-white/5 rounded-xl border border-white/10 mb-4 w-fit">
+              <button onClick={() => setAiMode(false)} className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${!aiMode ? "bg-red-600 text-white" : "text-gray-400 hover:text-white"}`}>
+                <Search className="h-3.5 w-3.5" /> Filtros
               </button>
-              <button
-                onClick={() => setAiMode(true)}
-                className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-lg text-sm font-medium transition-all ${aiMode ? "bg-red-600 text-white shadow" : "text-gray-400 hover:text-gray-200"}`}
-              >
-                <Sparkles className="size-4" />
-                Busca com IA
+              <button onClick={() => setAiMode(true)} className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${aiMode ? "bg-red-600 text-white" : "text-gray-400 hover:text-white"}`}>
+                <Sparkles className="h-3.5 w-3.5" /> Busca com IA
               </button>
             </div>
 
             {aiMode ? (
-              <div className="bg-gray-800/50 rounded-xl border border-gray-700 p-4">
+              <div className="bg-white/5 rounded-2xl border border-white/10 p-4">
                 <AISearch />
               </div>
             ) : (
-            <div className="flex gap-3">
-              <div className="relative flex-1">
-                <Search className="absolute left-4 top-1/2 -translate-y-1/2 size-5 text-slate-500" />
-                <Input
-                  placeholder="Buscar por marca, modelo ou ano..."
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                  className="h-14 pl-12 bg-gray-800/50 border-gray-700 text-white placeholder:text-gray-500 focus:border-red-500 rounded-xl"
-                />
+              <div className="flex gap-3">
+                <div className="relative flex-1">
+                  <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
+                  <Input
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                    placeholder="Buscar por marca ou modelo..."
+                    className="pl-10 h-12 bg-white/5 border-white/10 text-white placeholder:text-gray-500 rounded-xl"
+                  />
+                </div>
+                {/* Filtros mobile */}
+                <Sheet>
+                  <SheetTrigger asChild>
+                    <Button variant="outline" className="h-12 px-4 border-white/10 text-white hover:bg-white/10 bg-transparent rounded-xl relative md:hidden">
+                      <SlidersHorizontal className="h-4 w-4" />
+                      {activeFiltersCount > 0 && (
+                        <span className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-red-600 text-white text-xs flex items-center justify-center font-bold">{activeFiltersCount}</span>
+                      )}
+                    </Button>
+                  </SheetTrigger>
+                  <SheetContent side="left" className="w-80 bg-background p-6 overflow-y-auto">
+                    <SheetTitle className="sr-only">Filtros</SheetTitle>
+                    <FilterPanel />
+                  </SheetContent>
+                </Sheet>
               </div>
-              
-              {/* Mobile Filter Button */}
-              <Sheet>
-                <SheetTrigger asChild>
-                  <Button size="lg" className="lg:hidden h-14 px-4 bg-slate-800 border border-slate-700 hover:bg-slate-700">
-                    <SlidersHorizontal className="size-5 text-slate-400" />
-                  </Button>
-                </SheetTrigger>
-                <SheetContent side="right" className="w-80 bg-slate-900 border-slate-700 p-0">
-                  <SheetHeader className="p-4 border-b border-slate-700">
-                    <SheetTitle className="text-white">Filtros</SheetTitle>
-                  </SheetHeader>
-                  <div className="p-4 space-y-6">
-                    <div>
-                      <label className="text-sm font-medium text-slate-400 mb-2 block">Marca</label>
-                      <Select>
-                        <SelectTrigger className="bg-slate-800 border-slate-700 text-white">
-                          <SelectValue placeholder="Todas as marcas" />
-                        </SelectTrigger>
-                        <SelectContent className="bg-slate-800 border-slate-700">
-                          <SelectItem value="all">Todas as marcas</SelectItem>
-                          {brands.map(b => (
-                            <SelectItem key={b.id} value={b.slug}>{b.name}</SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    
-                    <div>
-                      <label className="text-sm font-medium text-slate-400 mb-2 block">Categoria</label>
-                      <Select>
-                        <SelectTrigger className="bg-slate-800 border-slate-700 text-white">
-                          <SelectValue placeholder="Todas as categorias" />
-                        </SelectTrigger>
-                        <SelectContent className="bg-slate-800 border-slate-700">
-                          <SelectItem value="all">Todas as categorias</SelectItem>
-                          {categories.map(c => (
-                            <SelectItem key={c.id} value={c.slug}>{c.name}</SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    
-                    <div>
-                      <label className="text-sm font-medium text-slate-400 mb-4 block">
-                        Faixa de Preco: R$ {priceRange[0].toLocaleString()} - R$ {priceRange[1].toLocaleString()}
-                      </label>
-                      <Slider
-                        value={priceRange}
-                        onValueChange={setPriceRange}
-                        max={500000}
-                        step={10000}
-                        className="py-4"
-                      />
-                    </div>
-                    
-                    <SheetClose asChild>
-                      <Button className="w-full bg-gradient-to-r from-red-600 to-red-700">
-                        Aplicar Filtros
-                      </Button>
-                    </SheetClose>
-                  </div>
-                </SheetContent>
-              </Sheet>
-            </div>
             )}
           </div>
         </div>
       </section>
 
-      {/* Results Section */}
-      <section className="py-8 lg:py-12">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          {/* Toolbar */}
-          <div className="flex flex-wrap items-center justify-between gap-4 mb-8">
-            <p className="text-slate-400">
-              <span className="text-white font-semibold">{sortedVehicles.length}</span> veiculos encontrados
-            </p>
-            
-            <div className="flex items-center gap-3">
-              {/* Sort */}
-              <Select value={sortBy} onValueChange={setSortBy}>
-                <SelectTrigger className="w-48 bg-slate-800/50 border-slate-700 text-white">
-                  <ArrowUpDown className="size-4 mr-2 text-slate-500" />
-                  <SelectValue placeholder="Ordenar por" />
-                </SelectTrigger>
-                <SelectContent className="bg-slate-800 border-slate-700">
-                  <SelectItem value="relevancia">Relevancia</SelectItem>
-                  <SelectItem value="menor-preco">Menor Preco</SelectItem>
-                  <SelectItem value="maior-preco">Maior Preco</SelectItem>
-                  <SelectItem value="mais-novo">Mais Novo</SelectItem>
-                  <SelectItem value="menor-km">Menor KM</SelectItem>
-                </SelectContent>
-              </Select>
-              
-              {/* View Toggle */}
-              <div className="hidden lg:flex items-center gap-1 bg-slate-800/50 rounded-lg p-1 border border-slate-700">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className={viewMode === "grid" ? "bg-slate-700 text-white" : "text-slate-400 hover:text-white"}
-                  onClick={() => setViewMode("grid")}
-                >
-                  <Grid3X3 className="size-4" />
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className={viewMode === "list" ? "bg-slate-700 text-white" : "text-slate-400 hover:text-white"}
-                  onClick={() => setViewMode("list")}
-                >
-                  <List className="size-4" />
-                </Button>
+      {/* Layout principal: sidebar + grid */}
+      <div className="container mx-auto px-4 py-8">
+        <div className="flex gap-8">
+          {/* Sidebar sticky — desktop */}
+          <aside className="hidden md:block w-64 flex-shrink-0">
+            <div className="sticky top-24 bg-card rounded-2xl border border-border p-5 shadow-card">
+              <FilterPanel />
+            </div>
+          </aside>
+
+          {/* Conteudo */}
+          <div className="flex-1 min-w-0">
+            {/* Barra de ordenacao */}
+            <div className="flex items-center justify-between mb-6 gap-4">
+              <p className="text-sm text-muted-foreground">
+                <span className="font-semibold text-foreground">{sorted.length}</span> veiculos
+                {activeFiltersCount > 0 && <span className="text-primary ml-1">(filtrado)</span>}
+              </p>
+              <div className="flex items-center gap-2">
+                <Select value={sortBy} onValueChange={setSortBy}>
+                  <SelectTrigger className="h-9 w-44 text-sm rounded-xl border-border">
+                    <SelectValue placeholder="Ordenar" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="relevancia">Mais relevantes</SelectItem>
+                    <SelectItem value="menor-preco">Menor preco</SelectItem>
+                    <SelectItem value="maior-preco">Maior preco</SelectItem>
+                    <SelectItem value="mais-novo">Mais novos</SelectItem>
+                    <SelectItem value="menor-km">Menor KM</SelectItem>
+                  </SelectContent>
+                </Select>
+                <div className="flex items-center border border-border rounded-xl overflow-hidden">
+                  <button onClick={() => setViewMode("grid")} className={`p-2 ${viewMode === "grid" ? "bg-primary text-white" : "text-muted-foreground hover:bg-muted"} transition-colors`} aria-label="Grade">
+                    <Grid3X3 className="h-4 w-4" />
+                  </button>
+                  <button onClick={() => setViewMode("list")} className={`p-2 ${viewMode === "list" ? "bg-primary text-white" : "text-muted-foreground hover:bg-muted"} transition-colors`} aria-label="Lista">
+                    <List className="h-4 w-4" />
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
 
-          {/* Desktop Filters + Grid */}
-          <div className="flex gap-8">
-            {/* Desktop Filters Sidebar */}
-            <aside className="hidden lg:block w-72 flex-shrink-0">
-              <div className="sticky top-24 space-y-6 bg-slate-800/30 rounded-2xl p-6 border border-slate-700/50">
-                <div className="flex items-center justify-between">
-                  <h3 className="font-semibold text-white">Filtros</h3>
-                  <Button variant="ghost" size="sm" className="text-red-400 hover:text-red-300 h-auto p-0">
-                    Limpar
-                  </Button>
-                </div>
-                
-                <div className="space-y-4">
-                  <div>
-                    <label className="text-sm font-medium text-slate-400 mb-2 block">Marca</label>
-                    <Select>
-                      <SelectTrigger className="bg-slate-900/50 border-slate-700 text-white">
-                        <SelectValue placeholder="Todas as marcas" />
-                      </SelectTrigger>
-                      <SelectContent className="bg-slate-800 border-slate-700">
-                        <SelectItem value="all">Todas as marcas</SelectItem>
-                        {brands.map(b => (
-                          <SelectItem key={b.id} value={b.slug}>{b.name}</SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  
-                  <div>
-                    <label className="text-sm font-medium text-slate-400 mb-2 block">Categoria</label>
-                    <Select>
-                      <SelectTrigger className="bg-slate-900/50 border-slate-700 text-white">
-                        <SelectValue placeholder="Todas as categorias" />
-                      </SelectTrigger>
-                      <SelectContent className="bg-slate-800 border-slate-700">
-                        <SelectItem value="all">Todas as categorias</SelectItem>
-                        {categories.map(c => (
-                          <SelectItem key={c.id} value={c.slug}>{c.name}</SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  
-                  <div>
-                    <label className="text-sm font-medium text-slate-400 mb-2 block">Combustivel</label>
-                    <Select>
-                      <SelectTrigger className="bg-slate-900/50 border-slate-700 text-white">
-                        <SelectValue placeholder="Todos" />
-                      </SelectTrigger>
-                      <SelectContent className="bg-slate-800 border-slate-700">
-                        <SelectItem value="all">Todos</SelectItem>
-                        <SelectItem value="flex">Flex</SelectItem>
-                        <SelectItem value="gasolina">Gasolina</SelectItem>
-                        <SelectItem value="diesel">Diesel</SelectItem>
-                        <SelectItem value="eletrico">Eletrico</SelectItem>
-                        <SelectItem value="hibrido">Hibrido</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  
-                  <div>
-                    <label className="text-sm font-medium text-slate-400 mb-2 block">Cambio</label>
-                    <Select>
-                      <SelectTrigger className="bg-slate-900/50 border-slate-700 text-white">
-                        <SelectValue placeholder="Todos" />
-                      </SelectTrigger>
-                      <SelectContent className="bg-slate-800 border-slate-700">
-                        <SelectItem value="all">Todos</SelectItem>
-                        <SelectItem value="automatico">Automatico</SelectItem>
-                        <SelectItem value="manual">Manual</SelectItem>
-                        <SelectItem value="cvt">CVT</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  
-                  <div>
-                    <label className="text-sm font-medium text-slate-400 mb-4 block">
-                      Faixa de Preco
-                    </label>
-                    <div className="space-y-3">
-                      <Slider
-                        value={priceRange}
-                        onValueChange={setPriceRange}
-                        max={500000}
-                        step={10000}
-                      />
-                      <div className="flex justify-between text-xs text-slate-500">
-                        <span>R$ {priceRange[0].toLocaleString()}</span>
-                        <span>R$ {priceRange[1].toLocaleString()}</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                
-                <Button className="w-full bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600">
-                  Aplicar Filtros
-                </Button>
+            {/* Active filter chips */}
+            {activeFiltersCount > 0 && (
+              <div className="flex flex-wrap gap-2 mb-5">
+                {selectedBrands.map(id => {
+                  const b = brands.find((br: any) => String(br.id) === id)
+                  return b ? (
+                    <span key={id} className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-medium border border-primary/20">
+                      {b.name} <button onClick={() => toggleFilter(selectedBrands, setSelectedBrands, id)}><X className="h-3 w-3" /></button>
+                    </span>
+                  ) : null
+                })}
+                {selectedFuel.map(f => (
+                  <span key={f} className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-medium border border-primary/20 capitalize">
+                    {f} <button onClick={() => toggleFilter(selectedFuel, setSelectedFuel, f)}><X className="h-3 w-3" /></button>
+                  </span>
+                ))}
               </div>
-            </aside>
+            )}
 
-            {/* Vehicles Grid */}
-            <div className="flex-1">
-              {sortedVehicles.length > 0 ? (
-                <div className={viewMode === "grid" 
-                  ? "grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6" 
-                  : "space-y-4"
-                }>
-                  {sortedVehicles.map((vehicle) => (
-                    <Link key={vehicle.id} href={`/veiculos/${vehicle.slug}`}>
-                      <Card className={`group bg-gray-800/50 border-gray-700/50 hover:border-red-500/50 transition-all duration-300 overflow-hidden ${viewMode === "list" ? "flex" : ""}`}>
-                        {/* Image */}
-                        <div className={`relative overflow-hidden ${viewMode === "list" ? "w-48 flex-shrink-0" : "aspect-[4/3]"}`}>
-                          <Image
-                            src={vehicle.primary_image || "https://images.unsplash.com/photo-1494976388531-d1058494cdd8?w=600&h=400&fit=crop"}
-                            alt={vehicle.name}
-                            fill
-                            className="object-cover group-hover:scale-105 transition-transform duration-500"
-                          />
-                          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-                          
-                          {/* Badges */}
-                          <div className="absolute top-3 left-3 flex gap-2">
-                            {vehicle.is_featured && (
-                              <Badge className="bg-gradient-to-r from-amber-500 to-orange-500 text-white border-0">
-                                <Sparkles className="size-3 mr-1" />
-                                Destaque
-                              </Badge>
-                            )}
-                            {vehicle.condition === "new" && (
-                              <Badge className="bg-gradient-to-r from-green-500 to-emerald-500 text-white border-0">
-                                0KM
-                              </Badge>
-                            )}
-                          </div>
-                          
-                          {/* Favorite Button */}
-                          <Button
-                            size="icon"
-                            variant="ghost"
-                            className="absolute top-3 right-3 size-9 rounded-full bg-black/30 hover:bg-black/50 text-white backdrop-blur-sm"
-                            onClick={(e) => {
-                              e.preventDefault()
-                              // Toggle favorite
-                            }}
-                          >
-                            <Heart className="size-4" />
-                          </Button>
-                        </div>
-
-                        {/* Content */}
-                        <CardContent className={`p-4 ${viewMode === "list" ? "flex-1" : ""}`}>
-                          <div className="flex items-start justify-between mb-2">
-                            <div>
-                              <p className="text-xs text-red-400 font-medium">{vehicle.brand_name}</p>
-                              <h3 className="font-semibold text-white group-hover:text-red-400 transition-colors line-clamp-1">
-                                {vehicle.name}
-                              </h3>
-                            </div>
-                          </div>
-                          
-                          {/* Specs */}
-                          <div className="flex flex-wrap gap-x-4 gap-y-1 mb-4 text-xs text-slate-400">
-                            <span className="flex items-center gap-1">
-                              <Calendar className="size-3" />
-                              {vehicle.year}
-                            </span>
-                            <span className="flex items-center gap-1">
-                              <Gauge className="size-3" />
-                              {vehicle.mileage?.toLocaleString()} km
-                            </span>
-                            <span className="flex items-center gap-1">
-                              <Fuel className="size-3" />
-                              {vehicle.fuel_type}
-                            </span>
-                          </div>
-                          
-                          {/* Price */}
-                          <div className="flex items-end justify-between">
-                            <div>
-                              <p className="text-xs text-slate-500">A partir de</p>
-                              <p className="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-emerald-400">
-                                R$ {vehicle.price?.toLocaleString()}
-                              </p>
-                            </div>
-                            <Button size="sm" className="bg-red-600 hover:bg-red-500 text-white">
-                              Ver mais
-                              <ChevronRight className="size-4 ml-1" />
-                            </Button>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    </Link>
-                  ))}
-                </div>
-              ) : (
-                <div className="text-center py-16">
-                  <Car className="size-16 mx-auto text-slate-600 mb-4" />
-                  <h3 className="text-xl font-semibold text-white mb-2">Nenhum veiculo encontrado</h3>
-                  <p className="text-slate-400 mb-6">Tente ajustar os filtros para encontrar o que procura.</p>
-                  <Button 
-                    variant="outline" 
-                    className="border-slate-700 text-white hover:bg-slate-800 bg-transparent"
-                    onClick={() => setSearch("")}
-                  >
-                    Limpar busca
-                  </Button>
-                </div>
-              )}
-            </div>
+            {/* Grid / lista */}
+            {sorted.length === 0 ? (
+              <div className="flex flex-col items-center justify-center py-24 text-center">
+                <Car className="h-14 w-14 text-muted-foreground/30 mb-4" />
+                <h3 className="font-display font-semibold text-foreground mb-2">Nenhum veiculo encontrado</h3>
+                <p className="text-muted-foreground text-sm mb-6">Tente ajustar os filtros ou buscar por outro termo.</p>
+                <Button onClick={clearFilters} variant="outline" className="rounded-xl">Limpar filtros</Button>
+              </div>
+            ) : (
+              <div className={viewMode === "grid" ? "grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5" : "flex flex-col gap-3"}>
+                {sorted.map((v) => (
+                  <VehicleCard key={v.id} vehicle={v} view={viewMode} />
+                ))}
+              </div>
+            )}
           </div>
         </div>
-      </section>
+      </div>
     </main>
   )
 }

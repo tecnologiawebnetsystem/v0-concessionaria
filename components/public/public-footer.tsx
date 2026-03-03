@@ -8,7 +8,7 @@ export function PublicFooter() {
   const currentYear = new Date().getFullYear()
 
   return (
-    <footer className="bg-gradient-to-b from-gray-900 to-gray-950 text-gray-300" role="contentinfo">
+    <footer className="bg-gray-950 text-gray-300" role="contentinfo">
       {/* CTA Section */}
       <div className="relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-r from-red-600/10 via-red-700/10 to-red-600/10" />

@@ -1,46 +1,22 @@
 "use client"
+
 import { PublicHeader } from "@/components/public/public-header"
 import { PublicFooter } from "@/components/public/public-footer"
 import { UnifiedChat } from "@/components/public/unified-chat"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import Link from "next/link"
 import Image from "next/image"
 import {
-  Search,
-  Calendar,
-  Gauge,
-  Fuel,
-  ArrowRight,
-  Car,
-  Star,
-  Shield,
-  Clock,
-  Award,
-  Users,
-  ChevronRight,
-  ChevronLeft,
-  DollarSign,
-  FileText,
-  TrendingUp,
-  Zap,
-  Heart,
-  MapPin,
-  Phone,
-  Truck,
-  Sparkles,
-  BadgeCheck,
-  Calculator,
-  Newspaper,
-  Play,
-  Eye,
-  ArrowUpRight,
+  Search, Calendar, Gauge, Fuel, ArrowRight, Car, Star,
+  Shield, Clock, Award, Users, ChevronRight, ChevronLeft,
+  Heart, MapPin, Phone, Sparkles, BadgeCheck, Calculator,
+  CheckCircle2, TrendingUp, Zap, ArrowUpRight, Instagram,
+  MessageCircle,
 } from "lucide-react"
-import { useState, useRef } from "react"
+import { useState, useRef, useEffect } from "react"
 
 function formatCurrency(value: number) {
   return new Intl.NumberFormat("pt-BR", {
@@ -57,216 +33,306 @@ interface HomePageProps {
   brands?: any[]
 }
 
+function AnimatedCounter({ end, duration = 2000, suffix = "" }: { end: number; duration?: number; suffix?: string }) {
+  const [count, setCount] = useState(0)
+  const ref = useRef<HTMLSpanElement>(null)
+  const started = useRef(false)
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting && !started.current) {
+        started.current = true
+        const start = Date.now()
+        const tick = () => {
+          const elapsed = Date.now() - start
+          const progress = Math.min(elapsed / duration, 1)
+          const ease = 1 - Math.pow(1 - progress, 3)
+          setCount(Math.round(end * ease))
+          if (progress < 1) requestAnimationFrame(tick)
+        }
+        requestAnimationFrame(tick)
+      }
+    }, { threshold: 0.3 })
+    if (ref.current) observer.observe(ref.current)
+    return () => observer.disconnect()
+  }, [end, duration])
+
+  return <span ref={ref}>{count.toLocaleString("pt-BR")}{suffix}</span>
+}
+
+function VehicleCard({ vehicle, priority = false }: { vehicle: any; priority?: boolean }) {
+  const [favorited, setFavorited] = useState(false)
+  const [imgError, setImgError] = useState(false)
+
+  return (
+    <Link href={`/veiculos/${vehicle.slug}`} className="group block">
+      <article className="bg-card rounded-2xl overflow-hidden border border-border hover-lift hover:border-primary/30 transition-colors duration-300">
+        {/* Imagem */}
+        <div className="relative aspect-[16/10] overflow-hidden bg-muted">
+          {vehicle.primary_image && !imgError ? (
+            <Image
+              src={vehicle.primary_image}
+              alt={vehicle.name}
+              fill
+              priority={priority}
+              className="object-cover group-hover:scale-105 transition-transform duration-500"
+              onError={() => setImgError(true)}
+            />
+          ) : (
+            <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-muted to-muted/60">
+              <Car className="h-14 w-14 text-muted-foreground/30" />
+            </div>
+          )}
+
+          {/* Gradiente base */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
+
+          {/* Badges topo */}
+          <div className="absolute top-3 left-3 flex gap-1.5 flex-wrap">
+            {vehicle.is_featured && (
+              <span className="badge-featured flex items-center gap-1">
+                <Star className="h-3 w-3 fill-amber-500" /> Destaque
+              </span>
+            )}
+            {vehicle.condition === "new" && (
+              <span className="badge-new">0 KM</span>
+            )}
+          </div>
+
+          {/* Botão favorito */}
+          <button
+            onClick={(e) => { e.preventDefault(); setFavorited(f => !f) }}
+            className="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center shadow-sm hover:scale-110 transition-transform"
+            aria-label={favorited ? "Remover dos favoritos" : "Adicionar aos favoritos"}
+          >
+            <Heart className={`h-4 w-4 ${favorited ? "fill-red-500 text-red-500" : "text-gray-600"}`} />
+          </button>
+
+          {/* Preço na base da imagem */}
+          <div className="absolute bottom-3 left-3">
+            <p className="text-white font-display font-bold text-lg leading-tight drop-shadow">
+              {formatCurrency(vehicle.price)}
+            </p>
+          </div>
+        </div>
+
+        {/* Conteúdo */}
+        <div className="p-4">
+          <p className="text-xs text-muted-foreground font-medium mb-0.5 uppercase tracking-wide">{vehicle.brand_name}</p>
+          <h3 className="font-display font-semibold text-foreground text-base leading-snug line-clamp-1 group-hover:text-primary transition-colors">{vehicle.name}</h3>
+
+          {/* Specs row */}
+          <div className="flex items-center gap-3 mt-2.5 text-xs text-muted-foreground">
+            <span className="flex items-center gap-1"><Calendar className="h-3.5 w-3.5" />{vehicle.year_manufacture || vehicle.year}</span>
+            {vehicle.mileage !== undefined && (
+              <span className="flex items-center gap-1"><Gauge className="h-3.5 w-3.5" />{vehicle.mileage > 0 ? `${Number(vehicle.mileage).toLocaleString("pt-BR")} km` : "0 km"}</span>
+            )}
+            {vehicle.fuel_type && (
+              <span className="flex items-center gap-1 capitalize"><Fuel className="h-3.5 w-3.5" />{vehicle.fuel_type}</span>
+            )}
+          </div>
+
+          {/* CTA */}
+          <div className="mt-3 pt-3 border-t border-border flex items-center justify-between">
+            <span className="text-xs text-muted-foreground">
+              {vehicle.transmission || "Consulte"}
+            </span>
+            <span className="text-xs font-semibold text-primary flex items-center gap-1 group-hover:gap-2 transition-all">
+              Ver detalhes <ArrowRight className="h-3.5 w-3.5" />
+            </span>
+          </div>
+        </div>
+      </article>
+    </Link>
+  )
+}
+
 export default function ClientHomePage({ vehicles, totalVehicles = 0, brands = [] }: HomePageProps) {
   const [searchType, setSearchType] = useState<"all" | "new" | "used">("all")
   const [searchBrand, setSearchBrand] = useState("")
   const [priceRange, setPriceRange] = useState("")
-  const [favorites, setFavorites] = useState<number[]>([])
-  const scrollContainerRef = useRef<HTMLDivElement>(null)
+  const scrollRef = useRef<HTMLDivElement>(null)
+  const brandsRef = useRef<HTMLDivElement>(null)
 
   const featuredVehicles = vehicles.filter((v) => v.is_featured).slice(0, 8)
-  const allVehicles = vehicles.slice(0, 30)
+  const recentVehicles = vehicles.slice(0, 12)
 
-  const toggleFavorite = (id: number) => {
-    setFavorites(prev => prev.includes(id) ? prev.filter(f => f !== id) : [...prev, id])
+  const scroll = (ref: React.RefObject<HTMLDivElement | null>, dir: "left" | "right") => {
+    ref.current?.scrollBy({ left: dir === "left" ? -380 : 380, behavior: "smooth" })
   }
 
-  const scroll = (direction: "left" | "right") => {
-    if (scrollContainerRef.current) {
-      const scrollAmount = 400
-      scrollContainerRef.current.scrollBy({
-        left: direction === "left" ? -scrollAmount : scrollAmount,
-        behavior: "smooth"
-      })
-    }
-  }
+  const searchParams = new URLSearchParams()
+  if (searchBrand && searchBrand !== "all") searchParams.set("marca", searchBrand)
+  if (priceRange && priceRange !== "all") searchParams.set("preco", priceRange)
+  if (searchType !== "all") searchParams.set("tipo", searchType)
+  const searchUrl = `/veiculos${searchParams.toString() ? `?${searchParams}` : ""}`
 
   const priceRanges = [
-    { label: "Ate R$ 50 mil", value: "0-50000", color: "from-emerald-500 to-teal-500", icon: "💚" },
-    { label: "R$ 50 - 100 mil", value: "50000-100000", color: "from-red-600 to-red-500", icon: "💙" },
-    { label: "R$ 100 - 150 mil", value: "100000-150000", color: "from-gray-700 to-gray-600", icon: "💜" },
-    { label: "Acima R$ 150 mil", value: "150000-999999", color: "from-amber-500 to-orange-500", icon: "🧡" },
+    { label: "Ate R$ 50 mil", value: "0-50000" },
+    { label: "R$ 50 mil — R$ 100 mil", value: "50000-100000" },
+    { label: "R$ 100 mil — R$ 200 mil", value: "100000-200000" },
+    { label: "Acima de R$ 200 mil", value: "200000-999999" },
   ]
 
-  const categories = [
-    { name: "SUVs", icon: "🚙", count: 45 },
-    { name: "Sedans", icon: "🚗", count: 32 },
-    { name: "Hatches", icon: "🚕", count: 28 },
-    { name: "Picapes", icon: "🛻", count: 15 },
-    { name: "Esportivos", icon: "🏎️", count: 8 },
-    { name: "Eletricos", icon: "⚡", count: 12 },
+  const bodyTypes = [
+    { name: "SUVs", slug: "suv", icon: "🚙" },
+    { name: "Hatch", slug: "hatch", icon: "🚗" },
+    { name: "Sedan", slug: "sedan", icon: "🚘" },
+    { name: "Picape", slug: "picape", icon: "🛻" },
+    { name: "Eletrico", slug: "eletrico", icon: "⚡" },
+    { name: "Esportivo", slug: "esportivo", icon: "🏎" },
+  ]
+
+  const trustItems = [
+    { icon: Shield, title: "Garantia de 3 meses", desc: "Motor e cambio em todos os seminovos" },
+    { icon: BadgeCheck, title: "Revisados e vistoriados", desc: "Checklist de 120 pontos antes da venda" },
+    { icon: Calculator, title: "Financiamento facilitado", desc: "Aprovacao em ate 2h nos principais bancos" },
+    { icon: TrendingUp, title: "Melhor preco garantido", desc: "Fazemos o match com a Tabela FIPE" },
   ]
 
   return (
-    <div className="flex min-h-screen flex-col bg-gray-950">
+    <div className="flex min-h-screen flex-col bg-background">
       <PublicHeader />
       <UnifiedChat />
 
       <main className="flex-1">
-        {/* HERO SECTION */}
-        <section className="relative min-h-[700px] overflow-hidden">
-          {/* Video/Image Background */}
+
+        {/* ================================================
+            HERO — fundo escuro premium com busca integrada
+            ================================================ */}
+        <section className="relative min-h-[92vh] flex items-center overflow-hidden bg-gray-950">
+          {/* Fundo com imagem */}
           <div className="absolute inset-0">
-            <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/95 to-slate-950/80 z-10" />
-            <div className="absolute inset-0 bg-[url('/hero-car.jpg')] bg-cover bg-center bg-no-repeat opacity-40" />
-            <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-slate-950/50 z-10" />
+            <div className="absolute inset-0 bg-[url('/hero-car.jpg')] bg-cover bg-center opacity-25" />
+            <div className="absolute inset-0 bg-gradient-to-r from-gray-950 via-gray-950/90 to-gray-950/60" />
+            <div className="absolute inset-0 bg-gradient-to-t from-gray-950 via-transparent to-gray-950/30" />
           </div>
 
-          {/* Animated Gradient Orbs */}
-          <div className="absolute top-20 left-10 w-96 h-96 bg-red-600/20 rounded-full blur-3xl animate-pulse" />
-          <div className="absolute bottom-20 right-10 w-80 h-80 bg-red-800/20 rounded-full blur-3xl animate-pulse delay-1000" />
+          {/* Acento vermelho sutil */}
+          <div className="absolute top-1/3 right-1/4 w-[600px] h-[600px] rounded-full bg-red-600/8 blur-[120px] pointer-events-none" />
 
-          <div className="container mx-auto px-4 py-20 md:py-28 relative z-20">
-            <div className="grid lg:grid-cols-2 gap-12 items-center">
-              {/* Left Content */}
-              <div className="space-y-8">
-                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-red-500/10 border border-red-500/20 backdrop-blur-sm">
-                  <span className="flex h-2 w-2 rounded-full bg-red-500 animate-pulse" />
-                  <span className="text-sm text-red-300">Mais de 5.000 clientes satisfeitos</span>
+          <div className="container mx-auto px-4 py-24 lg:py-32 relative z-10">
+            <div className="grid lg:grid-cols-2 gap-16 items-center">
+
+              {/* Esquerda — copy */}
+              <div className="space-y-8 animate-fade-up">
+                <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-red-600/10 border border-red-600/20 text-red-400 text-sm font-medium">
+                  <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />
+                  Mais de 5.000 clientes em Taubate
                 </div>
 
-                <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white leading-tight">
-                  Seu proximo{" "}
-                  <span className="relative">
-                    <span className="text-red-500">
-                      carro
-                    </span>
-                    <svg className="absolute -bottom-2 left-0 w-full" viewBox="0 0 200 12" fill="none">
-                      <path d="M2 10C50 4 150 4 198 10" stroke="url(#gradient)" strokeWidth="3" strokeLinecap="round"/>
-                      <defs>
-                        <linearGradient id="gradient" x1="0" y1="0" x2="200" y2="0">
-                          <stop stopColor="#dc2626"/>
-                          <stop offset="1" stopColor="#b91c1c"/>
-                        </linearGradient>
-                      </defs>
-                    </svg>
-                  </span>
-                  <br />esta aqui
+                <h1 className="font-display text-fluid-2xl font-bold text-white leading-none">
+                  O carro que<br />
+                  voce merece<br />
+                  <span className="text-gradient-brand">esta aqui.</span>
                 </h1>
 
-                <p className="text-xl text-gray-400 max-w-lg">
-                  Ha mais de 15 anos conectando voce ao veiculo dos seus sonhos. 
-                  Financiamento facilitado, garantia e atendimento premium.
+                <p className="text-gray-400 text-lg leading-relaxed max-w-md">
+                  Ha mais de 15 anos conectando voce ao veiculo ideal.
+                  Garantia real, financiamento facilitado e atendimento sem burocracia.
                 </p>
 
-                <div className="flex flex-wrap gap-4">
+                <div className="flex flex-wrap gap-3">
                   <Link href="/veiculos">
-                    <Button size="lg" className="h-14 px-8 bg-red-600 hover:bg-red-700 text-white text-lg font-semibold rounded-2xl shadow-xl shadow-red-600/25">
-                      <Search className="mr-2 h-5 w-5" />
-                      Ver {totalVehicles || vehicles.length} veiculos
+                    <Button size="lg" className="h-13 px-7 bg-red-600 hover:bg-red-700 text-white rounded-xl font-semibold shadow-brand">
+                      <Search className="h-4 w-4 mr-2" />
+                      Ver {totalVehicles || vehicles.length}+ veiculos
                     </Button>
                   </Link>
-                  <Link href="/minha-conta/avaliacoes">
-                    <Button size="lg" variant="outline" className="h-14 px-8 border-gray-700 text-white hover:bg-gray-800 text-lg font-semibold rounded-2xl bg-transparent">
-                      <DollarSign className="mr-2 h-5 w-5" />
-                      Vender meu carro
+                  <a href="https://wa.me/5512974063079" target="_blank" rel="noopener noreferrer">
+                    <Button size="lg" variant="outline" className="h-13 px-7 border-white/20 text-white hover:bg-white/10 rounded-xl font-semibold bg-transparent">
+                      <MessageCircle className="h-4 w-4 mr-2" />
+                      Falar no WhatsApp
                     </Button>
-                  </Link>
+                  </a>
                 </div>
 
                 {/* Stats */}
-                <div className="grid grid-cols-3 gap-6 pt-8 border-t border-gray-800">
-                  <div>
-                    <p className="text-3xl font-bold text-white">{totalVehicles || vehicles.length}+</p>
-                    <p className="text-sm text-gray-500">Veiculos</p>
-                  </div>
-                  <div>
-                    <p className="text-3xl font-bold text-white">15+</p>
-                    <p className="text-sm text-gray-500">Anos</p>
-                  </div>
-                  <div>
-                    <p className="text-3xl font-bold text-white">98%</p>
-                    <p className="text-sm text-gray-500">Aprovacao</p>
-                  </div>
+                <div className="flex items-center gap-8 pt-4 border-t border-white/10">
+                  {[
+                    { value: totalVehicles || vehicles.length, suffix: "+", label: "Veiculos" },
+                    { value: 15, suffix: "+", label: "Anos" },
+                    { value: 5000, suffix: "+", label: "Clientes" },
+                  ].map((s) => (
+                    <div key={s.label}>
+                      <p className="font-display text-3xl font-bold text-white">
+                        <AnimatedCounter end={s.value} suffix={s.suffix} />
+                      </p>
+                      <p className="text-sm text-gray-500 mt-0.5">{s.label}</p>
+                    </div>
+                  ))}
                 </div>
               </div>
 
-              {/* Right - Search Card */}
-              <div className="lg:pl-8">
-                <div className="bg-gray-900/80 backdrop-blur-xl rounded-3xl border border-gray-800 p-6 shadow-2xl">
-                  <div className="flex items-center gap-2 mb-6">
-                    <div className="p-2 rounded-xl bg-red-500/10">
-                      <Search className="h-5 w-5 text-red-400" />
-                    </div>
-                    <h3 className="text-lg font-semibold text-white">Busca rapida</h3>
+              {/* Direita — card de busca */}
+              <div className="lg:pl-4 animate-fade-up" style={{ animationDelay: "150ms" }}>
+                <div className="bg-white/5 backdrop-blur-2xl rounded-3xl border border-white/10 p-7 shadow-2xl">
+                  <h2 className="font-display text-xl font-bold text-white mb-6">Buscar veiculo</h2>
+
+                  {/* Tabs tipo */}
+                  <div className="flex gap-1.5 p-1 bg-white/5 rounded-xl mb-5">
+                    {[
+                      { id: "all", label: "Todos" },
+                      { id: "new", label: "0 KM" },
+                      { id: "used", label: "Seminovos" },
+                    ].map((t) => (
+                      <button
+                        key={t.id}
+                        onClick={() => setSearchType(t.id as any)}
+                        className={`flex-1 py-2.5 text-sm font-medium rounded-lg transition-all ${
+                          searchType === t.id
+                            ? "bg-red-600 text-white"
+                            : "text-gray-400 hover:text-white hover:bg-white/5"
+                        }`}
+                      >
+                        {t.label}
+                      </button>
+                    ))}
                   </div>
 
-                  <div className="space-y-4">
-                    {/* Type Tabs */}
-                    <div className="flex gap-2 p-1 bg-gray-800/50 rounded-xl">
-                      {[
-                        { id: "all", label: "Todos" },
-                        { id: "new", label: "0 KM" },
-                        { id: "used", label: "Seminovos" },
-                      ].map((type) => (
-                        <button
-                          key={type.id}
-                          onClick={() => setSearchType(type.id as any)}
-                          className={`flex-1 py-2.5 px-4 rounded-lg text-sm font-medium transition-all ${
-                            searchType === type.id
-                              ? "bg-red-600 text-white shadow-lg"
-                              : "text-gray-400 hover:text-white"
-                          }`}
-                        >
-                          {type.label}
-                        </button>
-                      ))}
-                    </div>
+                  <div className="space-y-3">
+                    {/* Marca */}
+                    <Select value={searchBrand} onValueChange={setSearchBrand}>
+                      <SelectTrigger className="h-12 bg-white/5 border-white/10 text-white rounded-xl">
+                        <SelectValue placeholder="Marca" />
+                      </SelectTrigger>
+                      <SelectContent className="bg-gray-900 border-gray-700">
+                        <SelectItem value="all">Todas as marcas</SelectItem>
+                        {brands.map((b: any) => (
+                          <SelectItem key={b.id} value={b.id.toString()}>{b.name}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
 
-                    {/* Brand Select */}
-                    <div>
-                      <label className="text-xs text-gray-500 font-medium mb-1.5 block">Marca</label>
-                      <Select value={searchBrand} onValueChange={setSearchBrand}>
-                        <SelectTrigger className="h-12 bg-gray-800/50 border-gray-700 text-white rounded-xl">
-                          <SelectValue placeholder="Todas as marcas" />
-                        </SelectTrigger>
-                        <SelectContent className="bg-gray-800 border-gray-700">
-                          <SelectItem value="all">Todas as marcas</SelectItem>
-                          {brands.map((brand: any) => (
-                            <SelectItem key={brand.id} value={brand.id.toString()}>
-                              {brand.name}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
+                    {/* Faixa de preco */}
+                    <Select value={priceRange} onValueChange={setPriceRange}>
+                      <SelectTrigger className="h-12 bg-white/5 border-white/10 text-white rounded-xl">
+                        <SelectValue placeholder="Faixa de preco" />
+                      </SelectTrigger>
+                      <SelectContent className="bg-gray-900 border-gray-700">
+                        <SelectItem value="all">Qualquer valor</SelectItem>
+                        {priceRanges.map((r) => (
+                          <SelectItem key={r.value} value={r.value}>{r.label}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
 
-                    {/* Price Select */}
-                    <div>
-                      <label className="text-xs text-gray-500 font-medium mb-1.5 block">Faixa de preco</label>
-                      <Select value={priceRange} onValueChange={setPriceRange}>
-                        <SelectTrigger className="h-12 bg-gray-800/50 border-gray-700 text-white rounded-xl">
-                          <SelectValue placeholder="Qualquer valor" />
-                        </SelectTrigger>
-                        <SelectContent className="bg-gray-800 border-gray-700">
-                          <SelectItem value="all">Qualquer valor</SelectItem>
-                          {priceRanges.map((range) => (
-                            <SelectItem key={range.value} value={range.value}>
-                              {range.label}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-
-                    {/* Search Button */}
-                    <Link href="/veiculos" className="block">
-                      <Button className="w-full h-14 bg-red-600 hover:bg-red-700 text-white rounded-xl text-base font-semibold">
-                        <Search className="mr-2 h-5 w-5" />
-                        Buscar veiculos
+                    <Link href={searchUrl} className="block">
+                      <Button className="w-full h-12 bg-red-600 hover:bg-red-700 text-white rounded-xl font-semibold text-base">
+                        <Search className="h-4 w-4 mr-2" /> Buscar agora
                       </Button>
                     </Link>
                   </div>
 
-                  {/* Quick Links */}
-                  <div className="mt-6 pt-6 border-t border-gray-800">
-                    <p className="text-xs text-gray-500 mb-3">Buscas populares:</p>
+                  {/* Busca IA */}
+                  <div className="mt-5 pt-5 border-t border-white/10">
+                    <p className="text-xs text-gray-500 mb-2.5">Buscas rapidas:</p>
                     <div className="flex flex-wrap gap-2">
-                      {["SUV", "Sedan", "Hatch", "Automatico", "Flex"].map((tag) => (
-                        <Link key={tag} href={`/veiculos?q=${tag.toLowerCase()}`}>
-                          <Badge variant="secondary" className="bg-gray-800 hover:bg-gray-700 text-slate-300 cursor-pointer">
+                      {["SUV automatico", "Ate 50 mil", "Hatch 0km", "Flex"].map((tag) => (
+                        <Link key={tag} href={`/veiculos?q=${encodeURIComponent(tag)}`}>
+                          <span className="inline-flex items-center px-3 py-1 rounded-full bg-white/5 border border-white/10 text-gray-400 text-xs hover:border-red-500/40 hover:text-red-400 transition-colors cursor-pointer">
                             {tag}
-                          </Badge>
+                          </span>
                         </Link>
                       ))}
                     </div>
@@ -277,436 +343,234 @@ export default function ClientHomePage({ vehicles, totalVehicles = 0, brands = [
           </div>
         </section>
 
-        {/* MARCAS CAROUSEL */}
-        <section className="py-12 bg-gray-900 border-y border-gray-800">
+        {/* ================================================
+            MARCAS — carrossel infinito suave
+            ================================================ */}
+        {brands.length > 0 && (
+          <section className="py-14 bg-white border-y border-border overflow-hidden">
+            <div className="container mx-auto px-4 mb-8 text-center">
+              <p className="text-sm font-medium text-muted-foreground uppercase tracking-widest">Marcas disponiveis</p>
+            </div>
+            <div className="relative flex items-center">
+              <button onClick={() => scroll(brandsRef, "left")} className="absolute left-4 z-10 w-9 h-9 rounded-full bg-background border border-border shadow-card flex items-center justify-center hover:border-primary transition-colors">
+                <ChevronLeft className="h-4 w-4 text-foreground" />
+              </button>
+              <div ref={brandsRef} className="flex items-center gap-8 overflow-x-auto scrollbar-hide px-12 py-2" style={{ scrollbarWidth: "none" }}>
+                {brands.map((brand: any) => (
+                  <Link
+                    key={brand.id}
+                    href={`/veiculos?marca=${brand.id}`}
+                    className="flex-shrink-0 flex flex-col items-center gap-2 group"
+                  >
+                    <div className="w-20 h-12 flex items-center justify-center grayscale group-hover:grayscale-0 opacity-50 group-hover:opacity-100 transition-all duration-300">
+                      {brand.logo_url ? (
+                        <img src={brand.logo_url} alt={brand.name} className="max-h-full max-w-full object-contain" />
+                      ) : (
+                        <span className="font-display font-bold text-lg text-foreground">{brand.name}</span>
+                      )}
+                    </div>
+                    <span className="text-xs text-muted-foreground group-hover:text-primary transition-colors">{brand.name}</span>
+                  </Link>
+                ))}
+              </div>
+              <button onClick={() => scroll(brandsRef, "right")} className="absolute right-4 z-10 w-9 h-9 rounded-full bg-background border border-border shadow-card flex items-center justify-center hover:border-primary transition-colors">
+                <ChevronRight className="h-4 w-4 text-foreground" />
+              </button>
+            </div>
+          </section>
+        )}
+
+        {/* ================================================
+            TIPOS DE CARROCERIA
+            ================================================ */}
+        <section className="py-20 bg-background">
           <div className="container mx-auto px-4">
-            <div className="flex items-center justify-center gap-12 overflow-hidden">
-              {brands.slice(0, 8).map((brand: any) => (
-                <Link 
-                  key={brand.id} 
-                  href={`/veiculos?marca=${brand.id}`}
-                  className="flex-shrink-0 opacity-60 hover:opacity-100 transition-all duration-300 grayscale hover:grayscale-0"
-                >
-                  {brand.logo_url ? (
-                    <img 
-                      src={brand.logo_url || "/placeholder.svg"} 
-                      alt={brand.name} 
-                      className="h-12 w-auto object-contain brightness-0 invert opacity-70 hover:opacity-100 transition-opacity"
-                      onError={(e) => {
-                        const target = e.target as HTMLImageElement
-                        target.style.display = 'none'
-                        target.nextElementSibling?.classList.remove('hidden')
-                      }}
-                    />
-                  ) : null}
-                  <span className={`text-xl font-bold text-gray-400 hover:text-white ${brand.logo_url ? 'hidden' : ''}`}>
-                    {brand.name}
-                  </span>
+            <div className="flex items-end justify-between mb-10">
+              <div>
+                <p className="text-xs font-semibold text-primary uppercase tracking-widest mb-2">Categorias</p>
+                <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground">Buscar por tipo</h2>
+              </div>
+              <Link href="/veiculos" className="hidden md:flex items-center gap-1 text-sm font-medium text-primary hover:underline">
+                Ver todos <ArrowRight className="h-4 w-4" />
+              </Link>
+            </div>
+            <div className="grid grid-cols-3 md:grid-cols-6 gap-3">
+              {bodyTypes.map((type) => (
+                <Link key={type.slug} href={`/veiculos?categoria=${type.slug}`}>
+                  <div className="group flex flex-col items-center gap-3 p-5 rounded-2xl border border-border bg-card hover:border-primary/40 hover:bg-primary/3 hover-lift cursor-pointer text-center transition-colors">
+                    <span className="text-3xl">{type.icon}</span>
+                    <span className="font-medium text-sm text-foreground group-hover:text-primary transition-colors">{type.name}</span>
+                  </div>
                 </Link>
               ))}
             </div>
           </div>
         </section>
 
-        {/* CATEGORIAS POR PRECO */}
-        <section className="py-20 bg-gray-950">
-          <div className="container mx-auto px-4">
-            <div className="text-center mb-12">
-              <Badge className="mb-4 bg-emerald-500/10 text-emerald-400 border-emerald-500/20">
-                <DollarSign className="h-3 w-3 mr-1" /> Orcamento
-              </Badge>
-              <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Busque por faixa de preco</h2>
-              <p className="text-gray-400 max-w-2xl mx-auto">Encontre veiculos que cabem no seu bolso</p>
-            </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-              {priceRanges.map((range, idx) => (
-                <Link key={idx} href={`/veiculos?preco=${range.value}`}>
-                  <Card className="group relative overflow-hidden bg-gray-900 border-gray-800 hover:border-gray-700 transition-all duration-500 cursor-pointer h-full">
-                    <div className={`absolute inset-0 bg-gradient-to-br ${range.color} opacity-0 group-hover:opacity-10 transition-opacity duration-500`} />
-                    <CardContent className="p-6 md:p-8 relative">
-                      <span className="text-4xl md:text-5xl mb-4 block">{range.icon}</span>
-                      <h3 className="text-lg md:text-xl font-bold text-white mb-2">{range.label}</h3>
-                      <div className="flex items-center text-gray-500 group-hover:text-red-400 transition-colors">
-                        <span className="text-sm">Ver veiculos</span>
-                        <ArrowRight className="h-4 w-4 ml-1 group-hover:translate-x-1 transition-transform" />
-                      </div>
-                    </CardContent>
-                  </Card>
-                </Link>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* VEICULOS EM DESTAQUE - CAROUSEL */}
+        {/* ================================================
+            VEICULOS EM DESTAQUE
+            ================================================ */}
         {featuredVehicles.length > 0 && (
-          <section className="py-20 bg-gradient-to-b from-gray-900 to-slate-950">
+          <section className="py-20 bg-muted/40">
             <div className="container mx-auto px-4">
               <div className="flex items-end justify-between mb-10">
                 <div>
-                  <Badge className="mb-4 bg-amber-500/10 text-amber-400 border-amber-500/20">
-                    <Star className="h-3 w-3 mr-1 fill-amber-400" /> Destaques
-                  </Badge>
-                  <h2 className="text-3xl md:text-4xl font-bold text-white">Veiculos em destaque</h2>
+                  <p className="text-xs font-semibold text-amber-600 uppercase tracking-widest mb-2 flex items-center gap-1.5">
+                    <Star className="h-3.5 w-3.5 fill-amber-500" /> Destaques
+                  </p>
+                  <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground">Veiculos em destaque</h2>
                 </div>
-                <div className="hidden md:flex items-center gap-2">
-                  <Button variant="outline" size="icon" onClick={() => scroll("left")} className="rounded-full border-gray-700 hover:bg-gray-800 bg-transparent">
-                    <ChevronLeft className="h-5 w-5" />
-                  </Button>
-                  <Button variant="outline" size="icon" onClick={() => scroll("right")} className="rounded-full border-gray-700 hover:bg-gray-800 bg-transparent">
-                    <ChevronRight className="h-5 w-5" />
-                  </Button>
+                <div className="flex items-center gap-2">
+                  <button onClick={() => scroll(scrollRef, "left")} className="w-9 h-9 rounded-full border border-border flex items-center justify-center hover:border-primary transition-colors bg-background">
+                    <ChevronLeft className="h-4 w-4" />
+                  </button>
+                  <button onClick={() => scroll(scrollRef, "right")} className="w-9 h-9 rounded-full border border-border flex items-center justify-center hover:border-primary transition-colors bg-background">
+                    <ChevronRight className="h-4 w-4" />
+                  </button>
                 </div>
               </div>
-
-              <div 
-                ref={scrollContainerRef}
-                className="flex gap-6 overflow-x-auto scrollbar-hide pb-4 -mx-4 px-4 snap-x snap-mandatory"
-                style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
-              >
-                {featuredVehicles.map((vehicle: any) => (
-                  <Link 
-                    key={vehicle.id} 
-                    href={`/veiculos/${vehicle.slug}`}
-                    className="flex-shrink-0 w-[340px] snap-start"
-                  >
-                    <Card className="group bg-gray-900 border-gray-800 hover:border-red-500/50 overflow-hidden transition-all duration-500 hover:shadow-2xl hover:shadow-red-500/10">
-                      <div className="relative aspect-[16/10] overflow-hidden">
-                        {vehicle.primary_image ? (
-                          <Image
-                            src={vehicle.primary_image || "/placeholder.svg"}
-                            alt={vehicle.name}
-                            fill
-                            className="object-cover group-hover:scale-105 transition-transform duration-700"
-                          />
-                        ) : (
-                          <div className="w-full h-full bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center">
-                            <Car className="h-16 w-16 text-gray-700" />
-                          </div>
-                        )}
-                        <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-transparent to-transparent" />
-                        
-                        {/* Badges */}
-                        <div className="absolute top-3 left-3 flex gap-2">
-                          <Badge className="bg-amber-500 text-white text-xs">
-                            <Star className="h-3 w-3 mr-1 fill-white" /> Destaque
-                          </Badge>
-                          {vehicle.is_new && (
-                            <Badge className="bg-emerald-500 text-white text-xs">0 KM</Badge>
-                          )}
-                        </div>
-
-                        {/* Favorite */}
-                        <button 
-                          onClick={(e) => { e.preventDefault(); toggleFavorite(vehicle.id) }}
-                          className="absolute top-3 right-3 p-2 rounded-full bg-black/40 backdrop-blur-sm hover:bg-black/60 transition-colors"
-                        >
-                          <Heart className={`h-4 w-4 ${favorites.includes(vehicle.id) ? "fill-red-500 text-red-500" : "text-white"}`} />
-                        </button>
-                      </div>
-
-                      <CardContent className="p-5">
-                        <div className="mb-3">
-                          <p className="text-xs text-gray-500 mb-1">{vehicle.brand_name}</p>
-                          <h3 className="font-bold text-white text-lg truncate">{vehicle.name}</h3>
-                        </div>
-
-                        <div className="flex items-center gap-3 text-xs text-gray-500 mb-4">
-                          <span className="flex items-center gap-1">
-                            <Calendar className="h-3.5 w-3.5" /> {vehicle.year_manufacture}/{vehicle.year_model}
-                          </span>
-                          <span className="flex items-center gap-1">
-                            <Gauge className="h-3.5 w-3.5" /> {vehicle.mileage?.toLocaleString()} km
-                          </span>
-                        </div>
-
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <p className="text-2xl font-bold text-white">{formatCurrency(vehicle.price)}</p>
-                          </div>
-                          <Button size="sm" className="bg-red-600 hover:bg-red-700 rounded-lg">
-                            Ver mais
-                          </Button>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </Link>
+              <div ref={scrollRef} className="flex gap-5 overflow-x-auto scrollbar-hide pb-2 -mx-4 px-4 snap-x snap-mandatory">
+                {featuredVehicles.map((vehicle, i) => (
+                  <div key={vehicle.id} className="flex-shrink-0 w-[300px] md:w-[340px] snap-start">
+                    <VehicleCard vehicle={vehicle} priority={i < 3} />
+                  </div>
                 ))}
               </div>
             </div>
           </section>
         )}
 
-        {/* CATEGORIAS */}
-        <section className="py-20 bg-gray-950">
-          <div className="container mx-auto px-4">
-            <div className="text-center mb-12">
-              <Badge className="mb-4 bg-red-500/10 text-red-400 border-red-500/20">
-                <Car className="h-3 w-3 mr-1" /> Categorias
-              </Badge>
-              <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Encontre por tipo de veiculo</h2>
-            </div>
-
-            <div className="grid grid-cols-3 md:grid-cols-6 gap-4">
-              {categories.map((cat, idx) => (
-                <Link key={idx} href={`/veiculos?tipo=${cat.name.toLowerCase()}`}>
-                  <Card className="group bg-gray-900 border-gray-800 hover:border-red-500/30 transition-all duration-300 cursor-pointer text-center">
-                    <CardContent className="p-6">
-                      <span className="text-4xl mb-3 block group-hover:scale-110 transition-transform">{cat.icon}</span>
-                      <h3 className="font-semibold text-white text-sm">{cat.name}</h3>
-                      <p className="text-xs text-gray-500 mt-1">{cat.count} ofertas</p>
-                    </CardContent>
-                  </Card>
-                </Link>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* TODOS OS VEICULOS - GRID DE 30 */}
-        <section className="py-20 bg-gradient-to-b from-slate-950 to-gray-900">
+        {/* ================================================
+            TODOS OS VEICULOS — grid limpo
+            ================================================ */}
+        <section className="py-20 bg-background">
           <div className="container mx-auto px-4">
             <div className="flex items-end justify-between mb-10">
               <div>
-                <h2 className="text-3xl md:text-4xl font-bold text-white">Nosso estoque completo</h2>
-                <p className="text-gray-400 mt-2">{allVehicles.length} veiculos disponiveis</p>
+                <p className="text-xs font-semibold text-primary uppercase tracking-widest mb-2">Estoque completo</p>
+                <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground">Veiculos disponiveis</h2>
               </div>
-              <Link href="/veiculos">
-                <Button variant="outline" className="border-gray-700 text-white hover:bg-gray-800 bg-transparent">
-                  Ver todos
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
+              <Link href="/veiculos" className="text-sm font-medium text-primary hover:underline flex items-center gap-1">
+                Ver todos <ArrowRight className="h-4 w-4" />
               </Link>
             </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-6">
-              {allVehicles.map((vehicle: any) => (
-                <Link key={vehicle.id} href={`/veiculos/${vehicle.slug}`}>
-                  <Card className="group bg-gray-900 border-gray-800 hover:border-red-500/50 overflow-hidden transition-all duration-300 hover:shadow-xl hover:shadow-red-500/10 h-full">
-                    <div className="relative aspect-[4/3] overflow-hidden">
-                      {vehicle.primary_image ? (
-                        <Image
-                          src={vehicle.primary_image || "/placeholder.svg"}
-                          alt={vehicle.name}
-                          fill
-                          className="object-cover group-hover:scale-105 transition-transform duration-500"
-                        />
-                      ) : (
-                        <div className="w-full h-full bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center">
-                          <Car className="h-12 w-12 text-gray-700" />
-                        </div>
-                      )}
-                      
-                      {/* Badges */}
-                      <div className="absolute top-2 left-2 flex flex-col gap-1">
-                        {vehicle.is_featured && (
-                          <Badge className="bg-amber-500 text-white text-[10px] px-1.5 py-0.5">
-                            <Star className="h-2.5 w-2.5 mr-0.5 fill-white" /> Top
-                          </Badge>
-                        )}
-                        {vehicle.is_new && (
-                          <Badge className="bg-emerald-500 text-white text-[10px] px-1.5 py-0.5">0KM</Badge>
-                        )}
-                      </div>
-
-                      {/* Favorite */}
-                      <button 
-                        onClick={(e) => { e.preventDefault(); toggleFavorite(vehicle.id) }}
-                        className="absolute top-2 right-2 p-1.5 rounded-full bg-black/40 backdrop-blur-sm hover:bg-black/60 transition-colors opacity-0 group-hover:opacity-100"
-                      >
-                        <Heart className={`h-3.5 w-3.5 ${favorites.includes(vehicle.id) ? "fill-red-500 text-red-500" : "text-white"}`} />
-                      </button>
-
-                      {/* Gradient overlay */}
-                      <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-transparent to-transparent opacity-60" />
-                    </div>
-
-                    <CardContent className="p-3 md:p-4">
-                      <p className="text-[10px] text-gray-500 uppercase tracking-wider mb-0.5">{vehicle.brand_name}</p>
-                      <h3 className="font-bold text-white text-sm truncate mb-2">{vehicle.name}</h3>
-
-                      <div className="flex items-center gap-2 text-[10px] text-gray-500 mb-3">
-                        <span>{vehicle.year_manufacture}/{vehicle.year_model}</span>
-                        <span className="w-1 h-1 rounded-full bg-gray-600" />
-                        <span>{(vehicle.mileage / 1000).toFixed(0)}k km</span>
-                      </div>
-
-                      <div className="flex items-center justify-between">
-                        <p className="text-lg font-bold text-white">{formatCurrency(vehicle.price)}</p>
-                        <div className="p-1.5 rounded-lg bg-red-600/10 text-red-400 opacity-0 group-hover:opacity-100 transition-opacity">
-                          <ArrowUpRight className="h-4 w-4" />
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </Link>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+              {recentVehicles.map((vehicle, i) => (
+                <VehicleCard key={vehicle.id} vehicle={vehicle} priority={i < 4} />
               ))}
             </div>
-
-            {/* Load More */}
-            <div className="text-center mt-12">
-              <Link href="/veiculos">
-                <Button size="lg" className="bg-red-600 hover:bg-red-700 text-white rounded-2xl px-12">
-                  Ver todos os {totalVehicles || vehicles.length} veiculos
-                  <ArrowRight className="ml-2 h-5 w-5" />
-                </Button>
-              </Link>
-            </div>
-          </div>
-        </section>
-
-        {/* SERVICOS */}
-        <section className="py-20 bg-gray-900">
-          <div className="container mx-auto px-4">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Nossos servicos</h2>
-              <p className="text-gray-400">Tudo que voce precisa em um so lugar</p>
-            </div>
-
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {[
-                { 
-                  icon: Calculator, 
-                  title: "Financiamento", 
-                  desc: "Aprovacao em ate 30 minutos. Melhores taxas do mercado.",
-                  color: "from-red-600 to-red-500",
-                  link: "/financiamento"
-                },
-                { 
-                  icon: DollarSign, 
-                  title: "Venda seu carro", 
-                  desc: "Avaliacao gratuita e pagamento a vista na hora.",
-                  color: "from-emerald-500 to-teal-500",
-                  link: "/avaliar-veiculo"
-                },
-                { 
-                  icon: Shield, 
-                  title: "Garantia", 
-                  desc: "Todos os veiculos com garantia de motor e cambio.",
-                  color: "from-violet-500 to-purple-500",
-                  link: "/garantia"
-                },
-                { 
-                  icon: FileText, 
-                  title: "Documentacao", 
-                  desc: "Cuidamos de toda a burocracia para voce.",
-                  color: "from-amber-500 to-orange-500",
-                  link: "/documentacao"
-                },
-              ].map((service, idx) => (
-                <Link key={idx} href={service.link}>
-                  <Card className="group bg-gray-800/50 border-gray-700 hover:border-gray-600 transition-all duration-300 cursor-pointer h-full">
-                    <CardContent className="p-6">
-                      <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${service.color} flex items-center justify-center mb-5 group-hover:scale-110 transition-transform`}>
-                        <service.icon className="h-7 w-7 text-white" />
-                      </div>
-                      <h3 className="text-xl font-bold text-white mb-2">{service.title}</h3>
-                      <p className="text-gray-400 text-sm">{service.desc}</p>
-                    </CardContent>
-                  </Card>
-                </Link>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* CTA SECTION */}
-        <section className="py-20 bg-gradient-to-r from-red-700 via-red-600 to-red-700 relative overflow-hidden">
-          <div className="absolute inset-0 bg-[url('/pattern.svg')] opacity-10" />
-          <div className="container mx-auto px-4 relative z-10">
-            <div className="max-w-3xl mx-auto text-center">
-              <h2 className="text-3xl md:text-5xl font-bold text-white mb-6">
-                Pronto para encontrar seu proximo carro?
-              </h2>
-              <p className="text-xl text-red-100 mb-8">
-                Fale com um de nossos consultores e encontre o veiculo ideal para voce
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            {vehicles.length > 12 && (
+              <div className="text-center mt-12">
                 <Link href="/veiculos">
-                    <Button size="lg" className="h-14 px-8 bg-white text-red-600 hover:bg-red-50 rounded-2xl text-lg font-semibold">
-                    <Search className="mr-2 h-5 w-5" />
-                    Explorar veiculos
-                  </Button>
-                </Link>
-                <Link href="https://wa.me/5512974063079">
-                  <Button size="lg" variant="outline" className="h-14 px-8 border-white/30 text-white hover:bg-white/10 rounded-2xl text-lg font-semibold bg-transparent">
-                    <Phone className="mr-2 h-5 w-5" />
-                    Falar no WhatsApp
+                  <Button size="lg" variant="outline" className="h-12 px-8 rounded-xl border-border font-semibold">
+                    Ver todos os {totalVehicles}+ veiculos <ArrowRight className="h-4 w-4 ml-2" />
                   </Button>
                 </Link>
               </div>
-            </div>
+            )}
           </div>
         </section>
 
-        {/* LOCALIZACAO */}
-        <section className="py-20 bg-gray-950">
+        {/* ================================================
+            POR QUE ESCOLHER A GT — trust signals
+            ================================================ */}
+        <section className="py-24 bg-gray-950 text-white">
           <div className="container mx-auto px-4">
-            <div className="grid lg:grid-cols-2 gap-12 items-center">
-              <div>
-                <Badge className="mb-4 bg-red-500/10 text-red-400 border-red-500/20">
-                  <MapPin className="h-3 w-3 mr-1" /> Localizacao
-                </Badge>
-                <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">Venha nos visitar</h2>
-                <p className="text-gray-400 mb-8">
-                  Estamos localizados em Taubate, com facil acesso pela Rodovia Presidente Dutra.
-                  Venha conhecer nosso showroom e fazer um test drive!
-                </p>
+            <div className="text-center mb-16">
+              <p className="text-xs font-semibold text-red-400 uppercase tracking-widest mb-3">Diferenciais</p>
+              <h2 className="font-display text-3xl md:text-5xl font-bold text-white mb-4">
+                Por que escolher<br className="hidden md:block" /> a GT Veiculos?
+              </h2>
+              <p className="text-gray-400 max-w-xl mx-auto text-lg">Mais de 15 anos de historia e milhares de clientes satisfeitos em Taubate e regiao.</p>
+            </div>
 
-                <div className="space-y-4 mb-8">
-                  <div className="flex items-start gap-4">
-                    <div className="p-3 rounded-xl bg-red-500/10">
-                      <MapPin className="h-5 w-5 text-red-400" />
-                    </div>
-                    <div>
-                      <h4 className="font-semibold text-white">Endereco</h4>
-                      <p className="text-gray-400">Av. César Costa, 222 - Taubaté, SP</p>
-                    </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {trustItems.map((item, i) => (
+                <div key={i} className="group p-7 rounded-2xl bg-white/5 border border-white/10 hover:border-red-500/30 hover:bg-white/8 transition-all duration-300">
+                  <div className="w-12 h-12 rounded-xl bg-red-600/15 flex items-center justify-center mb-5 group-hover:bg-red-600/25 transition-colors">
+                    <item.icon className="h-6 w-6 text-red-400" />
                   </div>
-                  <div className="flex items-start gap-4">
-                    <div className="p-3 rounded-xl bg-emerald-500/10">
-                      <Clock className="h-5 w-5 text-emerald-400" />
-                    </div>
-                    <div>
-                      <h4 className="font-semibold text-white">Horario</h4>
-                      <p className="text-gray-400">Seg a Sex: 8h as 18h | Sab: 9h as 13h</p>
-                    </div>
+                  <h3 className="font-display font-bold text-white mb-2">{item.title}</h3>
+                  <p className="text-gray-400 text-sm leading-relaxed">{item.desc}</p>
+                </div>
+              ))}
+            </div>
+
+            {/* Social proof */}
+            <div className="mt-16 pt-12 border-t border-white/10">
+              <div className="flex flex-col md:flex-row items-center justify-between gap-8">
+                <div className="flex items-center gap-6">
+                  <div className="flex -space-x-2">
+                    {[1,2,3,4,5].map((i) => (
+                      <div key={i} className="w-10 h-10 rounded-full bg-gradient-to-br from-red-500 to-red-700 border-2 border-gray-950 flex items-center justify-center text-white text-xs font-bold">
+                        {["J","M","A","C","R"][i-1]}
+                      </div>
+                    ))}
                   </div>
-                  <div className="flex items-start gap-4">
-                    <div className="p-3 rounded-xl bg-amber-500/10">
-                      <Phone className="h-5 w-5 text-amber-400" />
+                  <div>
+                    <div className="flex items-center gap-1 mb-0.5">
+                      {[1,2,3,4,5].map((i) => <Star key={i} className="h-4 w-4 fill-amber-400 text-amber-400" />)}
+                      <span className="text-amber-400 font-bold ml-1">4.9</span>
                     </div>
-                    <div>
-                      <h4 className="font-semibold text-white">Telefone</h4>
-                      <p className="text-gray-400">(12) 3333-4444 | (12) 99999-9999</p>
-                    </div>
+                    <p className="text-gray-400 text-sm">+500 avaliacoes verificadas</p>
                   </div>
                 </div>
 
-                <Link href="https://maps.google.com" target="_blank">
-                  <Button className="bg-red-600 hover:bg-red-700 rounded-xl">
-                    <MapPin className="mr-2 h-4 w-4" />
-                    Abrir no Google Maps
-                  </Button>
-                </Link>
-              </div>
+                <div className="flex flex-wrap items-center gap-5 text-gray-400 text-sm">
+                  <div className="flex items-center gap-2">
+                    <CheckCircle2 className="h-5 w-5 text-emerald-400 flex-shrink-0" />
+                    <span>CNPJ verificado</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <CheckCircle2 className="h-5 w-5 text-emerald-400 flex-shrink-0" />
+                    <span>Detran credenciado</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <CheckCircle2 className="h-5 w-5 text-emerald-400 flex-shrink-0" />
+                    <span>Nota 5 no Google</span>
+                  </div>
+                </div>
 
-              <div className="relative h-[400px] rounded-3xl overflow-hidden border border-gray-800">
-                <iframe
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3675.356303544976!2d-45.555932684425!3d-23.02636448494991!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjPCsDAxJzM0LjkiUyA0NcKwMzMnMTIuNSJX!5e0!3m2!1spt-BR!2sbr!4v1234567890"
-                  width="100%"
-                  height="100%"
-                  style={{ border: 0 }}
-                  allowFullScreen
-                  loading="lazy"
-                  referrerPolicy="no-referrer-when-downgrade"
-                  className="grayscale"
-                />
+                <a href="https://instagram.com/gtveiculostaubate" target="_blank" rel="noopener noreferrer">
+                  <Button variant="outline" className="border-white/20 text-white hover:bg-white/10 bg-transparent gap-2 rounded-xl">
+                    <Instagram className="h-4 w-4" /> @gtveiculostaubate
+                  </Button>
+                </a>
               </div>
             </div>
           </div>
         </section>
+
+        {/* ================================================
+            CTA FINAL — faixa de conversao
+            ================================================ */}
+        <section className="py-20 bg-red-600">
+          <div className="container mx-auto px-4 text-center">
+            <h2 className="font-display text-3xl md:text-5xl font-bold text-white mb-4 text-balance">
+              Pronto para encontrar seu proximo veiculo?
+            </h2>
+            <p className="text-red-100 text-lg mb-8 max-w-xl mx-auto">
+              Visite a GT Veiculos em Taubate ou fale com um especialista agora mesmo pelo WhatsApp.
+            </p>
+            <div className="flex flex-wrap items-center justify-center gap-4">
+              <Link href="/veiculos">
+                <Button size="lg" className="h-13 px-8 bg-white text-red-600 hover:bg-gray-100 font-bold rounded-xl">
+                  <Search className="h-4 w-4 mr-2" /> Ver estoque completo
+                </Button>
+              </Link>
+              <a href="https://wa.me/5512974063079" target="_blank" rel="noopener noreferrer">
+                <Button size="lg" variant="outline" className="h-13 px-8 border-white/40 text-white hover:bg-white/10 bg-transparent font-semibold rounded-xl">
+                  <MessageCircle className="h-4 w-4 mr-2" /> Falar com especialista
+                </Button>
+              </a>
+            </div>
+            <div className="flex items-center justify-center gap-2 mt-8 text-red-100 text-sm">
+              <MapPin className="h-4 w-4" />
+              Av. Cesar Costa, 222 — Taubate, SP · Seg–Sex 8h–18h · Sab 9h–13h
+            </div>
+          </div>
+        </section>
+
       </main>
 
       <PublicFooter />
