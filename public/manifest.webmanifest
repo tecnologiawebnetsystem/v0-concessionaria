@@ -1,0 +1,45 @@
+{
+  "name": "GT Veículos - Painel Admin",
+  "short_name": "GT Admin",
+  "description": "Painel de Administração GT Veículos Taubaté",
+  "start_url": "/admin",
+  "scope": "/admin",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#dc2626",
+  "orientation": "any",
+  "lang": "pt-BR",
+  "categories": ["business", "automotive"],
+  "icons": [
+    {
+      "src": "/pwa-icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/pwa-icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [],
+  "shortcuts": [
+    {
+      "name": "Dashboard",
+      "url": "/admin",
+      "description": "Painel principal"
+    },
+    {
+      "name": "Veículos",
+      "url": "/admin/vehicles",
+      "description": "Gerenciar veículos"
+    },
+    {
+      "name": "Propostas",
+      "url": "/admin/proposals",
+      "description": "Ver propostas"
+    }
+  ]
+}

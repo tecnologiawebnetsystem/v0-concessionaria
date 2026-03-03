@@ -24,6 +24,7 @@ import {
   LogOut,
   Building2,
   Code2,
+  Smartphone,
 } from "lucide-react"
 import { useState } from "react"
 
@@ -77,6 +78,7 @@ const navigationGroups = [
     name: "Sistema",
     items: [
       { name: "Configuracoes", href: "/admin/settings", icon: Settings },
+  { name: "Instalar App", href: "/admin/app-download", icon: Smartphone },
       { name: "API Docs", href: "/api-docs", icon: Code2 },
     ]
   },

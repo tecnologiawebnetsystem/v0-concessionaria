@@ -252,14 +252,9 @@ export function PublicHeader() {
                 </DropdownMenuContent>
               </DropdownMenu>
             ) : (
-              <div className="flex items-center gap-2">
-                <Button variant="ghost" size="sm" asChild className="text-gray-300 hover:text-white hover:bg-gray-800">
-                  <Link href="/login">Entrar</Link>
-                </Button>
-                <Button size="sm" asChild className="bg-red-600 hover:bg-red-500 text-white border-0">
-                  <Link href="/registro">Cadastrar</Link>
-                </Button>
-              </div>
+              <Button variant="ghost" size="sm" asChild className="text-gray-300 hover:text-white hover:bg-gray-800">
+                <Link href="/login">Entrar</Link>
+              </Button>
             )}
           </div>
 
@@ -429,18 +424,11 @@ export function PublicHeader() {
                         Sair da conta
                       </Button>
                     ) : (
-                      <div className="grid grid-cols-2 gap-2">
-                        <SheetClose asChild>
-                          <Button variant="outline" asChild className="w-full border-gray-800 text-white hover:bg-gray-800 bg-transparent">
-                            <Link href="/login">Entrar</Link>
-                          </Button>
-                        </SheetClose>
-                        <SheetClose asChild>
-                          <Button asChild className="w-full bg-red-600 hover:bg-red-500">
-                            <Link href="/registro">Cadastrar</Link>
-                          </Button>
-                        </SheetClose>
-                      </div>
+                      <SheetClose asChild>
+                        <Button asChild className="w-full bg-red-600 hover:bg-red-500">
+                          <Link href="/login">Entrar</Link>
+                        </Button>
+                      </SheetClose>
                     )}
                   </div>
                 </div>
