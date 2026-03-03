@@ -11,7 +11,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Switch } from "@/components/ui/switch"
 import { toast } from "sonner"
-import { Loader2, Upload, X } from "lucide-react"
+import { Loader2, Upload, X, Sparkles } from "lucide-react"
 
 type VehicleFormProps = {
   vehicle?: any
@@ -41,6 +41,77 @@ export function VehicleForm({ vehicle, brands, categories }: VehicleFormProps) {
     is_new: vehicle?.is_new || false,
     published: vehicle?.published || false,
   })
+
+  const [generatingDesc, setGeneratingDesc] = useState(false)
+  const [generatingPrice, setGeneratingPrice] = useState(false)
+
+  async function handleGenerateDescription() {
+    if (!formData.name || !formData.year) {
+      toast.error("Preencha pelo menos o nome e o ano do veículo.")
+      return
+    }
+    setGeneratingDesc(true)
+    try {
+      const brandName = brands.find(b => b.id === formData.brand_id)?.name || ""
+      const categoryName = categories.find(c => c.id === formData.category_id)?.name || ""
+      const res = await fetch("/api/ai/generate-description", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          brand: brandName,
+          model: formData.name,
+          year: formData.year,
+          mileage: formData.mileage,
+          fuel_type: formData.fuel_type,
+          transmission: formData.transmission,
+          engine: formData.engine,
+          color: formData.color,
+          category: categoryName,
+        }),
+      })
+      const data = await res.json()
+      if (data.description) {
+        setFormData(prev => ({ ...prev, description: data.description }))
+        toast.success("Descrição gerada com IA!")
+      }
+    } catch {
+      toast.error("Erro ao gerar descrição")
+    } finally {
+      setGeneratingDesc(false)
+    }
+  }
+
+  async function handleSuggestPrice() {
+    if (!formData.name || !formData.year) {
+      toast.error("Preencha pelo menos o nome e o ano do veículo.")
+      return
+    }
+    setGeneratingPrice(true)
+    try {
+      const brandName = brands.find(b => b.id === formData.brand_id)?.name || ""
+      const res = await fetch("/api/ai/suggest-price", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          brand: brandName,
+          model: formData.name,
+          year: formData.year,
+          mileage: formData.mileage,
+          fuel_type: formData.fuel_type,
+          transmission: formData.transmission,
+        }),
+      })
+      const data = await res.json()
+      if (data.suggestedPrice) {
+        setFormData(prev => ({ ...prev, price: data.suggestedPrice }))
+        toast.success(`Preço sugerido: R$ ${Number(data.suggestedPrice).toLocaleString("pt-BR")}`)
+      }
+    } catch {
+      toast.error("Erro ao sugerir preço")
+    } finally {
+      setGeneratingPrice(false)
+    }
+  }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
@@ -185,7 +256,20 @@ export function VehicleForm({ vehicle, brands, categories }: VehicleFormProps) {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="price">Preço (R$) *</Label>
+              <div className="flex items-center justify-between">
+                <Label htmlFor="price">Preço (R$) *</Label>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={handleSuggestPrice}
+                  disabled={generatingPrice}
+                  className="h-7 text-xs gap-1.5 border-purple-200 text-purple-700 hover:bg-purple-50"
+                >
+                  {generatingPrice ? <Loader2 className="size-3 animate-spin" /> : <Sparkles className="size-3" />}
+                  Sugerir com IA
+                </Button>
+              </div>
               <Input
                 id="price"
                 name="price"
@@ -284,13 +368,26 @@ export function VehicleForm({ vehicle, brands, categories }: VehicleFormProps) {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="description">Descrição</Label>
+            <div className="flex items-center justify-between">
+              <Label htmlFor="description">Descrição</Label>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={handleGenerateDescription}
+                disabled={generatingDesc}
+                className="h-7 text-xs gap-1.5 border-purple-200 text-purple-700 hover:bg-purple-50"
+              >
+                {generatingDesc ? <Loader2 className="size-3 animate-spin" /> : <Sparkles className="size-3" />}
+                Gerar com IA
+              </Button>
+            </div>
             <Textarea
               id="description"
               name="description"
               value={formData.description}
               onChange={handleChange}
-              placeholder="Descreva o veículo em detalhes..."
+              placeholder="Descreva o veículo em detalhes ou use 'Gerar com IA' para criar automaticamente..."
               rows={5}
             />
           </div>

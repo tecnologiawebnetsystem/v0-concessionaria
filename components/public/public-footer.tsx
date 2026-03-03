@@ -67,7 +67,7 @@ export function PublicFooter() {
                 <Facebook className="size-5" />
               </a>
               <a 
-                href="https://instagram.com/gtveiculos" 
+              href="https://instagram.com/gtveiculostaubate" 
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex size-10 items-center justify-center rounded-lg bg-gray-800 hover:bg-red-600 transition-all duration-300" 

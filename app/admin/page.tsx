@@ -2,6 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { sql } from "@/lib/db"
+import { AIInsightsWidget } from "@/components/admin/ai-insights-widget"
 import { 
   Car, 
   FileText, 
@@ -431,6 +432,9 @@ export default async function AdminDashboard() {
             </div>
           </CardContent>
         </Card>
+
+        {/* AI Insights */}
+        <AIInsightsWidget />
 
         {/* Performance Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
