@@ -38,8 +38,7 @@ export default function NotFound() {
           </h1>
           
           <p className="text-gray-600 dark:text-gray-400 mb-8 text-base sm:text-lg">
-            Parece que o veículo que você procura já foi vendido ou a página não existe mais. 
-            Que tal explorar nosso estoque atualizado?
+            Esta página saiu de estoque! Que tal encontrar o seu próximo carro?
           </p>
 
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
