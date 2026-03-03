@@ -661,7 +661,7 @@ export default function ClientHomePage({ vehicles, totalVehicles = 0, brands = [
                     </div>
                     <div>
                       <h4 className="font-semibold text-white">Endereco</h4>
-                      <p className="text-gray-400">Av. Independencia, 1500 - Centro, Taubate - SP</p>
+                      <p className="text-gray-400">Av. César Costa, 222 - Taubaté, SP</p>
                     </div>
                   </div>
                   <div className="flex items-start gap-4">

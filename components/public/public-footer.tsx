@@ -168,20 +168,20 @@ export function PublicFooter() {
                     <MapPin className="size-4 text-red-400" />
                   </div>
                   <span className="text-gray-400">
-                    Av. Independencia, 1500
+                    Av. César Costa, 222
                     <br />
-                    Taubate, SP - 12010-000
+                    Taubaté, SP
                   </span>
                 </li>
                 <li>
                   <a 
-                    href="tel:+551234567890" 
+                    href="tel:+5512974063079" 
                     className="flex items-center gap-3 text-gray-400 hover:text-white transition-colors group"
                   >
                     <div className="flex size-9 items-center justify-center rounded-lg bg-gray-800 group-hover:bg-red-600 transition-colors flex-shrink-0">
                       <Phone className="size-4 text-red-400 group-hover:text-white" />
                     </div>
-                    (12) 3456-7890
+                    (12) 97406-3079
                   </a>
                 </li>
                 <li>

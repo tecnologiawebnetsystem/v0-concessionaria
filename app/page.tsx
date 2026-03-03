@@ -86,7 +86,7 @@ const homeFaqs = [
   },
   {
     question: "Onde a GT Veículos esta localizada?",
-    answer: "Estamos localizados na Av. Independencia, 1500 - Taubate, SP. Funcionamos de segunda a sexta das 8h as 18h e sabados das 9h as 13h."
+    answer: "Estamos localizados na Av. César Costa, 222 - Taubaté, SP. Funcionamos de segunda a sexta das 8h as 18h e sabados das 9h as 13h."
   }
 ]
 

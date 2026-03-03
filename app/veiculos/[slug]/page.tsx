@@ -337,8 +337,8 @@ export default async function VehicleDetailPage({ params }: { params: Promise<{ 
                     Localizacao
                   </h3>
                   <p className="text-gray-400 text-sm mb-4">
-                    Av. Independencia, 1500<br />
-                    Centro - Taubate, SP
+                    Av. César Costa, 222<br />
+                    Taubaté, SP
                   </p>
                   <div className="flex items-center gap-2 text-sm text-gray-500">
                     <Clock className="h-4 w-4" />

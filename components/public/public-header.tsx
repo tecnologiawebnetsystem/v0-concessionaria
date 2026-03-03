@@ -113,11 +113,11 @@ export function PublicHeader() {
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-2 text-sm">
           <div className="flex items-center gap-6">
             <a 
-              href="tel:+551234567890" 
+              href="tel:+5512974063079" 
               className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors"
             >
               <Phone className="size-4 text-red-500" />
-              <span>(12) 3456-7890</span>
+              <span>(12) 97406-3079</span>
             </a>
             <a 
               href="https://wa.me/5512974063079" 
@@ -383,7 +383,7 @@ export function PublicHeader() {
                   <div className="p-4 border-t border-gray-800/50 space-y-3">
                     <div className="grid grid-cols-2 gap-2">
                       <Button variant="outline" size="sm" asChild className="w-full border-gray-800 text-white hover:bg-gray-800 bg-transparent">
-                        <a href="tel:+551234567890">
+                        <a href="tel:+5512974063079">
                           <Phone className="size-4 mr-2" />
                           Ligar
                         </a>
