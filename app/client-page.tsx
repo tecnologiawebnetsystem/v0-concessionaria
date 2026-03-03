@@ -63,6 +63,8 @@ function AnimatedCounter({ end, duration = 2000, suffix = "" }: { end: number; d
 function VehicleCard({ vehicle, priority = false }: { vehicle: any; priority?: boolean }) {
   const [favorited, setFavorited] = useState(false)
   const [imgError, setImgError] = useState(false)
+  const year = vehicle.year
+  const isNew = vehicle.is_new
 
   return (
     <Link href={`/veiculos/${vehicle.slug}`} className="group block">
@@ -94,7 +96,7 @@ function VehicleCard({ vehicle, priority = false }: { vehicle: any; priority?: b
                 <Star className="h-3 w-3 fill-amber-500" /> Destaque
               </span>
             )}
-            {vehicle.condition === "new" && (
+            {isNew && (
               <span className="badge-new">0 KM</span>
             )}
           </div>
@@ -123,7 +125,7 @@ function VehicleCard({ vehicle, priority = false }: { vehicle: any; priority?: b
 
           {/* Specs row */}
           <div className="flex items-center gap-3 mt-2.5 text-xs text-muted-foreground">
-            <span className="flex items-center gap-1"><Calendar className="h-3.5 w-3.5" />{vehicle.year_manufacture || vehicle.year}</span>
+              <span className="flex items-center gap-1"><Calendar className="h-3.5 w-3.5" />{year}</span>
             {vehicle.mileage !== undefined && (
               <span className="flex items-center gap-1"><Gauge className="h-3.5 w-3.5" />{vehicle.mileage > 0 ? `${Number(vehicle.mileage).toLocaleString("pt-BR")} km` : "0 km"}</span>
             )}

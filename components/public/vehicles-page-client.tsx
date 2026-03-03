@@ -18,9 +18,9 @@ import {
 
 interface Vehicle {
   id: string; name: string; slug: string; brand_name: string
-  category_name: string; year: number; year_manufacture: number; year_model: number
+  category_name: string; year: number; is_new: boolean
   price: number; mileage: number; fuel_type: string; transmission: string
-  primary_image: string; is_featured: boolean; condition: string
+  primary_image: string; is_featured: boolean
 }
 
 interface VehiclesPageClientProps {
@@ -55,7 +55,7 @@ function VehicleCard({ vehicle, view }: { vehicle: Vehicle; view: "grid" | "list
               <p className="font-display font-bold text-primary text-lg flex-shrink-0">{formatCurrency(vehicle.price)}</p>
             </div>
             <div className="flex items-center gap-4 mt-2 text-xs text-muted-foreground">
-              <span className="flex items-center gap-1"><Calendar className="h-3.5 w-3.5" />{vehicle.year_manufacture || vehicle.year}</span>
+              <span className="flex items-center gap-1"><Calendar className="h-3.5 w-3.5" />{vehicle.year}</span>
               <span className="flex items-center gap-1"><Gauge className="h-3.5 w-3.5" />{vehicle.mileage > 0 ? `${Number(vehicle.mileage).toLocaleString("pt-BR")} km` : "0 km"}</span>
               <span className="flex items-center gap-1 capitalize"><Fuel className="h-3.5 w-3.5" />{vehicle.fuel_type || "—"}</span>
               <span>{vehicle.transmission || "—"}</span>
@@ -80,7 +80,7 @@ function VehicleCard({ vehicle, view }: { vehicle: Vehicle; view: "grid" | "list
           <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
           <div className="absolute top-3 left-3 flex gap-1.5">
             {vehicle.is_featured && <span className="badge-featured flex items-center gap-1"><Star className="h-3 w-3 fill-amber-500" /> Destaque</span>}
-            {vehicle.condition === "new" && <span className="badge-new">0 KM</span>}
+            {vehicle.is_new && <span className="badge-new">0 KM</span>}
           </div>
           <button onClick={(e) => { e.preventDefault(); setFav(f => !f) }} className="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center shadow-sm hover:scale-110 transition-transform" aria-label="Favoritar">
             <Heart className={`h-4 w-4 ${fav ? "fill-red-500 text-red-500" : "text-gray-600"}`} />
@@ -93,7 +93,7 @@ function VehicleCard({ vehicle, view }: { vehicle: Vehicle; view: "grid" | "list
           <p className="text-xs text-muted-foreground font-medium mb-0.5 uppercase tracking-wide">{vehicle.brand_name}</p>
           <h3 className="font-display font-semibold text-foreground text-base line-clamp-1 group-hover:text-primary transition-colors">{vehicle.name}</h3>
           <div className="flex items-center gap-3 mt-2.5 text-xs text-muted-foreground">
-            <span className="flex items-center gap-1"><Calendar className="h-3.5 w-3.5" />{vehicle.year_manufacture || vehicle.year}</span>
+            <span className="flex items-center gap-1"><Calendar className="h-3.5 w-3.5" />{vehicle.year}</span>
             {vehicle.mileage !== undefined && <span className="flex items-center gap-1"><Gauge className="h-3.5 w-3.5" />{vehicle.mileage > 0 ? `${Number(vehicle.mileage).toLocaleString("pt-BR")} km` : "0 km"}</span>}
             {vehicle.fuel_type && <span className="flex items-center gap-1 capitalize"><Fuel className="h-3.5 w-3.5" />{vehicle.fuel_type}</span>}
           </div>
@@ -152,7 +152,7 @@ export function VehiclesPageClient({ vehicles, brands, categories, currentFilter
       switch (sortBy) {
         case "menor-preco": return Number(a.price) - Number(b.price)
         case "maior-preco": return Number(b.price) - Number(a.price)
-        case "mais-novo": return (b.year_manufacture || b.year) - (a.year_manufacture || a.year)
+        case "mais-novo": return b.year - a.year
         case "menor-km": return Number(a.mileage) - Number(b.mileage)
         default: return (b.is_featured ? 1 : 0) - (a.is_featured ? 1 : 0)
       }

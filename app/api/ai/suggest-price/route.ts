@@ -9,7 +9,6 @@ export async function POST(req: Request) {
     return Response.json({ error: "Dados insuficientes" }, { status: 400 })
   }
 
-  // Busca veículos similares no próprio estoque para contexto
   const similar = await sql`
     SELECT v.price, v.year, v.mileage, b.name as brand
     FROM vehicles v
@@ -27,14 +26,14 @@ export async function POST(req: Request) {
       ).join("\n")}`
     : ""
 
-  const { experimental_output } = await generateText({
+  const { text } = await generateText({
     model: "openai/gpt-4o-mini",
-    experimental_output: Output.object({
+    output: Output.object({
       schema: z.object({
         suggestedPrice: z.number().describe("Preço sugerido em reais"),
         minPrice: z.number().describe("Preço mínimo aceitável"),
         maxPrice: z.number().describe("Preço máximo de mercado"),
-        reasoning: z.string().describe("Justificativa resumida em até 2 frases"),
+        reasoning: z.string().nullable().describe("Justificativa resumida em até 2 frases"),
       }),
     }),
     system: `Você é um especialista em avaliação de veículos usados no mercado brasileiro.
@@ -51,5 +50,11 @@ ${similarContext}`,
     maxOutputTokens: 200,
   })
 
-  return Response.json(experimental_output)
+  try {
+    const result = JSON.parse(text)
+    return Response.json(result)
+  } catch {
+    return Response.json({ error: "Erro ao processar resposta" }, { status: 500 })
+  }
 }
+
