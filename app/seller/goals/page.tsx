@@ -1,93 +1,72 @@
 "use client"
 
+import useSWR from "swr"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Progress } from "@/components/ui/progress"
-import { 
-  Target,
-  TrendingUp,
-  Award,
-  Calendar,
-  Trophy,
-  Star,
-  Zap
-} from "lucide-react"
+import { Target, TrendingUp, Award, Calendar, Trophy, Star, Zap } from "lucide-react"
+
+const fetcher = (url: string) => fetch(url).then(r => r.json())
+const fmt = (v: number) => new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(v)
+const monthNames = ["Janeiro","Fevereiro","Marco","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"]
 
 export default function SellerGoalsPage() {
-  // Dados mockados
-  const currentGoal = {
-    goal_quantity: 8,
-    goal_value: 800000,
-    bonus_percentage: 5
-  }
-  
-  const currentSales = {
-    count: 5,
-    value: 485000
-  }
+  const { data, isLoading } = useSWR("/api/seller/goals", fetcher)
 
-  const stats = {
-    achieved: 8,
-    total: 12
-  }
+  const currentGoal  = data?.currentGoal  ?? null
+  const currentSales = data?.currentSales ?? { count: "0", value: "0" }
+  const history      = data?.history      ?? []
+  const stats        = data?.stats        ?? { total: 0, achieved: 0 }
 
-  const goalsHistory = [
-    { year: 2023, month: 12, goal_quantity: 6, actual_sales: 7, actual_value: 580000 },
-    { year: 2023, month: 11, goal_quantity: 6, actual_sales: 6, actual_value: 520000 },
-    { year: 2023, month: 10, goal_quantity: 5, actual_sales: 4, actual_value: 380000 },
-    { year: 2023, month: 9, goal_quantity: 5, actual_sales: 6, actual_value: 490000 },
-  ]
+  const salesCount = Number(currentSales.count) || 0
+  const salesValue = Number(currentSales.value) || 0
+  const goalQty    = currentGoal?.goal_quantity ?? 0
+  const goalValue  = Number(currentGoal?.goal_value) || 0
 
-  const monthNames = ['Janeiro', 'Fevereiro', 'Marco', 'Abril', 'Maio', 'Junho', 
-                      'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro']
+  const qtyProgress   = goalQty   > 0 ? Math.min((salesCount / goalQty) * 100, 100)   : 0
+  const valueProgress = goalValue > 0 ? Math.min((salesValue / goalValue) * 100, 100) : 0
 
-  const formatCurrency = (value: number) => 
-    new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(value)
+  const now = new Date()
+  const currentMonthName = monthNames[now.getMonth()]
+  const currentYear = now.getFullYear()
 
-  const quantityProgress = currentGoal.goal_quantity > 0 
-    ? (currentSales.count / currentGoal.goal_quantity * 100) 
-    : 0
-
-  const valueProgress = currentGoal.goal_value > 0 
-    ? (currentSales.value / currentGoal.goal_value * 100) 
-    : 0
-
-  const currentMonth = monthNames[new Date().getMonth()]
-  const currentYear = new Date().getFullYear()
+  if (isLoading) return (
+    <div className="space-y-6">
+      <div className="h-10 w-40 bg-slate-800 rounded animate-pulse" />
+      <div className="grid gap-4 md:grid-cols-3">
+        {[...Array(3)].map((_, i) => <div key={i} className="h-28 bg-slate-800 rounded-xl animate-pulse" />)}
+      </div>
+    </div>
+  )
 
   return (
     <div className="space-y-6">
-      {/* Header */}
       <div>
         <h1 className="text-3xl font-bold text-white">Metas</h1>
         <p className="text-slate-400">Acompanhe seu progresso e conquistas</p>
       </div>
 
-      {/* Cards de Resumo */}
+      {/* Cards resumo */}
       <div className="grid gap-4 md:grid-cols-3">
         <Card className="bg-gradient-to-br from-amber-500 to-orange-600 border-0 shadow-lg shadow-amber-500/20">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium text-amber-100">Metas Batidas</CardTitle>
-            <div className="rounded-lg bg-white/20 p-2">
-              <Trophy className="size-5 text-white" />
-            </div>
+            <div className="rounded-lg bg-white/20 p-2"><Trophy className="size-5 text-white" /></div>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold text-white">{stats.achieved}</div>
-            <p className="text-sm text-amber-200">de {stats.total} metas</p>
+            <div className="text-3xl font-bold text-white">{Number(stats.achieved)}</div>
+            <p className="text-sm text-amber-200">de {Number(stats.total)} metas</p>
           </CardContent>
         </Card>
 
         <Card className="bg-gradient-to-br from-emerald-500 to-green-600 border-0 shadow-lg shadow-emerald-500/20">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium text-emerald-100">Taxa de Sucesso</CardTitle>
-            <div className="rounded-lg bg-white/20 p-2">
-              <Star className="size-5 text-white" />
-            </div>
+            <div className="rounded-lg bg-white/20 p-2"><Star className="size-5 text-white" /></div>
           </CardHeader>
           <CardContent>
             <div className="text-3xl font-bold text-white">
-              {stats.total > 0 ? ((stats.achieved / stats.total) * 100).toFixed(0) : 0}%
+              {Number(stats.total) > 0 ? ((Number(stats.achieved) / Number(stats.total)) * 100).toFixed(0) : 0}%
             </div>
             <p className="text-sm text-emerald-200">Metas atingidas</p>
           </CardContent>
@@ -95,152 +74,129 @@ export default function SellerGoalsPage() {
 
         <Card className="bg-gradient-to-br from-blue-600 to-blue-700 border-0 shadow-lg shadow-blue-500/20">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-blue-100">Vendas Hoje</CardTitle>
-            <div className="rounded-lg bg-white/20 p-2">
-              <Calendar className="size-5 text-white" />
-            </div>
+            <CardTitle className="text-sm font-medium text-blue-100">Vendas no Mes</CardTitle>
+            <div className="rounded-lg bg-white/20 p-2"><Calendar className="size-5 text-white" /></div>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold text-white">{currentSales.count}</div>
-            <p className="text-sm text-blue-200">{currentMonth}/{currentYear}</p>
+            <div className="text-3xl font-bold text-white">{salesCount}</div>
+            <p className="text-sm text-blue-200">{currentMonthName}/{currentYear}</p>
           </CardContent>
         </Card>
       </div>
 
-      {/* Meta do Mes Atual */}
-      <Card className="bg-gradient-to-r from-slate-800 to-slate-800/50 border-2 border-emerald-500/30">
-        <CardHeader>
-          <div className="flex items-center justify-between">
-            <div>
-              <CardTitle className="flex items-center gap-2 text-white">
-                <Target className="size-6 text-emerald-400" />
-                Meta de {currentMonth} {currentYear}
-              </CardTitle>
-              <CardDescription className="text-slate-400">Seu progresso no mes atual</CardDescription>
-            </div>
-            {quantityProgress >= 100 && (
-              <Badge className="bg-emerald-500 text-white text-lg px-4 py-2">
-                <Trophy className="size-4 mr-2" />
-                Meta Atingida!
-              </Badge>
-            )}
-          </div>
-        </CardHeader>
-        <CardContent className="space-y-6">
-          {/* Meta de Quantidade */}
-          <div className="bg-slate-900/50 rounded-lg p-4">
-            <div className="flex justify-between mb-3">
-              <span className="text-sm font-medium text-slate-300">Meta de Vendas</span>
-              <span className="text-sm font-bold text-white">
-                {currentSales.count} / {currentGoal.goal_quantity} veiculos
-              </span>
-            </div>
-            <div className="relative">
-              <Progress value={Math.min(quantityProgress, 100)} className="h-4 bg-slate-700" />
-              <div 
-                className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-500 to-emerald-500 transition-all"
-                style={{ width: `${Math.min(quantityProgress, 100)}%`, height: '100%', borderRadius: '9999px' }}
-              />
-            </div>
-            <p className="text-xs text-slate-500 mt-2">
-              {quantityProgress >= 100 
-                ? `Parabens! Voce ultrapassou a meta em ${(quantityProgress - 100).toFixed(0)}%!`
-                : `Faltam ${currentGoal.goal_quantity - currentSales.count} vendas para bater a meta`
-              }
-            </p>
-          </div>
-
-          {/* Meta de Valor */}
-          <div className="bg-slate-900/50 rounded-lg p-4">
-            <div className="flex justify-between mb-3">
-              <span className="text-sm font-medium text-slate-300">Meta de Faturamento</span>
-              <span className="text-sm font-bold text-white">
-                {formatCurrency(currentSales.value)} / {formatCurrency(currentGoal.goal_value)}
-              </span>
-            </div>
-            <div className="relative">
-              <Progress value={Math.min(valueProgress, 100)} className="h-4 bg-slate-700" />
-              <div 
-                className="absolute inset-0 rounded-full bg-gradient-to-r from-emerald-500 to-cyan-500 transition-all"
-                style={{ width: `${Math.min(valueProgress, 100)}%`, height: '100%', borderRadius: '9999px' }}
-              />
-            </div>
-            <p className="text-xs text-slate-500 mt-2">
-              {valueProgress >= 100 
-                ? `Parabens! Voce ultrapassou a meta em ${(valueProgress - 100).toFixed(0)}%!`
-                : `Faltam ${formatCurrency(currentGoal.goal_value - currentSales.value)} para bater a meta`
-              }
-            </p>
-          </div>
-
-          {/* Bonus */}
-          {currentGoal.bonus_percentage > 0 && (
-            <div className="p-4 bg-gradient-to-r from-amber-500/20 to-orange-500/20 border border-amber-500/30 rounded-lg">
-              <div className="flex items-center gap-2">
-                <Zap className="size-5 text-amber-400" />
-                <span className="font-medium text-amber-400">Bonus Disponivel</span>
+      {/* Meta do mes atual */}
+      {currentGoal ? (
+        <Card className="bg-gradient-to-r from-slate-800 to-slate-800/50 border-2 border-emerald-500/30">
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <div>
+                <CardTitle className="flex items-center gap-2 text-white">
+                  <Target className="size-6 text-emerald-400" />
+                  Meta de {currentMonthName} {currentYear}
+                </CardTitle>
+                <CardDescription className="text-slate-400">Seu progresso no mes atual</CardDescription>
               </div>
-              <p className="text-sm text-amber-200/80 mt-1">
-                Ao atingir a meta, voce recebera um bonus de <strong className="text-amber-300">{currentGoal.bonus_percentage}%</strong> sobre suas comissoes do mes.
+              {qtyProgress >= 100 && (
+                <Badge className="bg-emerald-500 text-white text-base px-4 py-2">
+                  <Trophy className="size-4 mr-2" /> Meta Atingida!
+                </Badge>
+              )}
+            </div>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            {/* Quantidade */}
+            <div className="bg-slate-900/50 rounded-lg p-4">
+              <div className="flex justify-between mb-3">
+                <span className="text-sm font-medium text-slate-300">Meta de Vendas</span>
+                <span className="text-sm font-bold text-white">{salesCount} / {goalQty} veiculos</span>
+              </div>
+              <Progress value={qtyProgress} className="h-4 bg-slate-700" />
+              <p className="text-xs text-slate-500 mt-2">
+                {qtyProgress >= 100
+                  ? `Parabens! Voce atingiu a meta com ${salesCount - goalQty} vendas a mais!`
+                  : `Faltam ${goalQty - salesCount} vendas para bater a meta`}
               </p>
             </div>
-          )}
-        </CardContent>
-      </Card>
 
-      {/* Historico de Metas */}
-      <Card className="bg-slate-800/50 border-slate-700">
-        <CardHeader>
-          <CardTitle className="text-white">Historico de Metas</CardTitle>
-          <CardDescription className="text-slate-400">Desempenho nos meses anteriores</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-            {goalsHistory.map((goal) => {
-              const achieved = goal.actual_sales >= goal.goal_quantity
-              const progress = goal.goal_quantity > 0 
-                ? (goal.actual_sales / goal.goal_quantity * 100) 
-                : 0
-
-              return (
-                <div 
-                  key={`${goal.year}-${goal.month}`} 
-                  className={`p-4 rounded-lg border transition-all ${
-                    achieved 
-                      ? 'bg-emerald-500/10 border-emerald-500/30 hover:border-emerald-500/50' 
-                      : 'bg-slate-900/50 border-slate-700 hover:border-slate-600'
-                  }`}
-                >
-                  <div className="flex items-center justify-between mb-3">
-                    <span className="font-medium text-slate-300">
-                      {monthNames[goal.month - 1]}/{goal.year}
-                    </span>
-                    {achieved ? (
-                      <Badge className="bg-emerald-500/20 text-emerald-400 border-emerald-500/30">
-                        <Trophy className="size-3 mr-1" />
-                        Atingida
-                      </Badge>
-                    ) : (
-                      <Badge className="bg-slate-700 text-slate-400">Nao atingida</Badge>
-                    )}
-                  </div>
-                  <div className="space-y-2">
-                    <div className="flex justify-between text-sm">
-                      <span className="text-slate-500">Vendas</span>
-                      <span className="font-medium text-white">{goal.actual_sales} / {goal.goal_quantity}</span>
-                    </div>
-                    <Progress value={Math.min(progress, 100)} className="h-2 bg-slate-700" />
-                    <div className="flex justify-between text-sm">
-                      <span className="text-slate-500">Faturamento</span>
-                      <span className="font-medium text-emerald-400">{formatCurrency(goal.actual_value)}</span>
-                    </div>
-                  </div>
+            {/* Valor */}
+            {goalValue > 0 && (
+              <div className="bg-slate-900/50 rounded-lg p-4">
+                <div className="flex justify-between mb-3">
+                  <span className="text-sm font-medium text-slate-300">Meta de Faturamento</span>
+                  <span className="text-sm font-bold text-white">{fmt(salesValue)} / {fmt(goalValue)}</span>
                 </div>
-              )
-            })}
-          </div>
-        </CardContent>
-      </Card>
+                <Progress value={valueProgress} className="h-4 bg-slate-700" />
+                <p className="text-xs text-slate-500 mt-2">
+                  {valueProgress >= 100
+                    ? `Parabens! Meta de faturamento atingida!`
+                    : `Faltam ${fmt(goalValue - salesValue)} para bater a meta de faturamento`}
+                </p>
+              </div>
+            )}
+
+            {/* Bonus */}
+            {Number(currentGoal.bonus_percentage) > 0 && (
+              <div className="p-4 bg-amber-500/10 border border-amber-500/30 rounded-lg">
+                <div className="flex items-center gap-2">
+                  <Zap className="size-5 text-amber-400" />
+                  <span className="font-medium text-amber-400">Bonus Disponivel</span>
+                </div>
+                <p className="text-sm text-amber-200/80 mt-1">
+                  Ao atingir a meta, voce recebera um bonus de{" "}
+                  <strong className="text-amber-300">{currentGoal.bonus_percentage}%</strong> sobre suas comissoes do mes.
+                </p>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      ) : (
+        <Card className="bg-slate-800/50 border-slate-700">
+          <CardContent className="py-10 text-center">
+            <Target className="size-12 text-slate-600 mx-auto mb-3" />
+            <p className="text-slate-400">Nenhuma meta definida para {currentMonthName}/{currentYear}.</p>
+            <p className="text-sm text-slate-500 mt-1">O administrador pode configurar sua meta mensal.</p>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Historico */}
+      {history.length > 0 && (
+        <Card className="bg-slate-800/50 border-slate-700">
+          <CardHeader>
+            <CardTitle className="text-white">Historico de Metas</CardTitle>
+            <CardDescription className="text-slate-400">Desempenho nos meses anteriores</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+              {history.map((g: any) => {
+                const achieved = Number(g.actual_sales) >= Number(g.goal_quantity)
+                const pct = g.goal_quantity > 0 ? Math.min((Number(g.actual_sales) / Number(g.goal_quantity)) * 100, 100) : 0
+                return (
+                  <div key={`${g.year}-${g.month}`} className={`p-4 rounded-lg border transition-all ${achieved ? "bg-emerald-500/10 border-emerald-500/30" : "bg-slate-900/50 border-slate-700"}`}>
+                    <div className="flex items-center justify-between mb-3">
+                      <span className="font-medium text-slate-300">{monthNames[g.month - 1]}/{g.year}</span>
+                      {achieved
+                        ? <Badge className="bg-emerald-500/20 text-emerald-400 border-emerald-500/30"><Trophy className="size-3 mr-1" />Atingida</Badge>
+                        : <Badge className="bg-slate-700 text-slate-400">Nao atingida</Badge>}
+                    </div>
+                    <div className="space-y-2">
+                      <div className="flex justify-between text-sm">
+                        <span className="text-slate-500">Vendas</span>
+                        <span className="font-medium text-white">{g.actual_sales} / {g.goal_quantity}</span>
+                      </div>
+                      <Progress value={pct} className="h-2 bg-slate-700" />
+                      <div className="flex justify-between text-sm">
+                        <span className="text-slate-500">Faturamento</span>
+                        <span className="font-medium text-emerald-400">{fmt(Number(g.actual_value))}</span>
+                      </div>
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+          </CardContent>
+        </Card>
+      )}
     </div>
   )
 }

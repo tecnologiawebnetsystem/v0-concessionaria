@@ -2,26 +2,17 @@ import { sql } from "@/lib/db"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
+  Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from "@/components/ui/table"
-import {
-  Clock,
-  Car,
-  DollarSign,
-  TrendingUp,
-  CheckCircle,
-  User,
-} from "lucide-react"
+import { Clock, Car, DollarSign, TrendingUp, User } from "lucide-react"
 import { getSession } from "@/lib/session"
 import { redirect } from "next/navigation"
 
-async function getSellerHistory(sellerUserId: string) {
+async function getSellerHistory(userId: string) {
   try {
+    const [seller] = await sql`SELECT id FROM sellers WHERE user_id = ${userId}`
+    if (!seller) return []
+
     const sales = await sql`
       SELECT 
         s.id,
@@ -32,11 +23,12 @@ async function getSellerHistory(sellerUserId: string) {
         s.status,
         v.name as vehicle_name,
         v.year as vehicle_year,
-        u.name as customer_name
+        b.name as brand_name,
+        s.customer_name
       FROM sales s
       LEFT JOIN vehicles v ON s.vehicle_id = v.id
-      LEFT JOIN sellers sl ON s.seller_id = sl.id
-      LEFT JOIN users u ON sl.user_id = u.id
+      LEFT JOIN brands b ON v.brand_id = b.id
+      WHERE s.seller_id = ${seller.id}
       ORDER BY s.sale_date DESC
       LIMIT 200
     `
@@ -55,18 +47,15 @@ function formatDate(date: string) {
 }
 
 const paymentLabels: Record<string, string> = {
-  cash: "A Vista",
-  financing: "Financiamento",
-  consortium: "Consorcio",
-  trade_in: "Troca",
+  cash: "A Vista", financing: "Financiamento", consortium: "Consorcio", trade_in: "Troca", mixed: "Misto",
 }
 
 function StatusBadge({ status }: { status: string }) {
   const map: Record<string, { label: string; className: string }> = {
-    pending:   { label: "Pendente",   className: "bg-amber-500/10 text-amber-400 border-amber-500/20" },
-    approved:  { label: "Aprovada",   className: "bg-blue-500/10 text-blue-400 border-blue-500/20" },
-    completed: { label: "Concluida",  className: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20" },
-    cancelled: { label: "Cancelada",  className: "bg-red-500/10 text-red-400 border-red-500/20" },
+    pending:   { label: "Pendente",  className: "bg-amber-500/10 text-amber-400 border-amber-500/20" },
+    approved:  { label: "Aprovada",  className: "bg-blue-500/10 text-blue-400 border-blue-500/20" },
+    completed: { label: "Concluida", className: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20" },
+    cancelled: { label: "Cancelada", className: "bg-red-500/10 text-red-400 border-red-500/20" },
   }
   const s = map[status] ?? { label: status, className: "bg-gray-500/10 text-gray-400 border-gray-500/20" }
   return <Badge className={`border ${s.className}`}>{s.label}</Badge>
@@ -78,9 +67,8 @@ export default async function SellerHistoryPage() {
 
   const sales = await getSellerHistory(session.userId)
 
-  const totalValue = sales.reduce((acc: number, s: any) => acc + Number(s.final_price || 0), 0)
-  const totalCommissions = sales.reduce((acc: number, s: any) => acc + Number(s.commission_value || 0), 0)
-  const completed = sales.filter((s: any) => s.status === "completed").length
+  const totalValue       = sales.reduce((a: number, s: any) => a + Number(s.final_price   || 0), 0)
+  const totalCommissions = sales.reduce((a: number, s: any) => a + Number(s.commission_value || 0), 0)
 
   return (
     <div className="space-y-6">
@@ -89,57 +77,32 @@ export default async function SellerHistoryPage() {
         <p className="text-gray-400 mt-1">Todas as suas negociacoes registradas</p>
       </div>
 
-      {/* Cards de resumo */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <Card className="bg-gray-900 border-gray-800">
-          <CardContent className="pt-6">
-            <div className="flex items-center gap-4">
-              <div className="p-3 rounded-xl bg-red-500/10">
-                <Car className="size-6 text-red-400" />
+        {[
+          { icon: Car,        color: "red",     label: "Total de Vendas",    value: sales.length },
+          { icon: DollarSign, color: "emerald", label: "Volume Total",       value: formatCurrency(totalValue) },
+          { icon: TrendingUp, color: "amber",   label: "Total em Comissoes", value: formatCurrency(totalCommissions) },
+        ].map((c, i) => (
+          <Card key={i} className="bg-gray-900 border-gray-800">
+            <CardContent className="pt-6">
+              <div className="flex items-center gap-4">
+                <div className={`p-3 rounded-xl bg-${c.color}-500/10`}>
+                  <c.icon className={`size-6 text-${c.color}-400`} />
+                </div>
+                <div>
+                  <p className="text-2xl font-bold text-white">{c.value}</p>
+                  <p className="text-sm text-gray-400">{c.label}</p>
+                </div>
               </div>
-              <div>
-                <p className="text-2xl font-bold text-white">{sales.length}</p>
-                <p className="text-sm text-gray-400">Total de Vendas</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="bg-gray-900 border-gray-800">
-          <CardContent className="pt-6">
-            <div className="flex items-center gap-4">
-              <div className="p-3 rounded-xl bg-emerald-500/10">
-                <DollarSign className="size-6 text-emerald-400" />
-              </div>
-              <div>
-                <p className="text-2xl font-bold text-white">{formatCurrency(totalValue)}</p>
-                <p className="text-sm text-gray-400">Volume Total</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="bg-gray-900 border-gray-800">
-          <CardContent className="pt-6">
-            <div className="flex items-center gap-4">
-              <div className="p-3 rounded-xl bg-amber-500/10">
-                <TrendingUp className="size-6 text-amber-400" />
-              </div>
-              <div>
-                <p className="text-2xl font-bold text-white">{formatCurrency(totalCommissions)}</p>
-                <p className="text-sm text-gray-400">Total em Comissoes</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
+        ))}
       </div>
 
-      {/* Tabela */}
       <Card className="bg-gray-900 border-gray-800">
         <CardHeader>
           <CardTitle className="text-white flex items-center gap-2">
-            <Clock className="size-5 text-red-400" />
-            Historico Completo
+            <Clock className="size-5 text-red-400" /> Historico Completo
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -147,7 +110,7 @@ export default async function SellerHistoryPage() {
             <div className="flex flex-col items-center justify-center py-16 text-center">
               <Clock className="size-12 text-gray-600 mb-4" />
               <p className="text-gray-400 text-lg font-medium">Nenhuma venda registrada</p>
-              <p className="text-gray-600 text-sm mt-1">As suas vendas aparecerão aqui</p>
+              <p className="text-gray-600 text-sm mt-1">As suas vendas aparecerao aqui</p>
             </div>
           ) : (
             <div className="overflow-x-auto">
@@ -166,14 +129,12 @@ export default async function SellerHistoryPage() {
                 <TableBody>
                   {sales.map((s: any) => (
                     <TableRow key={s.id} className="border-gray-800 hover:bg-gray-800/40">
-                      <TableCell className="text-gray-300 text-sm">
-                        {s.sale_date ? formatDate(s.sale_date) : "—"}
-                      </TableCell>
+                      <TableCell className="text-gray-300 text-sm">{s.sale_date ? formatDate(s.sale_date) : "—"}</TableCell>
                       <TableCell>
                         <div className="flex items-center gap-2">
                           <Car className="size-4 text-gray-500 shrink-0" />
                           <span className="text-white font-medium">
-                            {s.vehicle_name ? `${s.vehicle_name} ${s.vehicle_year ?? ""}` : "—"}
+                            {s.brand_name ? `${s.brand_name} ${s.vehicle_name} ${s.vehicle_year ?? ""}` : "—"}
                           </span>
                         </div>
                       </TableCell>
@@ -192,9 +153,7 @@ export default async function SellerHistoryPage() {
                       <TableCell className="text-gray-300 text-sm">
                         {paymentLabels[s.payment_method] ?? s.payment_method ?? "—"}
                       </TableCell>
-                      <TableCell>
-                        <StatusBadge status={s.status} />
-                      </TableCell>
+                      <TableCell><StatusBadge status={s.status} /></TableCell>
                     </TableRow>
                   ))}
                 </TableBody>

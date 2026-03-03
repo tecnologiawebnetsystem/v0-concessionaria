@@ -1,31 +1,19 @@
 import { sql } from "@/lib/db"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
+  Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from "@/components/ui/table"
 import {
-  Calendar,
-  Clock,
-  Car,
-  User,
-  Phone,
-  CheckCircle,
-  XCircle,
-  AlertCircle,
+  Calendar, Clock, Car, User, Phone, CheckCircle, AlertCircle,
 } from "lucide-react"
 import { getSession } from "@/lib/session"
 import { redirect } from "next/navigation"
+import { SellerAppointmentActions } from "@/components/seller/seller-appointment-actions"
 
-async function getAppointments(sellerId?: string) {
+async function getAppointments() {
   try {
-    const rows = await sql`
+    return await sql`
       SELECT 
         td.id,
         td.customer_name,
@@ -38,13 +26,17 @@ async function getAppointments(sellerId?: string) {
         td.notes,
         td.created_at,
         v.name as vehicle_name,
-        v.year as vehicle_year
+        v.year as vehicle_year,
+        b.name as brand_name
       FROM test_drives td
       LEFT JOIN vehicles v ON td.vehicle_id = v.id
-      ORDER BY td.preferred_date ASC, td.preferred_time ASC
+      LEFT JOIN brands b ON v.brand_id = b.id
+      ORDER BY 
+        CASE WHEN td.preferred_date >= CURRENT_DATE THEN 0 ELSE 1 END,
+        td.preferred_date ASC,
+        td.preferred_time ASC
       LIMIT 100
     `
-    return rows
   } catch {
     return []
   }
@@ -74,7 +66,7 @@ export default async function SellerAppointmentsPage() {
   const pending   = appointments.filter((a: any) => a.status === "pending").length
   const confirmed = appointments.filter((a: any) => a.status === "confirmed").length
   const today = new Date().toISOString().split("T")[0]
-  const todayCount = appointments.filter((a: any) => a.preferred_date?.toString().startsWith(today)).length
+  const todayCount = appointments.filter((a: any) => String(a.preferred_date).startsWith(today)).length
 
   return (
     <div className="space-y-6">
@@ -83,52 +75,28 @@ export default async function SellerAppointmentsPage() {
         <p className="text-gray-400 mt-1">Test drives agendados pelos clientes</p>
       </div>
 
-      {/* Cards de resumo */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <Card className="bg-gray-900 border-gray-800">
-          <CardContent className="pt-6">
-            <div className="flex items-center gap-4">
-              <div className="p-3 rounded-xl bg-amber-500/10">
-                <AlertCircle className="size-6 text-amber-400" />
+        {[
+          { icon: AlertCircle, color: "amber",   label: "Pendentes",   value: pending },
+          { icon: CheckCircle, color: "emerald", label: "Confirmados", value: confirmed },
+          { icon: Calendar,    color: "blue",    label: "Hoje",        value: todayCount },
+        ].map((c, i) => (
+          <Card key={i} className="bg-gray-900 border-gray-800">
+            <CardContent className="pt-6">
+              <div className="flex items-center gap-4">
+                <div className={`p-3 rounded-xl bg-${c.color}-500/10`}>
+                  <c.icon className={`size-6 text-${c.color}-400`} />
+                </div>
+                <div>
+                  <p className="text-2xl font-bold text-white">{c.value}</p>
+                  <p className="text-sm text-gray-400">{c.label}</p>
+                </div>
               </div>
-              <div>
-                <p className="text-2xl font-bold text-white">{pending}</p>
-                <p className="text-sm text-gray-400">Pendentes</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="bg-gray-900 border-gray-800">
-          <CardContent className="pt-6">
-            <div className="flex items-center gap-4">
-              <div className="p-3 rounded-xl bg-emerald-500/10">
-                <CheckCircle className="size-6 text-emerald-400" />
-              </div>
-              <div>
-                <p className="text-2xl font-bold text-white">{confirmed}</p>
-                <p className="text-sm text-gray-400">Confirmados</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="bg-gray-900 border-gray-800">
-          <CardContent className="pt-6">
-            <div className="flex items-center gap-4">
-              <div className="p-3 rounded-xl bg-blue-500/10">
-                <Calendar className="size-6 text-blue-400" />
-              </div>
-              <div>
-                <p className="text-2xl font-bold text-white">{todayCount}</p>
-                <p className="text-sm text-gray-400">Hoje</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
+        ))}
       </div>
 
-      {/* Tabela */}
       <Card className="bg-gray-900 border-gray-800">
         <CardHeader>
           <CardTitle className="text-white flex items-center gap-2">
@@ -141,7 +109,7 @@ export default async function SellerAppointmentsPage() {
             <div className="flex flex-col items-center justify-center py-16 text-center">
               <Calendar className="size-12 text-gray-600 mb-4" />
               <p className="text-gray-400 text-lg font-medium">Nenhum agendamento</p>
-              <p className="text-gray-600 text-sm mt-1">Os test drives solicitados aparecerão aqui</p>
+              <p className="text-gray-600 text-sm mt-1">Os test drives solicitados aparecerao aqui</p>
             </div>
           ) : (
             <div className="overflow-x-auto">
@@ -153,6 +121,7 @@ export default async function SellerAppointmentsPage() {
                     <TableHead className="text-gray-400">Data / Hora</TableHead>
                     <TableHead className="text-gray-400">Contato</TableHead>
                     <TableHead className="text-gray-400">Status</TableHead>
+                    <TableHead className="text-gray-400">Acoes</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -168,7 +137,7 @@ export default async function SellerAppointmentsPage() {
                         <div className="flex items-center gap-2">
                           <Car className="size-4 text-gray-500" />
                           <span className="text-gray-300">
-                            {a.vehicle_name ? `${a.vehicle_name} ${a.vehicle_year ?? ""}` : "—"}
+                            {a.vehicle_name ? `${a.brand_name ?? ""} ${a.vehicle_name} ${a.vehicle_year ?? ""}`.trim() : "—"}
                           </span>
                         </div>
                       </TableCell>
@@ -190,8 +159,9 @@ export default async function SellerAppointmentsPage() {
                           {a.customer_phone}
                         </div>
                       </TableCell>
+                      <TableCell><StatusBadge status={a.status} /></TableCell>
                       <TableCell>
-                        <StatusBadge status={a.status} />
+                        <SellerAppointmentActions id={a.id} status={a.status} />
                       </TableCell>
                     </TableRow>
                   ))}
