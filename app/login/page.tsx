@@ -1,6 +1,7 @@
 import { LoginForm } from "@/components/auth/login-form"
 import type { Metadata } from "next"
 import Link from "next/link"
+import Image from "next/image"
 
 export const metadata: Metadata = {
   title: "Login - GT Veículos",
@@ -9,13 +10,13 @@ export const metadata: Metadata = {
 
 export default function LoginPage() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-blue-50 to-blue-100 p-4">
+    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 p-4">
       <div className="w-full max-w-md">
         <div className="mb-8 text-center">
           <Link href="/" className="inline-block">
-            <h1 className="text-3xl font-bold text-blue-900">GT Veículos</h1>
+            <img src="/images/logo-gt-veiculos.png" alt="GT Veículos" className="h-14 w-auto mx-auto" />
           </Link>
-          <p className="mt-2 text-sm text-blue-700">Faça login para continuar</p>
+          <p className="mt-3 text-sm text-gray-400">Faça login para continuar</p>
         </div>
         <LoginForm />
       </div>

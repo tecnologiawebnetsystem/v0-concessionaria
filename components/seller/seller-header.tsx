@@ -48,12 +48,12 @@ export function SellerHeader({ session, sellerData }: SellerHeaderProps) {
     .slice(0, 2)
 
   return (
-    <header className="sticky top-0 z-40 flex h-16 items-center justify-between border-b border-slate-700/50 bg-slate-900/80 px-4 backdrop-blur-md lg:px-6">
+    <header className="sticky top-0 z-40 flex h-16 items-center justify-between border-b border-gray-800/60 bg-black/95 px-4 backdrop-blur-md lg:px-6">
       {/* Left Section */}
       <div className="flex items-center gap-4 lg:ml-0 ml-12">
         <div className="hidden md:block">
           <h2 className="text-lg font-semibold text-white">Painel do Vendedor</h2>
-          <p className="text-xs text-slate-500">Bem-vindo(a), {session.name.split(" ")[0]}</p>
+          <p className="text-xs text-gray-500">Bem-vindo(a), {session.name.split(" ")[0]}</p>
         </div>
       </div>
 
@@ -63,7 +63,7 @@ export function SellerHeader({ session, sellerData }: SellerHeaderProps) {
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
           <Input 
             placeholder="Buscar veiculos, clientes..." 
-            className="h-10 bg-slate-800/50 border-slate-700 text-white pl-10 rounded-xl placeholder:text-slate-500 focus:border-emerald-500"
+            className="h-10 bg-gray-800/50 border-gray-700 text-white pl-10 rounded-xl placeholder:text-gray-500 focus:border-red-500"
           />
         </div>
       </div>
@@ -73,21 +73,21 @@ export function SellerHeader({ session, sellerData }: SellerHeaderProps) {
         {/* Stats Cards */}
         {sellerData && (
           <div className="hidden xl:flex items-center gap-4 mr-4">
-            <div className="flex items-center gap-3 px-4 py-2 bg-slate-800/50 rounded-xl border border-slate-700">
-              <div className="p-2 rounded-lg bg-emerald-500/10">
-                <TrendingUp className="h-4 w-4 text-emerald-400" />
+            <div className="flex items-center gap-3 px-4 py-2 bg-gray-800/50 rounded-xl border border-gray-700">
+              <div className="p-2 rounded-lg bg-red-500/10">
+                <TrendingUp className="h-4 w-4 text-red-400" />
               </div>
               <div>
-                <p className="text-xs text-slate-500">Vendas do Mes</p>
+                <p className="text-xs text-gray-500">Vendas do Mes</p>
                 <p className="text-sm font-bold text-white">{sellerData.monthSales}</p>
               </div>
             </div>
-            <div className="flex items-center gap-3 px-4 py-2 bg-slate-800/50 rounded-xl border border-slate-700">
+            <div className="flex items-center gap-3 px-4 py-2 bg-gray-800/50 rounded-xl border border-gray-700">
               <div className="p-2 rounded-lg bg-amber-500/10">
                 <DollarSign className="h-4 w-4 text-amber-400" />
               </div>
               <div>
-                <p className="text-xs text-slate-500">Comissoes</p>
+                <p className="text-xs text-gray-500">Comissoes</p>
                 <p className="text-sm font-bold text-amber-400">
                   {new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL", notation: "compact" }).format(sellerData.pendingCommissions)}
                 </p>
@@ -106,21 +106,21 @@ export function SellerHeader({ session, sellerData }: SellerHeaderProps) {
               </span>
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-80 bg-slate-800 border-slate-700">
+            <DropdownMenuContent align="end" className="w-80 bg-gray-800 border-gray-700">
             <DropdownMenuLabel className="text-white">Notificacoes</DropdownMenuLabel>
-            <DropdownMenuSeparator className="bg-slate-700" />
+            <DropdownMenuSeparator className="bg-gray-700" />
             <div className="p-2 space-y-2 max-h-80 overflow-y-auto">
               {[
                 { title: "Nova meta definida", desc: "Sua meta de setembro foi atualizada", time: "2h" },
                 { title: "Comissao aprovada", desc: "R$ 2.500 liberado para pagamento", time: "5h" },
                 { title: "Novo agendamento", desc: "Test drive marcado para amanha", time: "1d" },
               ].map((notif, idx) => (
-                <div key={idx} className="p-3 rounded-lg bg-slate-700/50 hover:bg-slate-700 cursor-pointer transition-colors">
+                <div key={idx} className="p-3 rounded-lg bg-gray-700/50 hover:bg-gray-700 cursor-pointer transition-colors">
                   <div className="flex justify-between items-start">
                     <p className="text-sm font-medium text-white">{notif.title}</p>
-                    <span className="text-xs text-slate-500">{notif.time}</span>
+                    <p className="text-xs text-gray-500">{notif.time}</p>
                   </div>
-                  <p className="text-xs text-slate-400 mt-1">{notif.desc}</p>
+                  <p className="text-xs text-gray-400 mt-1">{notif.desc}</p>
                 </div>
               ))}
             </div>
@@ -128,7 +128,7 @@ export function SellerHeader({ session, sellerData }: SellerHeaderProps) {
         </DropdownMenu>
         
         {/* External Link */}
-        <Button variant="ghost" size="icon" asChild className="hidden md:flex hover:bg-slate-800">
+          <Button variant="ghost" size="icon" asChild className="hidden md:flex hover:bg-gray-800">
           <Link href="/" target="_blank">
             <ExternalLink className="h-5 w-5 text-slate-400" />
           </Link>
@@ -137,48 +137,48 @@ export function SellerHeader({ session, sellerData }: SellerHeaderProps) {
         {/* User Menu */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="relative flex items-center gap-3 rounded-full pl-2 pr-4 hover:bg-slate-800">
-              <Avatar className="h-8 w-8 border-2 border-emerald-500/30">
-                <AvatarFallback className="bg-gradient-to-br from-emerald-500 to-teal-600 text-white text-sm font-semibold">
+            <Button variant="ghost" className="relative flex items-center gap-3 rounded-full pl-2 pr-4 hover:bg-gray-800">
+              <Avatar className="h-8 w-8 border-2 border-red-500/30">
+                <AvatarFallback className="bg-gradient-to-br from-red-600 to-red-700 text-white text-sm font-semibold">
                   {initials}
                 </AvatarFallback>
               </Avatar>
               <div className="hidden md:block text-left">
                 <p className="text-sm font-medium text-white">{session.name.split(" ")[0]}</p>
-                <p className="text-xs text-slate-500">Vendedor</p>
+                <p className="text-xs text-gray-500">Vendedor</p>
               </div>
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-56 bg-slate-800 border-slate-700">
-            <DropdownMenuLabel className="text-slate-300">
+          <DropdownMenuContent align="end" className="w-56 bg-gray-800 border-gray-700">
+            <DropdownMenuLabel className="text-gray-300">
               <div className="flex flex-col space-y-1">
                 <p className="text-sm font-medium text-white">{session.name}</p>
-                <p className="text-xs text-slate-500">{session.email}</p>
-                <Badge className="w-fit mt-1 bg-emerald-500/20 text-emerald-400 border-emerald-500/30">
+                <p className="text-xs text-gray-500">{session.email}</p>
+                <Badge className="w-fit mt-1 bg-red-500/20 text-red-400 border-red-500/30">
                   Vendedor
                 </Badge>
               </div>
             </DropdownMenuLabel>
-            <DropdownMenuSeparator className="bg-slate-700" />
-            <DropdownMenuItem asChild className="text-slate-300 hover:text-white hover:bg-slate-700 cursor-pointer">
+            <DropdownMenuSeparator className="bg-gray-700" />
+            <DropdownMenuItem asChild className="text-gray-300 hover:text-white hover:bg-gray-700 cursor-pointer">
               <Link href="/seller/profile">
                 <User className="mr-2 h-4 w-4" />
                 Meu Perfil
               </Link>
             </DropdownMenuItem>
-            <DropdownMenuItem asChild className="text-slate-300 hover:text-white hover:bg-slate-700 cursor-pointer">
+            <DropdownMenuItem asChild className="text-gray-300 hover:text-white hover:bg-gray-700 cursor-pointer">
               <Link href="/seller/settings">
                 <Settings className="mr-2 h-4 w-4" />
                 Configuracoes
               </Link>
             </DropdownMenuItem>
-            <DropdownMenuItem asChild className="text-slate-300 hover:text-white hover:bg-slate-700 cursor-pointer">
+            <DropdownMenuItem asChild className="text-gray-300 hover:text-white hover:bg-gray-700 cursor-pointer">
               <Link href="/ajuda">
                 <HelpCircle className="mr-2 h-4 w-4" />
                 Ajuda
               </Link>
             </DropdownMenuItem>
-            <DropdownMenuSeparator className="bg-slate-700" />
+            <DropdownMenuSeparator className="bg-gray-700" />
             <DropdownMenuItem onClick={handleLogout} className="text-red-400 hover:text-red-300 hover:bg-red-500/10 cursor-pointer">
               <LogOut className="mr-2 h-4 w-4" />
               Sair

@@ -6,7 +6,7 @@ import { generateVehicleListSchema, generateBreadcrumbSchema } from "@/lib/seo"
 import type { Metadata } from "next"
 import { VehiclesPageClient } from "@/components/public/vehicles-page-client"
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://nacionalveiculos.com.br"
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://gtveiculos.com.br"
 
 async function getVehiclesData(searchParams: any) {
   const { categoria, marca, ano_min, ano_max, preco_min, preco_max, busca, ordenar, combustivel, cambio } = searchParams
@@ -141,7 +141,7 @@ export default async function VehiclesPage({ searchParams }: { searchParams: Pro
   ])
 
   return (
-    <div className="flex min-h-screen flex-col bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
+    <div className="flex min-h-screen flex-col bg-gradient-to-br from-gray-950 via-gray-900 to-gray-950">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(vehicleListSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       

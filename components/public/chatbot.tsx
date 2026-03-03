@@ -36,7 +36,7 @@ const botResponses: Record<string, { response: string; quickReplies?: string[] }
     quickReplies: ["Simular financiamento", "Avaliar meu carro"]
   },
   "como agendar test drive": {
-    response: "Agendar um test drive é muito fácil!\n\n1. Escolha o veículo de interesse\n2. Clique em 'Agendar Test Drive'\n3. Preencha seus dados e escolha o melhor horário\n\nOu se preferir, entre em contato pelo WhatsApp: **(12) 99999-9999**",
+    response: "Agendar um test drive é muito fácil!\n\n1. Escolha o veículo de interesse\n2. Clique em 'Agendar Test Drive'\n3. Preencha seus dados e escolha o melhor horário\n\nOu se preferir, entre em contato pelo WhatsApp: **(12) 97406-3079**",
     quickReplies: ["Ver veículos disponíveis", "Falar no WhatsApp"]
   },
   "financiamento disponível": {
@@ -44,7 +44,7 @@ const botResponses: Record<string, { response: string; quickReplies?: string[] }
     quickReplies: ["Simular financiamento", "Formas de pagamento"]
   },
   "localização da loja": {
-    response: "Estamos localizados em:\n\n**GT Veículos**\nAv. Independência, 1500\nCentro - Taubaté/SP\nCEP: 12020-000\n\n📍 Fácil acesso pela Dutra\n🅿️ Estacionamento gratuito\n\nVenha nos visitar!",
+    response: "Estamos localizados em:\n\n**GT Veículos**\nAvenida César Costa, 222\nTaubaté - SP\n\n📍 Fácil acesso\n🅿️ Estacionamento gratuito\n\nVenha nos visitar!",
     quickReplies: ["Ver no mapa", "Horário de funcionamento"]
   },
   "carros mais vendidos": {
@@ -64,15 +64,15 @@ const botResponses: Record<string, { response: string; quickReplies?: string[] }
     quickReplies: ["Agendar test drive", "Carros mais vendidos"]
   },
   "falar no whatsapp": {
-    response: "Claro! Fale diretamente com nossos consultores:\n\n📱 **(12) 99999-9999**\n\nAtendimento de segunda a sábado, das 8h às 18h.\n\nEstamos prontos para ajudar você a encontrar o carro ideal!",
+    response: "Claro! Fale diretamente com nossos consultores:\n\n📱 **(12) 97406-3079**\n\nAtendimento de segunda a sábado, das 8h às 18h.\n\nEstamos prontos para ajudar você a encontrar o carro ideal!",
     quickReplies: ["Horário de funcionamento", "Localização da loja"]
   },
   "ver no mapa": {
-    response: "Nossa localização no Google Maps está disponível na seção 'Contato' do site.\n\n**Endereço:**\nAv. Independência, 1500\nCentro - Taubaté/SP\n\nVenha nos visitar! Temos estacionamento gratuito.",
+    response: "Nossa localização no Google Maps está disponível na seção 'Contato' do site.\n\n**Endereço:**\nAvenida César Costa, 222\nTaubaté - SP\n\nVenha nos visitar! Temos estacionamento gratuito.",
     quickReplies: ["Horário de funcionamento", "Falar no WhatsApp"]
   },
   "agendar visita": {
-    response: "Para agendar sua visita:\n\n1. Escolha a data e horário de sua preferência\n2. Você pode agendar pelo site ou WhatsApp\n\nNossos consultores estarão prontos para atendê-lo!\n\n📱 **(12) 99999-9999**",
+    response: "Para agendar sua visita:\n\n1. Escolha a data e horário de sua preferência\n2. Você pode agendar pelo site ou WhatsApp\n\nNossos consultores estarão prontos para atendê-lo!\n\n📱 **(12) 97406-3079**",
     quickReplies: ["Horário de funcionamento", "Ver veículos disponíveis"]
   },
   "default": {
@@ -205,7 +205,7 @@ export function Chatbot() {
         onClick={() => setIsOpen(true)}
         className={cn(
           "fixed bottom-24 right-6 z-40 h-14 w-14 rounded-full shadow-lg",
-          "bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700",
+          "bg-gradient-to-r from-red-600 to-red-700",
           "transition-all hover:scale-105",
           isOpen && "hidden"
         )}
@@ -217,7 +217,7 @@ export function Chatbot() {
       {isOpen && (
         <Card className="fixed bottom-24 right-6 z-50 w-[380px] max-h-[600px] shadow-2xl border-0 flex flex-col overflow-hidden animate-in slide-in-from-bottom-5">
           {/* Header */}
-          <CardHeader className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-4 flex-shrink-0">
+          <CardHeader className="bg-gradient-to-r from-red-600 to-red-700 text-white p-4 flex-shrink-0">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center">
@@ -225,7 +225,7 @@ export function Chatbot() {
                 </div>
                 <div>
                   <CardTitle className="text-base font-semibold">Assistente Virtual</CardTitle>
-                  <p className="text-xs text-blue-100">GT Veículos</p>
+                  <p className="text-xs text-red-100">GT Veículos</p>
                 </div>
               </div>
               <Button
@@ -251,8 +251,8 @@ export function Chatbot() {
                   )}
                 >
                   {message.role === "assistant" && (
-                    <div className="w-8 h-8 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center flex-shrink-0">
-                      <Bot className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+                    <div className="w-8 h-8 rounded-full bg-red-100 dark:bg-red-900 flex items-center justify-center flex-shrink-0">
+                      <Bot className="h-4 w-4 text-red-600 dark:text-red-400" />
                     </div>
                   )}
                   <div className={cn("flex flex-col gap-2 max-w-[80%]")}>
@@ -260,7 +260,7 @@ export function Chatbot() {
                       className={cn(
                         "rounded-2xl px-4 py-2.5 text-sm",
                         message.role === "user"
-                          ? "bg-blue-600 text-white rounded-br-sm"
+                          ? "bg-red-600 text-white rounded-br-sm"
                           : "bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-200 shadow-sm rounded-bl-sm"
                       )}
                       dangerouslySetInnerHTML={{ __html: formatMessage(message.content) }}
@@ -271,7 +271,7 @@ export function Chatbot() {
                           <Badge
                             key={reply}
                             variant="outline"
-                            className="cursor-pointer hover:bg-blue-50 dark:hover:bg-blue-900/30 hover:border-blue-300 transition-colors text-xs py-1"
+                            className="cursor-pointer hover:bg-red-50 dark:hover:bg-red-900/30 hover:border-red-300 transition-colors text-xs py-1"
                             onClick={() => handleQuickReply(reply)}
                           >
                             {reply}
@@ -281,7 +281,7 @@ export function Chatbot() {
                     )}
                   </div>
                   {message.role === "user" && (
-                    <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center flex-shrink-0">
+                    <div className="w-8 h-8 rounded-full bg-red-600 flex items-center justify-center flex-shrink-0">
                       <User className="h-4 w-4 text-white" />
                     </div>
                   )}

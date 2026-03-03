@@ -16,7 +16,7 @@ export function TestimonialsSection({ testimonials }: { testimonials: any[] }) {
           {testimonials.map((testimonial) => (
             <Card key={testimonial.id} className="relative">
               <CardContent className="p-6">
-                <Quote className="mb-4 size-8 text-blue-900 opacity-20" />
+                <Quote className="mb-4 size-8 text-red-700 opacity-20" />
                 <div className="mb-4 flex gap-1">
                   {Array.from({ length: testimonial.rating }).map((_, i) => (
                     <Star key={i} className="size-5 fill-yellow-400 text-yellow-400" />
@@ -31,7 +31,7 @@ export function TestimonialsSection({ testimonials }: { testimonials: any[] }) {
                       className="size-12 rounded-full object-cover"
                     />
                   ) : (
-                    <div className="flex size-12 items-center justify-center rounded-full bg-blue-900 text-white">
+                    <div className="flex size-12 items-center justify-center rounded-full bg-red-700 text-white">
                       {testimonial.customer_name.charAt(0)}
                     </div>
                   )}

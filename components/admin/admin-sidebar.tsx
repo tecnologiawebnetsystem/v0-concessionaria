@@ -95,17 +95,17 @@ export function AdminSidebar() {
   }
 
   return (
-    <aside className="hidden w-72 flex-col border-r border-slate-700/50 bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 lg:flex">
+    <aside className="hidden w-72 flex-col border-r border-gray-800/60 bg-black lg:flex">
       {/* Logo */}
-      <div className="flex h-20 items-center gap-3 border-b border-slate-700/50 px-6">
-        <div className="flex size-10 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-blue-700 shadow-lg shadow-blue-500/30">
+      <div className="flex h-20 items-center gap-3 border-b border-gray-800/60 px-6">
+        <div className="flex size-10 items-center justify-center rounded-xl bg-gradient-to-br from-red-600 to-red-700 shadow-lg shadow-red-600/30">
           <Building2 className="size-6 text-white" />
         </div>
         <div>
           <Link href="/admin" className="text-lg font-bold text-white">
             GT Veículos
           </Link>
-          <p className="text-xs text-slate-400">Painel Administrativo</p>
+          <p className="text-xs text-gray-400">Painel Administrativo</p>
         </div>
       </div>
 
@@ -119,7 +119,7 @@ export function AdminSidebar() {
               <div key={group.name}>
                 <button
                   onClick={() => toggleGroup(group.name)}
-                  className="mb-2 flex w-full items-center justify-between px-3 text-xs font-semibold uppercase tracking-wider text-slate-400 hover:text-slate-300"
+                  className="mb-2 flex w-full items-center justify-between px-3 text-xs font-semibold uppercase tracking-wider text-gray-400 hover:text-gray-300"
                 >
                   {group.name}
                   <ChevronDown className={cn(
@@ -141,13 +141,13 @@ export function AdminSidebar() {
                           className={cn(
                             "flex items-center gap-3 rounded-xl px-4 py-2.5 text-sm font-medium transition-all duration-200",
                             isActive 
-                              ? "bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-lg shadow-blue-600/30" 
-                              : "text-slate-300 hover:bg-slate-700/50 hover:text-white"
+                  ? "bg-gradient-to-r from-red-600 to-red-700 text-white shadow-lg shadow-red-600/30" 
+                  : "text-gray-300 hover:bg-gray-700/50 hover:text-white"
                           )}
                         >
                           <item.icon className={cn(
                             "size-5",
-                            isActive ? "text-white" : "text-slate-400"
+                            isActive ? "text-white" : "text-gray-400"
                           )} />
                           {item.name}
                         </Link>
@@ -162,12 +162,12 @@ export function AdminSidebar() {
       </nav>
 
       {/* Footer */}
-      <div className="border-t border-slate-700/50 p-4">
+      <div className="border-t border-gray-800/60 p-4">
         <Link
           href="/"
-          className="flex items-center gap-3 rounded-xl px-4 py-2.5 text-sm font-medium text-slate-300 transition-colors hover:bg-slate-700/50 hover:text-white"
+          className="flex items-center gap-3 rounded-xl px-4 py-2.5 text-sm font-medium text-gray-300 transition-colors hover:bg-gray-700/50 hover:text-white"
         >
-          <LogOut className="size-5 text-slate-400" />
+          <LogOut className="size-5 text-gray-400" />
           Voltar ao Site
         </Link>
       </div>

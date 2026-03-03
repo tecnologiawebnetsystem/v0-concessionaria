@@ -1,6 +1,7 @@
 "use client"
 
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
 import {
@@ -30,28 +31,34 @@ const navigation = [
 
 export function CustomerSidebar() {
   const pathname = usePathname()
+  const router = useRouter()
+
+  async function handleLogout() {
+    await fetch("/api/auth/logout", { method: "POST" })
+    router.push("/entrar")
+  }
 
   return (
-    <aside className="hidden lg:flex lg:flex-col lg:w-72 lg:fixed lg:inset-y-0 bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 border-r border-slate-700/50">
+    <aside className="hidden lg:flex lg:flex-col lg:w-72 lg:fixed lg:inset-y-0 bg-black border-r border-gray-800/60">
       {/* Logo */}
-      <div className="flex h-16 items-center gap-3 px-6 border-b border-slate-700/50">
-        <div className="flex size-10 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-cyan-500 shadow-lg shadow-blue-500/30">
+      <div className="flex h-16 items-center gap-3 px-6 border-b border-gray-800/60">
+        <div className="flex size-10 items-center justify-center rounded-xl bg-gradient-to-br from-red-600 to-red-700 shadow-lg shadow-red-600/30">
           <Car className="size-5 text-white" />
         </div>
         <div>
           <h1 className="font-bold text-white">GT Veículos</h1>
-          <p className="text-[10px] text-slate-400">Area do Cliente</p>
+          <p className="text-[10px] text-gray-400">Area do Cliente</p>
         </div>
       </div>
 
       {/* Welcome Card */}
       <div className="px-4 py-4">
-        <div className="bg-gradient-to-br from-blue-600/20 to-cyan-600/20 border border-blue-500/20 rounded-xl p-4">
+        <div className="bg-gradient-to-br from-red-600/20 to-red-700/20 border border-red-500/20 rounded-xl p-4">
           <div className="flex items-center gap-2 mb-2">
-            <Sparkles className="size-4 text-cyan-400" />
-            <span className="text-sm font-medium text-cyan-400">Bem-vindo!</span>
+            <Sparkles className="size-4 text-red-400" />
+            <span className="text-sm font-medium text-red-400">Bem-vindo!</span>
           </div>
-          <p className="text-xs text-slate-400">Acompanhe suas propostas, test drives e muito mais.</p>
+          <p className="text-xs text-gray-400">Acompanhe suas propostas, test drives e muito mais.</p>
         </div>
       </div>
 
@@ -66,8 +73,8 @@ export function CustomerSidebar() {
               className={cn(
                 "flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-xl transition-all duration-200",
                 isActive
-                  ? "bg-gradient-to-r from-blue-600 to-cyan-600 text-white shadow-lg shadow-blue-500/25"
-                  : "text-slate-400 hover:text-white hover:bg-slate-700/50"
+                  ? "bg-gradient-to-r from-red-600 to-red-700 text-white shadow-lg shadow-red-600/25"
+                  : "text-gray-400 hover:text-white hover:bg-gray-700/50"
               )}
             >
               <item.icon className="size-5" />
@@ -84,7 +91,7 @@ export function CustomerSidebar() {
             <Shield className="size-5 text-amber-400" />
             <span className="text-sm font-semibold text-amber-400">Cliente Premium</span>
           </div>
-          <p className="text-xs text-slate-400 mb-3">Ganhe beneficios exclusivos em suas compras.</p>
+          <p className="text-xs text-gray-400 mb-3">Ganhe beneficios exclusivos em suas compras.</p>
           <Link
             href="/minha-conta/premium"
             className="inline-flex items-center text-xs font-medium text-amber-400 hover:text-amber-300 transition-colors"
@@ -95,14 +102,14 @@ export function CustomerSidebar() {
       </div>
 
       {/* Logout */}
-      <div className="p-4 border-t border-slate-700/50">
-        <Link
-          href="/logout"
-          className="flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-xl text-red-400 hover:bg-red-500/10 transition-colors"
+      <div className="p-4 border-t border-gray-800/60">
+        <button
+          onClick={handleLogout}
+          className="flex w-full items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-xl text-red-400 hover:bg-red-500/10 transition-colors"
         >
           <LogOut className="size-5" />
           Sair da Conta
-        </Link>
+        </button>
       </div>
     </aside>
   )

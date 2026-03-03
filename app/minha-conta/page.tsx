@@ -25,26 +25,26 @@ export default function CustomerDashboard() {
   return (
     <div className="space-y-6">
       {/* Welcome Header */}
-      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-blue-600 via-blue-700 to-cyan-600 p-6 lg:p-8">
+      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-red-700 via-red-600 to-red-800 p-6 lg:p-8">
         <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-10" />
         <div className="absolute -top-24 -right-24 size-48 rounded-full bg-white/10 blur-3xl" />
-        <div className="absolute -bottom-24 -left-24 size-48 rounded-full bg-cyan-400/20 blur-3xl" />
+        <div className="absolute -bottom-24 -left-24 size-48 rounded-full bg-red-400/20 blur-3xl" />
         
         <div className="relative">
           <div className="flex items-center gap-2 mb-2">
-            <Sparkles className="size-5 text-cyan-300" />
-            <span className="text-sm font-medium text-cyan-200">Bem-vindo de volta!</span>
+            <Sparkles className="size-5 text-red-300" />
+            <span className="text-sm font-medium text-red-200">Bem-vindo de volta!</span>
           </div>
           <h1 className="text-2xl lg:text-3xl font-bold text-white mb-2">
             Ola, Cliente!
           </h1>
-          <p className="text-blue-100 max-w-xl">
+          <p className="text-red-100 max-w-xl">
             Acompanhe suas propostas, test drives agendados e encontre o veiculo dos seus sonhos.
           </p>
           
           <div className="flex flex-wrap gap-3 mt-6">
             <Link href="/veiculos">
-              <Button className="bg-white text-blue-700 hover:bg-blue-50">
+              <Button className="bg-white text-red-700 hover:bg-red-50">
                 <Car className="size-4 mr-2" />
                 Explorar Veiculos
               </Button>
@@ -64,7 +64,7 @@ export default function CustomerDashboard() {
         <Card className="bg-slate-800/50 border-slate-700/50 hover:bg-slate-800 transition-all">
           <CardContent className="p-4 lg:p-6">
             <div className="flex items-center gap-4">
-              <div className="size-12 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center shadow-lg shadow-blue-500/25">
+              <div className="size-12 rounded-xl bg-gradient-to-br from-red-600 to-red-700 flex items-center justify-center shadow-lg shadow-red-500/25">
                 <FileText className="size-6 text-white" />
               </div>
               <div>
@@ -124,11 +124,11 @@ export default function CustomerDashboard() {
         <Card className="lg:col-span-2 bg-slate-800/50 border-slate-700/50">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-lg font-semibold text-white flex items-center gap-2">
-              <FileText className="size-5 text-blue-400" />
+              <FileText className="size-5 text-red-400" />
               Minhas Propostas
             </CardTitle>
             <Link href="/minha-conta/propostas">
-              <Button variant="ghost" size="sm" className="text-blue-400 hover:text-blue-300 hover:bg-slate-700">
+              <Button variant="ghost" size="sm" className="text-red-400 hover:text-red-300 hover:bg-slate-700">
                 Ver todas <ArrowRight className="ml-1 size-4" />
               </Button>
             </Link>
@@ -222,7 +222,7 @@ export default function CustomerDashboard() {
           <CardContent>
             <div className="grid grid-cols-2 gap-3">
               {[
-                { label: "Ver Veiculos", icon: Car, href: "/veiculos", color: "from-blue-500 to-cyan-500" },
+                { label: "Ver Veiculos", icon: Car, href: "/veiculos", color: "from-red-600 to-red-700" },
                 { label: "Favoritos", icon: Heart, href: "/minha-conta/favoritos", color: "from-red-500 to-pink-500" },
                 { label: "Avaliar Carro", icon: ClipboardList, href: "/minha-conta/avaliacoes", color: "from-amber-500 to-orange-500" },
                 { label: "Falar Conosco", icon: Bell, href: "/contato", color: "from-green-500 to-emerald-500" },
@@ -247,11 +247,11 @@ export default function CustomerDashboard() {
         <Card className="bg-slate-800/50 border-slate-700/50">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-lg font-semibold text-white flex items-center gap-2">
-              <Eye className="size-5 text-purple-400" />
+              <Eye className="size-5 text-red-400" />
               Vistos Recentemente
             </CardTitle>
             <Link href="/minha-conta/historico">
-              <Button variant="ghost" size="sm" className="text-purple-400 hover:text-purple-300 hover:bg-slate-700">
+              <Button variant="ghost" size="sm" className="text-red-400 hover:text-red-300 hover:bg-slate-700">
                 Ver todos
               </Button>
             </Link>

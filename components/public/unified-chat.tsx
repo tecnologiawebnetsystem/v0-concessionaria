@@ -189,7 +189,7 @@ export function UnifiedChat({ phoneNumber = "5511999999999" }: { phoneNumber?: s
         onClick={() => setIsOpen(!isOpen)}
         className={cn(
           "fixed bottom-6 right-6 z-50 flex items-center justify-center rounded-full shadow-lg transition-all hover:scale-110",
-          "bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700",
+          "bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800",
           isOpen ? "size-12" : "size-14 sm:size-16"
         )}
         aria-label="Abrir chat"
@@ -211,7 +211,7 @@ export function UnifiedChat({ phoneNumber = "5511999999999" }: { phoneNumber?: s
           {/* Menu View */}
           {view === "menu" && (
             <Card className="shadow-2xl border-0 overflow-hidden">
-              <CardHeader className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-4">
+              <CardHeader className="bg-gradient-to-r from-red-600 to-red-700 text-white p-4">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center">
@@ -219,7 +219,7 @@ export function UnifiedChat({ phoneNumber = "5511999999999" }: { phoneNumber?: s
                     </div>
                     <div>
                       <CardTitle className="text-base font-semibold">Atendimento</CardTitle>
-                      <p className="text-xs text-blue-100">Como podemos ajudar?</p>
+                      <p className="text-xs text-red-100">Como podemos ajudar?</p>
                     </div>
                   </div>
                   <Button
@@ -241,16 +241,16 @@ export function UnifiedChat({ phoneNumber = "5511999999999" }: { phoneNumber?: s
                 {/* Chatbot Option */}
                 <button
                   onClick={() => setView("chatbot")}
-                  className="w-full flex items-center gap-4 p-4 rounded-xl border-2 border-gray-100 hover:border-blue-500 hover:bg-blue-50 dark:border-slate-700 dark:hover:border-blue-500 dark:hover:bg-blue-900/20 transition-all group"
+                  className="w-full flex items-center gap-4 p-4 rounded-xl border-2 border-gray-100 hover:border-red-500 hover:bg-red-50 dark:border-gray-700 dark:hover:border-red-500 dark:hover:bg-red-900/20 transition-all group"
                 >
-                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-red-500 to-red-700 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
                     <Bot className="h-6 w-6 text-white" />
                   </div>
                   <div className="text-left flex-1">
                     <h3 className="font-semibold text-gray-900 dark:text-white">Assistente Virtual</h3>
                     <p className="text-xs text-gray-500 dark:text-gray-400">Respostas instantâneas 24h</p>
                   </div>
-                  <Badge variant="secondary" className="bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300">
+                  <Badge variant="secondary" className="bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300">
                     Online
                   </Badge>
                 </button>
@@ -357,7 +357,7 @@ export function UnifiedChat({ phoneNumber = "5511999999999" }: { phoneNumber?: s
           {/* Chatbot View */}
           {view === "chatbot" && (
             <Card className="shadow-2xl border-0 flex flex-col overflow-hidden max-h-[500px]">
-              <CardHeader className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-3 flex-shrink-0">
+              <CardHeader className="bg-gradient-to-r from-red-600 to-red-700 text-white p-3 flex-shrink-0">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <button onClick={() => setView("menu")} className="hover:bg-white/20 p-1.5 rounded">
@@ -403,8 +403,8 @@ export function UnifiedChat({ phoneNumber = "5511999999999" }: { phoneNumber?: s
                       )}
                     >
                       {message.role === "assistant" && (
-                        <div className="w-7 h-7 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center flex-shrink-0">
-                          <Bot className="h-3.5 w-3.5 text-blue-600 dark:text-blue-400" />
+                        <div className="w-7 h-7 rounded-full bg-red-100 dark:bg-red-900 flex items-center justify-center flex-shrink-0">
+                          <Bot className="h-3.5 w-3.5 text-red-600 dark:text-red-400" />
                         </div>
                       )}
                       <div className="flex flex-col gap-1.5 max-w-[85%]">
@@ -412,7 +412,7 @@ export function UnifiedChat({ phoneNumber = "5511999999999" }: { phoneNumber?: s
                           className={cn(
                             "rounded-2xl px-3 py-2 text-sm",
                             message.role === "user"
-                              ? "bg-blue-600 text-white rounded-br-sm"
+                              ? "bg-red-600 text-white rounded-br-sm"
                               : "bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-200 shadow-sm rounded-bl-sm"
                           )}
                           dangerouslySetInnerHTML={{ __html: formatMessage(message.content) }}
@@ -423,7 +423,7 @@ export function UnifiedChat({ phoneNumber = "5511999999999" }: { phoneNumber?: s
                               <Badge
                                 key={reply}
                                 variant="outline"
-                                className="cursor-pointer hover:bg-blue-50 dark:hover:bg-blue-900/30 hover:border-blue-300 transition-colors text-xs py-0.5"
+                                className="cursor-pointer hover:bg-red-50 dark:hover:bg-red-900/30 hover:border-red-300 transition-colors text-xs py-0.5"
                                 onClick={() => handleQuickReply(reply)}
                               >
                                 {reply}
@@ -433,7 +433,7 @@ export function UnifiedChat({ phoneNumber = "5511999999999" }: { phoneNumber?: s
                         )}
                       </div>
                       {message.role === "user" && (
-                        <div className="w-7 h-7 rounded-full bg-blue-600 flex items-center justify-center flex-shrink-0">
+                        <div className="w-7 h-7 rounded-full bg-red-600 flex items-center justify-center flex-shrink-0">
                           <User className="h-3.5 w-3.5 text-white" />
                         </div>
                       )}

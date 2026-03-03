@@ -14,7 +14,7 @@ import type { Metadata } from "next"
 export const metadata: Metadata = {
   title: "Contato - GT Veículos Taubaté",
   description: "Entre em contato com a GT Veículos em Taubaté. Telefone, WhatsApp, endereço e formulário de contato.",
-  keywords: "contato nacional veículos, concessionária taubaté telefone, endereço nacional veículos"
+  keywords: "contato GT veículos, concessionária taubaté telefone, endereço GT veículos"
 }
 
 export default function ContatoPage() {
@@ -25,17 +25,17 @@ export default function ContatoPage() {
       
       <main className="flex-1">
         {/* Hero */}
-        <section className="bg-gradient-to-br from-blue-950 via-blue-900 to-indigo-900 text-white py-16">
+        <section className="bg-gradient-to-br from-gray-950 via-gray-900 to-red-950 text-white py-16">
           <div className="container mx-auto px-4 max-w-7xl">
             <div className="text-center">
-              <Badge className="mb-4 bg-blue-400/20 text-blue-100 border-blue-300/30">
+              <Badge className="mb-4 bg-red-500/20 text-red-200 border-red-400/30">
                 <Phone className="h-3 w-3 mr-1" />
                 Fale Conosco
               </Badge>
               <h1 className="text-4xl md:text-5xl font-bold mb-4">
                 Entre em Contato
               </h1>
-              <p className="text-lg text-blue-100/90 max-w-2xl mx-auto">
+              <p className="text-lg text-gray-300 max-w-2xl mx-auto">
                 Estamos prontos para ajudar você a encontrar o carro dos seus sonhos. 
                 Fale com nossos consultores especializados.
               </p>
@@ -44,7 +44,7 @@ export default function ContatoPage() {
         </section>
 
         {/* Contact Cards */}
-        <section className="py-12 bg-slate-50 dark:bg-slate-900">
+        <section className="py-12 bg-gray-50 dark:bg-gray-900">
           <div className="container mx-auto px-4 max-w-7xl">
             <div className="grid md:grid-cols-3 gap-6 -mt-20">
               <Card className="text-center hover:shadow-lg transition-shadow">
@@ -55,8 +55,8 @@ export default function ContatoPage() {
                   <h3 className="font-bold text-lg mb-2">WhatsApp</h3>
                   <p className="text-muted-foreground mb-4">Atendimento rápido e prático</p>
                   <Button asChild className="w-full bg-green-600 hover:bg-green-700">
-                    <a href="https://wa.me/5512999999999" target="_blank" rel="noopener noreferrer">
-                      (12) 99999-9999
+                    <a href="https://wa.me/5512974063079" target="_blank" rel="noopener noreferrer">
+                      (12) 97406-3079
                     </a>
                   </Button>
                 </CardContent>
@@ -64,8 +64,8 @@ export default function ContatoPage() {
 
               <Card className="text-center hover:shadow-lg transition-shadow">
                 <CardContent className="pt-8 pb-6">
-                  <div className="w-14 h-14 rounded-full bg-blue-100 dark:bg-blue-900/30 mx-auto mb-4 flex items-center justify-center">
-                    <Phone className="h-7 w-7 text-blue-600" />
+                  <div className="w-14 h-14 rounded-full bg-red-100 dark:bg-red-900/30 mx-auto mb-4 flex items-center justify-center">
+                    <Phone className="h-7 w-7 text-red-600" />
                   </div>
                   <h3 className="font-bold text-lg mb-2">Telefone</h3>
                   <p className="text-muted-foreground mb-4">Ligue para nossa central</p>
@@ -79,14 +79,14 @@ export default function ContatoPage() {
 
               <Card className="text-center hover:shadow-lg transition-shadow">
                 <CardContent className="pt-8 pb-6">
-                  <div className="w-14 h-14 rounded-full bg-purple-100 dark:bg-purple-900/30 mx-auto mb-4 flex items-center justify-center">
-                    <Mail className="h-7 w-7 text-purple-600" />
+                  <div className="w-14 h-14 rounded-full bg-red-100 dark:bg-red-900/30 mx-auto mb-4 flex items-center justify-center">
+                    <Mail className="h-7 w-7 text-red-600" />
                   </div>
                   <h3 className="font-bold text-lg mb-2">E-mail</h3>
                   <p className="text-muted-foreground mb-4">Envie sua mensagem</p>
                   <Button asChild variant="outline" className="w-full bg-transparent">
-                    <a href="mailto:contato@nacionalveiculos.com.br">
-                      contato@nacionalveiculos.com.br
+                    <a href="mailto:contato@gtveiculos.com.br">
+                      contato@gtveiculos.com.br
                     </a>
                   </Button>
                 </CardContent>
@@ -96,7 +96,7 @@ export default function ContatoPage() {
         </section>
 
         {/* Map and Form */}
-        <section className="py-16 bg-white dark:bg-slate-950">
+        <section className="py-16 bg-white dark:bg-gray-950">
           <div className="container mx-auto px-4 max-w-7xl">
             <div className="grid lg:grid-cols-2 gap-12">
               {/* Map */}
@@ -148,7 +148,7 @@ export default function ContatoPage() {
                       />
                     </div>
                     
-                    <Button type="submit" className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700">
+                    <Button type="submit" className="w-full bg-red-600 hover:bg-red-700">
                       <Send className="mr-2 h-4 w-4" />
                       Enviar Mensagem
                     </Button>
@@ -160,12 +160,12 @@ export default function ContatoPage() {
         </section>
 
         {/* Trust Badges */}
-        <section className="py-12 bg-slate-50 dark:bg-slate-900">
+        <section className="py-12 bg-gray-50 dark:bg-gray-900">
           <div className="container mx-auto px-4 max-w-7xl">
             <div className="grid md:grid-cols-3 gap-8 text-center">
               <div className="flex flex-col items-center">
-                <div className="w-16 h-16 rounded-full bg-blue-100 dark:bg-blue-900/30 mb-4 flex items-center justify-center">
-                  <Clock className="h-8 w-8 text-blue-600" />
+                <div className="w-16 h-16 rounded-full bg-red-100 dark:bg-red-900/30 mb-4 flex items-center justify-center">
+                  <Clock className="h-8 w-8 text-red-600" />
                 </div>
                 <h3 className="font-bold mb-2">Resposta Rápida</h3>
                 <p className="text-sm text-muted-foreground">Retornamos seu contato em até 24 horas úteis</p>

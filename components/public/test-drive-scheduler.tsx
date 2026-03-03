@@ -122,18 +122,17 @@ export function TestDriveScheduler({ open, onOpenChange, vehicleName, vehicleSlu
             <DialogTitle className="text-2xl mb-2">Test Drive Agendado!</DialogTitle>
             <DialogDescription className="text-base space-y-2">
               <p>Seu test drive do <strong>{vehicleName}</strong> foi confirmado.</p>
-              <div className="bg-blue-50 p-4 rounded-lg mt-4 text-left">
-                <div className="flex items-center gap-2 text-blue-900 mb-2">
+              <div className="bg-gray-50 p-4 rounded-lg mt-4 text-left">
+                <div className="flex items-center gap-2 text-gray-900 mb-2">
                   <CalendarIcon className="h-4 w-4" />
                   <span className="font-semibold">
                     {selectedDate && format(selectedDate, "dd 'de' MMMM 'de' yyyy", { locale: ptBR })}
                   </span>
                 </div>
-                <div className="flex items-center gap-2 text-blue-900">
+                <div className="flex items-center gap-2 text-gray-900">
                   <Clock className="h-4 w-4" />
-                  <span className="font-semibold">{selectedTime}</span>
                 </div>
-                <div className="flex items-center gap-2 text-blue-700 mt-2 text-sm">
+                <div className="flex items-center gap-2 text-gray-700 mt-2 text-sm">
                   <MapPin className="h-4 w-4" />
                   <span>Av. Brasil, 1500 - São Paulo, SP</span>
                 </div>
@@ -143,7 +142,7 @@ export function TestDriveScheduler({ open, onOpenChange, vehicleName, vehicleSlu
               </p>
             </DialogDescription>
             <div className="mt-6">
-              <Button onClick={handleClose} className="bg-blue-600 hover:bg-blue-700">
+              <Button onClick={handleClose} className="bg-red-600 hover:bg-red-700">
                 Fechar
               </Button>
             </div>
@@ -158,7 +157,7 @@ export function TestDriveScheduler({ open, onOpenChange, vehicleName, vehicleSlu
       <DialogContent className="sm:max-w-xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <Car className="h-5 w-5 text-blue-600" />
+            <Car className="h-5 w-5 text-red-600" />
             Agendar Test Drive
           </DialogTitle>
           <DialogDescription>
@@ -167,15 +166,15 @@ export function TestDriveScheduler({ open, onOpenChange, vehicleName, vehicleSlu
         </DialogHeader>
 
         {/* Vehicle Badge */}
-        <Badge className="w-fit bg-blue-100 text-blue-800 py-1 px-3">
+          <Badge className="w-fit bg-red-100 text-red-800 py-1 px-3">
           <Car className="h-4 w-4 mr-2" />
           {vehicleName}
         </Badge>
 
         {/* Progress */}
         <div className="flex items-center gap-2 my-4">
-          <div className={`flex-1 h-2 rounded-full ${step >= 1 ? "bg-blue-600" : "bg-gray-200"}`} />
-          <div className={`flex-1 h-2 rounded-full ${step >= 2 ? "bg-blue-600" : "bg-gray-200"}`} />
+          <div className={`flex-1 h-2 rounded-full ${step >= 1 ? "bg-red-600" : "bg-gray-200"}`} />
+          <div className={`flex-1 h-2 rounded-full ${step >= 2 ? "bg-red-600" : "bg-gray-200"}`} />
         </div>
 
         {/* Step 1: Select Date and Time */}
@@ -213,7 +212,7 @@ export function TestDriveScheduler({ open, onOpenChange, vehicleName, vehicleSlu
                       variant={selectedTime === time ? "default" : "outline"}
                       size="sm"
                       onClick={() => setSelectedTime(time)}
-                      className={selectedTime === time ? "bg-blue-600" : "bg-transparent"}
+                      className={selectedTime === time ? "bg-red-600" : "bg-transparent"}
                     >
                       {time}
                     </Button>
@@ -226,7 +225,7 @@ export function TestDriveScheduler({ open, onOpenChange, vehicleName, vehicleSlu
               <Button 
                 onClick={() => setStep(2)} 
                 disabled={!selectedDate || !selectedTime}
-                className="bg-blue-600 hover:bg-blue-700"
+                className="bg-red-600 hover:bg-red-700"
               >
                 Próximo
               </Button>
@@ -237,18 +236,18 @@ export function TestDriveScheduler({ open, onOpenChange, vehicleName, vehicleSlu
         {/* Step 2: Personal Data */}
         {step === 2 && (
           <div className="space-y-4">
-            <Card className="bg-blue-50 border-blue-200">
+            <Card className="bg-gray-50 border-gray-200">
               <CardContent className="p-4 flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <CalendarIcon className="h-5 w-5 text-blue-600" />
+                  <CalendarIcon className="h-5 w-5 text-red-600" />
                   <div>
-                    <p className="font-semibold text-blue-900">
+                    <p className="font-semibold text-gray-900">
                       {selectedDate && format(selectedDate, "dd 'de' MMMM", { locale: ptBR })}
                     </p>
-                    <p className="text-sm text-blue-700">às {selectedTime}</p>
+                    <p className="text-sm text-gray-700">às {selectedTime}</p>
                   </div>
                 </div>
-                <Button variant="ghost" size="sm" onClick={() => setStep(1)} className="text-blue-600">
+                <Button variant="ghost" size="sm" onClick={() => setStep(1)} className="text-red-600">
                   Alterar
                 </Button>
               </CardContent>

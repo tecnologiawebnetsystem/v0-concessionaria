@@ -17,7 +17,7 @@ export function StoreMap({ className, showFullInfo = true }: StoreMapProps) {
   // Coordenadas de Taubaté - GT Veículos
   const latitude = -23.0226
   const longitude = -45.5561
-  const address = "Av. Independência, 1500 - Centro, Taubaté - SP"
+  const address = "Avenida César Costa, 222 - Taubaté - SP"
   const encodedAddress = encodeURIComponent("GT Veículos, Av. Independência, 1500, Centro, Taubaté, SP")
   
   const openInGoogleMaps = () => {
@@ -92,7 +92,7 @@ export function StoreMap({ className, showFullInfo = true }: StoreMapProps) {
                 <div>
                   <p className="font-semibold text-sm">Telefone</p>
                   <p className="text-sm text-muted-foreground">(12) 3621-0000</p>
-                  <p className="text-sm text-muted-foreground">WhatsApp: (12) 99999-9999</p>
+                  <p className="text-sm text-muted-foreground">WhatsApp: (12) 97406-3079</p>
                 </div>
               </div>
 
@@ -115,7 +115,7 @@ export function StoreMap({ className, showFullInfo = true }: StoreMapProps) {
             <div className="mt-6 flex gap-3">
               <Button 
                 onClick={openDirections}
-                className="flex-1 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700"
+                className="flex-1 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800"
               >
                 <Navigation className="mr-2 h-4 w-4" />
                 Como Chegar
@@ -128,16 +128,6 @@ export function StoreMap({ className, showFullInfo = true }: StoreMapProps) {
                 <ExternalLink className="mr-2 h-4 w-4" />
                 Abrir no Maps
               </Button>
-            </div>
-
-            {/* Landmarks */}
-            <div className="mt-6 p-4 bg-slate-50 dark:bg-slate-800/50 rounded-lg">
-              <p className="font-semibold text-sm mb-2">Pontos de Referência</p>
-              <ul className="text-sm text-muted-foreground space-y-1">
-                <li>• Próximo ao Shopping Taubaté</li>
-                <li>• 5 minutos da Rodovia Dutra (saída 102)</li>
-                <li>• Em frente ao Parque do Vale</li>
-              </ul>
             </div>
           </>
         )}

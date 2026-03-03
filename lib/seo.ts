@@ -1,13 +1,13 @@
 // SEO Utilities - Schema.org Structured Data Generators
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://nacionalveiculos.com.br"
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://gtveiculos.com.br"
 const SITE_NAME = "GT Veículos"
-const SITE_PHONE = "(12) 3456-7890"
+const SITE_PHONE = "(12) 97406-3079"
 const SITE_ADDRESS = {
-  street: "Av. Independência, 1500",
+  street: "Av. César Costa, 222",
   city: "Taubaté",
   state: "SP",
-  postalCode: "12010-000",
+  postalCode: "",
   country: "BR"
 }
 
@@ -29,7 +29,7 @@ export function generateOrganizationSchema() {
     image: `${SITE_URL}/og-image.jpg`,
     description: "Concessionária de veículos novos e seminovos em Taubaté. Mais de 15 anos oferecendo os melhores carros com garantia e financiamento facilitado.",
     telephone: SITE_PHONE,
-    email: "contato@nacionalveiculos.com.br",
+    email: "contato@gtveiculos.com.br",
     address: {
       "@type": "PostalAddress",
       streetAddress: SITE_ADDRESS.street,
@@ -58,9 +58,9 @@ export function generateOrganizationSchema() {
       }
     ],
     sameAs: [
-      "https://www.facebook.com/nacionalveiculos",
-      "https://www.instagram.com/nacionalveiculos",
-      "https://www.youtube.com/nacionalveiculos"
+      "https://www.facebook.com/gtveiculos",
+      "https://www.instagram.com/gtveiculos",
+      "https://www.youtube.com/gtveiculos"
     ],
     priceRange: "$$",
     currenciesAccepted: "BRL",

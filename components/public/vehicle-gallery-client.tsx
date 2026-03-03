@@ -61,8 +61,8 @@ export function VehicleGalleryClient({
           {showLockOverlay && (
             <div className="absolute inset-0 flex items-center justify-center bg-slate-950/80 backdrop-blur-md z-20">
               <div className="text-center px-6">
-                <div className="w-20 h-20 rounded-full bg-blue-500/10 flex items-center justify-center mx-auto mb-6">
-                  <Lock className="h-10 w-10 text-blue-400" />
+                <div className="w-20 h-20 rounded-full bg-red-500/10 flex items-center justify-center mx-auto mb-6">
+                  <Lock className="h-10 w-10 text-red-400" />
                 </div>
                 <h3 className="text-2xl font-bold text-white mb-2">Veja todas as fotos</h3>
                 <p className="text-slate-400 mb-6 max-w-sm">
@@ -70,7 +70,7 @@ export function VehicleGalleryClient({
                 </p>
                 <div className="flex flex-col sm:flex-row gap-3 justify-center">
                   <Link href={`/registro?redirect=${encodeURIComponent(typeof window !== 'undefined' ? window.location.pathname : '')}`}>
-                    <Button size="lg" className="bg-blue-600 hover:bg-blue-700 w-full sm:w-auto">
+                    <Button size="lg" className="bg-red-600 hover:bg-red-700 w-full sm:w-auto">
                       Criar Conta Gratis
                     </Button>
                   </Link>
@@ -133,7 +133,7 @@ export function VehicleGalleryClient({
                 className={cn(
                   "relative flex-shrink-0 w-24 h-16 rounded-lg overflow-hidden border-2 transition-all",
                   index === currentIndex
-                    ? "border-blue-500 ring-2 ring-blue-500/50"
+                    ? "border-red-500 ring-2 ring-red-500/50"
                     : "border-slate-700 opacity-60 hover:opacity-100"
                 )}
               >
@@ -150,15 +150,15 @@ export function VehicleGalleryClient({
 
         {/* Non-authenticated notice */}
         {!isAuthenticated && images.length > 1 && (
-          <div className="bg-blue-500/10 border border-blue-500/20 rounded-xl p-4 flex items-center justify-between">
+          <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-4 flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <Lock className="h-5 w-5 text-blue-400" />
-              <span className="text-sm text-blue-300">
+              <Lock className="h-5 w-5 text-red-400" />
+              <span className="text-sm text-red-300">
                 Mais {images.length - 1} {images.length - 1 === 1 ? "foto disponivel" : "fotos disponiveis"}
               </span>
             </div>
             <Link href="/login">
-              <Button size="sm" variant="ghost" className="text-blue-400 hover:text-blue-300 hover:bg-blue-500/10">
+              <Button size="sm" variant="ghost" className="text-red-400 hover:text-red-300 hover:bg-red-500/10">
                 Fazer login
               </Button>
             </Link>

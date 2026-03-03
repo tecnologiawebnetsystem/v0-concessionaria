@@ -77,17 +77,17 @@ export function VehiclesPageClient({ vehicles, brands, categories, currentFilter
     <main className="flex-1" id="main-content">
       {/* Hero Section */}
       <section className="relative overflow-hidden py-12 lg:py-16">
-        <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 via-transparent to-cyan-600/20" />
+        <div className="absolute inset-0 bg-gradient-to-r from-red-600/20 via-transparent to-red-600/20" />
         <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-5" />
         
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-8">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-500/10 border border-blue-500/20 mb-4">
-              <Sparkles className="size-4 text-blue-400" />
-              <span className="text-sm font-medium text-blue-400">{vehicles.length} veiculos disponiveis</span>
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-red-500/10 border border-red-500/20 mb-4">
+              <Sparkles className="size-4 text-red-400" />
+              <span className="text-sm font-medium text-red-400">{vehicles.length} veiculos disponiveis</span>
             </div>
             <h1 className="text-3xl lg:text-5xl font-bold text-white mb-4">
-              Encontre seu <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400">Veiculo Ideal</span>
+              Encontre seu <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-400 to-red-600">Veiculo Ideal</span>
             </h1>
             <p className="text-slate-400 max-w-2xl mx-auto">
               Explore nossa colecao de veiculos seminovos e 0km com as melhores condicoes de financiamento.
@@ -103,7 +103,7 @@ export function VehiclesPageClient({ vehicles, brands, categories, currentFilter
                   placeholder="Buscar por marca, modelo ou ano..."
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
-                  className="h-14 pl-12 bg-slate-800/50 border-slate-700 text-white placeholder:text-slate-500 focus:border-blue-500 rounded-xl"
+                  className="h-14 pl-12 bg-gray-800/50 border-gray-700 text-white placeholder:text-gray-500 focus:border-red-500 rounded-xl"
                 />
               </div>
               
@@ -163,7 +163,7 @@ export function VehiclesPageClient({ vehicles, brands, categories, currentFilter
                     </div>
                     
                     <SheetClose asChild>
-                      <Button className="w-full bg-gradient-to-r from-blue-600 to-cyan-600">
+                      <Button className="w-full bg-gradient-to-r from-red-600 to-red-700">
                         Aplicar Filtros
                       </Button>
                     </SheetClose>
@@ -229,7 +229,7 @@ export function VehiclesPageClient({ vehicles, brands, categories, currentFilter
               <div className="sticky top-24 space-y-6 bg-slate-800/30 rounded-2xl p-6 border border-slate-700/50">
                 <div className="flex items-center justify-between">
                   <h3 className="font-semibold text-white">Filtros</h3>
-                  <Button variant="ghost" size="sm" className="text-blue-400 hover:text-blue-300 h-auto p-0">
+                  <Button variant="ghost" size="sm" className="text-red-400 hover:text-red-300 h-auto p-0">
                     Limpar
                   </Button>
                 </div>
@@ -316,7 +316,7 @@ export function VehiclesPageClient({ vehicles, brands, categories, currentFilter
                   </div>
                 </div>
                 
-                <Button className="w-full bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500">
+                <Button className="w-full bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600">
                   Aplicar Filtros
                 </Button>
               </div>
@@ -331,7 +331,7 @@ export function VehiclesPageClient({ vehicles, brands, categories, currentFilter
                 }>
                   {sortedVehicles.map((vehicle) => (
                     <Link key={vehicle.id} href={`/veiculos/${vehicle.slug}`}>
-                      <Card className={`group bg-slate-800/50 border-slate-700/50 hover:border-blue-500/50 transition-all duration-300 overflow-hidden ${viewMode === "list" ? "flex" : ""}`}>
+                      <Card className={`group bg-gray-800/50 border-gray-700/50 hover:border-red-500/50 transition-all duration-300 overflow-hidden ${viewMode === "list" ? "flex" : ""}`}>
                         {/* Image */}
                         <div className={`relative overflow-hidden ${viewMode === "list" ? "w-48 flex-shrink-0" : "aspect-[4/3]"}`}>
                           <Image
@@ -375,8 +375,8 @@ export function VehiclesPageClient({ vehicles, brands, categories, currentFilter
                         <CardContent className={`p-4 ${viewMode === "list" ? "flex-1" : ""}`}>
                           <div className="flex items-start justify-between mb-2">
                             <div>
-                              <p className="text-xs text-blue-400 font-medium">{vehicle.brand_name}</p>
-                              <h3 className="font-semibold text-white group-hover:text-blue-400 transition-colors line-clamp-1">
+                              <p className="text-xs text-red-400 font-medium">{vehicle.brand_name}</p>
+                              <h3 className="font-semibold text-white group-hover:text-red-400 transition-colors line-clamp-1">
                                 {vehicle.name}
                               </h3>
                             </div>
@@ -406,7 +406,7 @@ export function VehiclesPageClient({ vehicles, brands, categories, currentFilter
                                 R$ {vehicle.price?.toLocaleString()}
                               </p>
                             </div>
-                            <Button size="sm" className="bg-blue-600 hover:bg-blue-500 text-white">
+                            <Button size="sm" className="bg-red-600 hover:bg-red-500 text-white">
                               Ver mais
                               <ChevronRight className="size-4 ml-1" />
                             </Button>

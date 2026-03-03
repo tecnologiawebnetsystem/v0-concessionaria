@@ -73,9 +73,9 @@ export function VehicleCTAButtons({
         Compartilhar
       </Button>
 
-      <div className="rounded-lg border bg-blue-50 p-4 text-center">
-        <p className="text-sm font-semibold text-blue-900">Atendimento Imediato</p>
-        <p className="text-xs text-blue-700">Seg-Sex: 8h-18h | Sáb: 8h-13h</p>
+      <div className="rounded-lg border bg-gray-50 p-4 text-center">
+        <p className="text-sm font-semibold text-gray-900">Atendimento Imediato</p>
+        <p className="text-xs text-gray-600">Seg-Sex: 8h-18h | Sáb: 8h-13h</p>
       </div>
     </div>
   )

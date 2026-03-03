@@ -106,7 +106,7 @@ export function LoginForm() {
         </form>
         <div className="mt-4 text-center text-sm text-gray-600">
           Não tem uma conta?{" "}
-          <Link href="/registro" className="font-medium text-blue-900 hover:underline">
+          <Link href="/registro" className="font-medium text-red-600 hover:underline">
             Criar conta gratuita
           </Link>
         </div>

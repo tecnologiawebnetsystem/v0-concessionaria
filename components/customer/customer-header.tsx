@@ -1,6 +1,7 @@
 "use client"
 
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
@@ -29,9 +30,15 @@ const navigation = [
 
 export function CustomerHeader() {
   const pathname = usePathname()
+  const router = useRouter()
+
+  async function handleLogout() {
+    await fetch("/api/auth/logout", { method: "POST" })
+    router.push("/entrar")
+  }
 
   return (
-    <header className="sticky top-0 z-40 flex h-16 items-center justify-between border-b border-slate-700/50 bg-slate-900/80 px-4 backdrop-blur-xl lg:px-6">
+    <header className="sticky top-0 z-40 flex h-16 items-center justify-between border-b border-gray-800/60 bg-black/95 px-4 backdrop-blur-xl lg:px-6">
       {/* Mobile menu */}
       <Sheet>
         <SheetTrigger asChild>
@@ -39,20 +46,20 @@ export function CustomerHeader() {
             <Menu className="size-5 text-slate-400" />
           </Button>
         </SheetTrigger>
-        <SheetContent side="left" className="w-80 p-0 bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 border-slate-700">
+        <SheetContent side="left" className="w-80 p-0 bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900 border-gray-700">
           <div className="flex flex-col h-full">
-            <div className="flex items-center justify-between p-4 border-b border-slate-700/50">
+            <div className="flex items-center justify-between p-4 border-b border-gray-700/50">
               <div className="flex items-center gap-3">
-                <div className="flex size-10 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-cyan-500">
+                <div className="flex size-10 items-center justify-center rounded-xl bg-gradient-to-br from-red-600 to-red-700">
                   <Car className="size-5 text-white" />
                 </div>
                 <div>
                   <h1 className="font-bold text-white">GT Veículos</h1>
-                  <p className="text-[10px] text-slate-400">Area do Cliente</p>
+                  <p className="text-[10px] text-gray-400">Area do Cliente</p>
                 </div>
               </div>
               <SheetClose asChild>
-                <Button variant="ghost" size="icon" className="hover:bg-slate-800">
+                <Button variant="ghost" size="icon" className="hover:bg-gray-800">
                   <X className="size-5 text-slate-400" />
                 </Button>
               </SheetClose>
@@ -67,8 +74,8 @@ export function CustomerHeader() {
                       className={cn(
                         "flex items-center gap-3 px-3 py-3 text-sm font-medium rounded-xl transition-all",
                         isActive
-                          ? "bg-gradient-to-r from-blue-600 to-cyan-600 text-white"
-                          : "text-slate-400 hover:text-white hover:bg-slate-700/50"
+                          ? "bg-gradient-to-r from-red-600 to-red-700 text-white"
+                          : "text-gray-400 hover:text-white hover:bg-gray-700/50"
                       )}
                     >
                       <item.icon className="size-5" />
@@ -78,15 +85,15 @@ export function CustomerHeader() {
                 )
               })}
             </nav>
-            <div className="p-4 border-t border-slate-700/50">
+            <div className="p-4 border-t border-gray-700/50">
               <SheetClose asChild>
-                <Link
-                  href="/logout"
-                  className="flex items-center gap-3 px-3 py-3 text-sm font-medium rounded-xl text-red-400 hover:bg-red-500/10 transition-colors"
+                <button
+                  onClick={handleLogout}
+                  className="flex w-full items-center gap-3 px-3 py-3 text-sm font-medium rounded-xl text-red-400 hover:bg-red-500/10 transition-colors"
                 >
                   <LogOut className="size-5" />
                   Sair da Conta
-                </Link>
+                </button>
               </SheetClose>
             </div>
           </div>
@@ -99,7 +106,7 @@ export function CustomerHeader() {
           <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-slate-500" />
           <Input
             placeholder="Buscar veiculos, propostas..."
-            className="h-10 border-slate-700 bg-slate-800/50 pl-10 text-white placeholder:text-slate-500 focus:bg-slate-800 focus:border-blue-500"
+            className="h-10 border-gray-700 bg-gray-800/50 pl-10 text-white placeholder:text-gray-500 focus:bg-gray-800 focus:border-red-500"
           />
         </div>
       </div>
@@ -107,7 +114,7 @@ export function CustomerHeader() {
       {/* Right side */}
       <div className="flex items-center gap-3">
         <Link href="/veiculos">
-          <Button size="sm" className="hidden sm:flex bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 text-white border-0">
+          <Button size="sm" className="hidden sm:flex bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white border-0">
             <Car className="size-4 mr-2" />
             Ver Veiculos
           </Button>
@@ -123,34 +130,34 @@ export function CustomerHeader() {
               </span>
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-80 bg-slate-900 border-slate-700">
+          <DropdownMenuContent align="end" className="w-80 bg-gray-900 border-gray-700">
             <DropdownMenuLabel className="text-white">Notificacoes</DropdownMenuLabel>
-            <DropdownMenuSeparator className="bg-slate-700" />
+            <DropdownMenuSeparator className="bg-gray-700" />
             <div className="p-2 space-y-2">
-              <div className="flex gap-3 p-2 rounded-lg hover:bg-slate-800 cursor-pointer">
+              <div className="flex gap-3 p-2 rounded-lg hover:bg-gray-800 cursor-pointer">
                 <div className="size-10 rounded-full bg-green-500/20 flex items-center justify-center flex-shrink-0">
                   <FileText className="size-5 text-green-400" />
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-medium text-white">Proposta Aprovada!</p>
-                  <p className="text-xs text-slate-400 truncate">Sua proposta para Honda Civic foi aprovada</p>
-                  <p className="text-[10px] text-slate-500 mt-1">Ha 2 horas</p>
+                  <p className="text-xs text-gray-400 truncate">Sua proposta para Honda Civic foi aprovada</p>
+                  <p className="text-[10px] text-gray-500 mt-1">Ha 2 horas</p>
                 </div>
               </div>
-              <div className="flex gap-3 p-2 rounded-lg hover:bg-slate-800 cursor-pointer">
-                <div className="size-10 rounded-full bg-blue-500/20 flex items-center justify-center flex-shrink-0">
-                  <Car className="size-5 text-blue-400" />
+              <div className="flex gap-3 p-2 rounded-lg hover:bg-gray-800 cursor-pointer">
+                <div className="size-10 rounded-full bg-red-500/20 flex items-center justify-center flex-shrink-0">
+                  <Car className="size-5 text-red-400" />
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-medium text-white">Test Drive Confirmado</p>
-                  <p className="text-xs text-slate-400 truncate">Amanha as 14h - Toyota Corolla</p>
-                  <p className="text-[10px] text-slate-500 mt-1">Ha 5 horas</p>
+                  <p className="text-xs text-gray-400 truncate">Amanha as 14h - Toyota Corolla</p>
+                  <p className="text-[10px] text-gray-500 mt-1">Ha 5 horas</p>
                 </div>
               </div>
             </div>
-            <DropdownMenuSeparator className="bg-slate-700" />
+            <DropdownMenuSeparator className="bg-gray-700" />
             <div className="p-2">
-              <Button variant="ghost" className="w-full text-blue-400 hover:text-blue-300 hover:bg-slate-800">
+              <Button variant="ghost" className="w-full text-red-400 hover:text-red-300 hover:bg-gray-800">
                 Ver todas as notificacoes
               </Button>
             </div>
@@ -160,45 +167,45 @@ export function CustomerHeader() {
         {/* User Menu */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="relative flex items-center gap-3 rounded-full pl-2 pr-4 hover:bg-slate-800">
-              <Avatar className="size-8 border-2 border-blue-500/30">
-                <AvatarFallback className="bg-gradient-to-br from-blue-500 to-cyan-500 text-sm font-semibold text-white">
+            <Button variant="ghost" className="relative flex items-center gap-3 rounded-full pl-2 pr-4 hover:bg-gray-800">
+              <Avatar className="size-8 border-2 border-red-500/30">
+                <AvatarFallback className="bg-gradient-to-br from-red-600 to-red-700 text-sm font-semibold text-white">
                   CL
                 </AvatarFallback>
               </Avatar>
               <div className="hidden text-left md:block">
                 <p className="text-sm font-medium text-white">Cliente</p>
-                <p className="text-xs text-slate-400">Minha Conta</p>
+                <p className="text-xs text-gray-400">Minha Conta</p>
               </div>
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-56 bg-slate-900 border-slate-700">
+          <DropdownMenuContent align="end" className="w-56 bg-gray-900 border-gray-700">
             <DropdownMenuLabel className="text-white">Minha Conta</DropdownMenuLabel>
-            <DropdownMenuSeparator className="bg-slate-700" />
+            <DropdownMenuSeparator className="bg-gray-700" />
             <DropdownMenuItem asChild>
-              <Link href="/minha-conta/perfil" className="cursor-pointer text-slate-300 hover:text-white focus:text-white focus:bg-slate-800">
+              <Link href="/minha-conta/perfil" className="cursor-pointer text-gray-300 hover:text-white focus:text-white focus:bg-gray-800">
                 <User className="mr-2 size-4" />
                 Meu Perfil
               </Link>
             </DropdownMenuItem>
             <DropdownMenuItem asChild>
-              <Link href="/minha-conta/favoritos" className="cursor-pointer text-slate-300 hover:text-white focus:text-white focus:bg-slate-800">
+              <Link href="/minha-conta/favoritos" className="cursor-pointer text-gray-300 hover:text-white focus:text-white focus:bg-gray-800">
                 <Heart className="mr-2 size-4" />
                 Favoritos
               </Link>
             </DropdownMenuItem>
             <DropdownMenuItem asChild>
-              <Link href="/minha-conta/propostas" className="cursor-pointer text-slate-300 hover:text-white focus:text-white focus:bg-slate-800">
+              <Link href="/minha-conta/propostas" className="cursor-pointer text-gray-300 hover:text-white focus:text-white focus:bg-gray-800">
                 <FileText className="mr-2 size-4" />
                 Minhas Propostas
               </Link>
             </DropdownMenuItem>
-            <DropdownMenuSeparator className="bg-slate-700" />
+            <DropdownMenuSeparator className="bg-gray-700" />
             <DropdownMenuItem asChild>
-              <Link href="/logout" className="cursor-pointer text-red-400 hover:text-red-300 focus:text-red-300 focus:bg-red-500/10">
+              <button onClick={handleLogout} className="w-full cursor-pointer text-red-400 hover:text-red-300 focus:text-red-300 focus:bg-red-500/10">
                 <LogOut className="mr-2 size-4" />
                 Sair
-              </Link>
+              </button>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

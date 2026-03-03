@@ -13,7 +13,7 @@ export function FeaturedVehicles({ vehicles }: { vehicles: any[] }) {
         <div className="mb-16 text-center">
           <Badge
             variant="outline"
-            className="mb-4 border-blue-200 bg-blue-50 px-4 py-1.5 text-sm font-semibold text-blue-900"
+            className="mb-4 border-red-200 bg-red-50 px-4 py-1.5 text-sm font-semibold text-red-700"
           >
             Destaques
           </Badge>
@@ -63,8 +63,8 @@ export function FeaturedVehicles({ vehicles }: { vehicles: any[] }) {
 
                 <CardContent className="p-6">
                   <div className="mb-4">
-                    <p className="text-sm font-bold uppercase tracking-wide text-blue-900">{vehicle.brand_name}</p>
-                    <h3 className="mt-1 text-xl font-bold text-gray-900 group-hover:text-blue-900">{vehicle.name}</h3>
+                    <p className="text-sm font-bold uppercase tracking-wide text-red-700">{vehicle.brand_name}</p>
+                    <h3 className="mt-1 text-xl font-bold text-gray-900 group-hover:text-red-700">{vehicle.name}</h3>
                     <p className="mt-1 text-sm text-gray-600">{vehicle.model}</p>
                   </div>
 
@@ -93,7 +93,7 @@ export function FeaturedVehicles({ vehicles }: { vehicles: any[] }) {
                   <div className="flex items-end justify-between">
                     <div>
                       <p className="text-xs font-medium uppercase tracking-wide text-gray-500">Preço</p>
-                      <p className="mt-1 text-3xl font-extrabold text-blue-900">
+                      <p className="mt-1 text-3xl font-extrabold text-red-700">
                         {new Intl.NumberFormat("pt-BR", {
                           style: "currency",
                           currency: "BRL",
@@ -101,7 +101,7 @@ export function FeaturedVehicles({ vehicles }: { vehicles: any[] }) {
                         }).format(Number(vehicle.price))}
                       </p>
                     </div>
-                    <div className="flex size-12 items-center justify-center rounded-full bg-blue-900 text-white transition-transform group-hover:scale-110">
+                      <div className="flex size-12 items-center justify-center rounded-full bg-red-600 text-white transition-transform group-hover:scale-110">
                       <ArrowRight className="size-5" />
                     </div>
                   </div>
@@ -112,7 +112,7 @@ export function FeaturedVehicles({ vehicles }: { vehicles: any[] }) {
         </div>
 
         <div className="mt-16 text-center">
-          <Button size="lg" asChild className="h-14 bg-blue-900 px-8 text-base font-semibold hover:bg-blue-800">
+          <Button size="lg" asChild className="h-14 bg-red-600 px-8 text-base text-white font-semibold hover:bg-red-700">
             <Link href="/veiculos">
               Ver Todos os Veículos
               <ArrowRight className="ml-2 size-5" />

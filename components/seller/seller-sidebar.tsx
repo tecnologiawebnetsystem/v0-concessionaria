@@ -26,12 +26,12 @@ import { useState } from "react"
 
 const navigation = [
   { name: "Dashboard", href: "/seller", icon: LayoutDashboard, color: "text-emerald-400" },
-  { name: "Minhas Vendas", href: "/seller/sales", icon: DollarSign, color: "text-blue-400" },
-  { name: "Veiculos", href: "/seller/vehicles", icon: Car, color: "text-cyan-400" },
+  { name: "Minhas Vendas", href: "/seller/sales", icon: DollarSign, color: "text-red-400" },
+  { name: "Veiculos", href: "/seller/vehicles", icon: Car, color: "text-gray-400" },
   { name: "Comissoes", href: "/seller/commissions", icon: TrendingUp, color: "text-amber-400" },
-  { name: "Metas", href: "/seller/goals", icon: Target, color: "text-violet-400" },
+  { name: "Metas", href: "/seller/goals", icon: Target, color: "text-red-400" },
   { name: "Agendamentos", href: "/seller/appointments", icon: Calendar, color: "text-pink-400" },
-  { name: "Historico", href: "/seller/history", icon: Clock, color: "text-slate-400" },
+  { name: "Historico", href: "/seller/history", icon: Clock, color: "text-gray-400" },
   { name: "Meu Perfil", href: "/seller/profile", icon: User, color: "text-teal-400" },
   { name: "Documentos", href: "/seller/documents", icon: FileText, color: "text-orange-400" },
 ]
@@ -42,15 +42,9 @@ function SidebarContent() {
   return (
     <div className="flex flex-col h-full">
       {/* Logo */}
-      <div className="p-6 border-b border-slate-700/50">
+      <div className="p-6 border-b border-gray-700/50">
         <Link href="/seller" className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center shadow-lg shadow-emerald-500/25">
-            <Zap className="h-6 w-6 text-white" />
-          </div>
-          <div>
-            <h1 className="text-lg font-bold text-white">Portal Vendedor</h1>
-            <p className="text-xs text-slate-500">GT Veículos</p>
-          </div>
+          <img src="/images/logo-gt-veiculos.png" alt="GT Veículos" className="h-10 w-auto" />
         </Link>
       </div>
 
@@ -66,7 +60,7 @@ function SidebarContent() {
                 "flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200",
                 isActive 
                   ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 shadow-lg shadow-emerald-500/5" 
-                  : "text-slate-400 hover:text-white hover:bg-slate-800/50"
+                  : "text-gray-400 hover:text-white hover:bg-gray-800/50"
               )}
             >
               <item.icon className={cn("h-5 w-5", isActive ? "text-emerald-400" : item.color)} />
@@ -82,9 +76,9 @@ function SidebarContent() {
       </nav>
 
       {/* Bottom Section */}
-      <div className="p-4 border-t border-slate-700/50 space-y-2">
+      <div className="p-4 border-t border-gray-700/50 space-y-2">
         <Link href="/">
-          <Button variant="ghost" className="w-full justify-start text-slate-400 hover:text-white hover:bg-slate-800/50">
+          <Button variant="ghost" className="w-full justify-start text-gray-400 hover:text-white hover:bg-gray-800/50">
             <Home className="h-5 w-5 mr-3" />
             Voltar ao Site
           </Button>
@@ -113,7 +107,7 @@ function SidebarContent() {
               <p className="text-xs text-slate-400">75% concluido</p>
             </div>
           </div>
-          <div className="w-full bg-slate-700/50 rounded-full h-2">
+          <div className="w-full bg-gray-700/50 rounded-full h-2">
             <div className="bg-gradient-to-r from-emerald-500 to-teal-500 h-2 rounded-full" style={{ width: "75%" }} />
           </div>
         </div>
@@ -133,18 +127,18 @@ export function SellerSidebar() {
           <Button 
             variant="ghost" 
             size="icon" 
-            className="lg:hidden fixed top-4 left-4 z-50 bg-slate-800 text-white hover:bg-slate-700"
+            className="lg:hidden fixed top-4 left-4 z-50 bg-gray-800 text-white hover:bg-gray-700"
           >
             <Menu className="h-5 w-5" />
           </Button>
         </SheetTrigger>
-        <SheetContent side="left" className="p-0 w-72 bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 border-slate-700">
+        <SheetContent side="left" className="p-0 w-72 bg-black border-gray-800/60">
           <SidebarContent />
         </SheetContent>
       </Sheet>
 
       {/* Desktop Sidebar */}
-      <aside className="hidden w-72 flex-col border-r border-slate-700/50 bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 lg:flex">
+      <aside className="hidden w-72 flex-col border-r border-gray-800/60 bg-black lg:flex">
         <SidebarContent />
       </aside>
     </>

@@ -3,7 +3,7 @@ import { sql } from "@/lib/db"
 import ClientHomePage from "./client-page"
 import { generateVehicleListSchema, generateFAQSchema } from "@/lib/seo"
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://nacionalveiculos.com.br"
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://gtveiculos.com.br"
 
 async function getHomeData() {
   const [vehicles, totalResult, brands] = await Promise.all([
@@ -35,7 +35,7 @@ export const metadata: Metadata = {
     "concessionaria taubate",
     "carros seminovos taubate",
     "carros 0km taubate",
-    "nacional veiculos",
+    "gt veiculos",
     "comprar carro taubate",
     "financiamento de veiculos",
     "carros usados vale do paraiba",
@@ -86,7 +86,7 @@ const homeFaqs = [
   },
   {
     question: "Onde a GT Veículos esta localizada?",
-    answer: "Estamos localizados na Av. Independencia, 1500 - Taubate, SP. Funcionamos de segunda a sexta das 8h as 18h e sabados das 9h as 13h."
+    answer: "Estamos localizados na Av. César Costa, 222 - Taubaté, SP. Funcionamos de segunda a sexta das 8h as 18h e sabados das 9h as 13h."
   }
 ]
 

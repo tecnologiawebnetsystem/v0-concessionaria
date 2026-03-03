@@ -28,7 +28,7 @@ export async function GET() {
     
     // 3. Verificar se funciona
     const testUser = await sql`
-      SELECT email, password_hash FROM users WHERE email = 'admin@nacionalveiculos.com.br' LIMIT 1
+      SELECT email, password_hash FROM users WHERE email = 'admin@gtveiculos.com.br' LIMIT 1
     `
     
     let testResult = false
@@ -44,7 +44,7 @@ export async function GET() {
       testeLogin: testResult ? "PASSOU - bcrypt.compare funcionou!" : "FALHOU",
       hashGerado: adminHash.substring(0, 30) + "...",
       instrucoes: {
-        admin: "admin@nacionalveiculos.com.br / admin123",
+        admin: "admin@gtveiculos.com.br / admin123",
         cliente: "carlos.silva@email.com / cliente123"
       }
     })

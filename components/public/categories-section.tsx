@@ -29,14 +29,14 @@ export function CategoriesSection({ categories }: { categories: any[] }) {
             const Icon = iconMap[category.icon || "car"] || Car
             return (
               <Link key={category.id} href={`/veiculos?categoria=${category.slug}`}>
-                <Card className="group h-full overflow-hidden border-2 border-gray-100 transition-all hover:-translate-y-1 hover:border-blue-500 hover:shadow-xl">
+                <Card className="group h-full overflow-hidden border-2 border-gray-100 transition-all hover:-translate-y-1 hover:border-red-500 hover:shadow-xl">
                   <CardContent className="flex flex-col items-center p-8 text-center">
-                    <div className="mb-4 flex size-20 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-50 to-blue-100 transition-all group-hover:from-blue-900 group-hover:to-blue-700 group-hover:shadow-lg">
-                      <Icon className="size-10 text-blue-900 transition-colors group-hover:text-white" />
+                    <div className="mb-4 flex size-20 items-center justify-center rounded-2xl bg-gradient-to-br from-red-50 to-red-100 transition-all group-hover:from-red-700 group-hover:to-red-900 group-hover:shadow-lg">
+                      <Icon className="size-10 text-red-700 transition-colors group-hover:text-white" />
                     </div>
-                    <h3 className="text-xl font-bold text-gray-900 group-hover:text-blue-900">{category.name}</h3>
+                    <h3 className="text-xl font-bold text-gray-900 group-hover:text-red-700">{category.name}</h3>
                     {category.description && <p className="mt-2 text-sm text-gray-600">{category.description}</p>}
-                    <div className="mt-4 text-sm font-semibold text-blue-900 group-hover:underline">Ver Veículos →</div>
+                    <div className="mt-4 text-sm font-semibold text-red-700 group-hover:underline">Ver Veículos →</div>
                   </CardContent>
                 </Card>
               </Link>

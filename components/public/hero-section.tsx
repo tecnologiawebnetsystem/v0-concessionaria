@@ -34,14 +34,14 @@ export function HeroSection({ banners }: { banners: any[] }) {
 
   if (banners.length === 0) {
     return (
-      <section className="relative bg-gradient-to-br from-blue-950 via-blue-900 to-blue-800 py-20 lg:py-32">
+      <section className="relative bg-gradient-to-br from-gray-950 via-gray-900 to-red-950 py-20 lg:py-32">
         <div className="absolute inset-0 bg-[url('/luxury-car-showroom.png')] bg-cover bg-center opacity-10" />
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center text-white">
             <h1 className="text-balance text-5xl font-extrabold tracking-tight sm:text-6xl lg:text-7xl">
               Encontre Seu Carro Ideal
             </h1>
-            <p className="mx-auto mt-6 max-w-3xl text-pretty text-xl leading-relaxed text-blue-100">
+            <p className="mx-auto mt-6 max-w-3xl text-pretty text-xl leading-relaxed text-gray-300">
               As melhores ofertas de veículos seminovos e 0km com garantia, financiamento facilitado e atendimento
               personalizado
             </p>
@@ -87,7 +87,7 @@ export function HeroSection({ banners }: { banners: any[] }) {
                 <Button
                   size="lg"
                   asChild
-                  className="mt-6 h-12 w-full bg-blue-900 text-base font-semibold hover:bg-blue-800"
+                  className="mt-6 h-12 w-full bg-red-600 text-white text-base font-semibold hover:bg-red-700"
                 >
                   <Link href="/veiculos">
                     <Search className="mr-2 size-5" />
@@ -98,20 +98,20 @@ export function HeroSection({ banners }: { banners: any[] }) {
             </div>
 
             <div className="mt-12 flex flex-wrap justify-center gap-4">
-              <div className="flex items-center gap-2 text-blue-100">
-                <div className="flex size-10 items-center justify-center rounded-full bg-blue-800">
+              <div className="flex items-center gap-2 text-gray-200">
+                <div className="flex size-10 items-center justify-center rounded-full bg-red-700">
                   <span className="text-lg font-bold">✓</span>
                 </div>
                 <span className="text-sm font-medium">Garantia de Qualidade</span>
               </div>
-              <div className="flex items-center gap-2 text-blue-100">
-                <div className="flex size-10 items-center justify-center rounded-full bg-blue-800">
+              <div className="flex items-center gap-2 text-gray-200">
+                <div className="flex size-10 items-center justify-center rounded-full bg-red-700">
                   <span className="text-lg font-bold">✓</span>
                 </div>
                 <span className="text-sm font-medium">Financiamento Aprovado</span>
               </div>
-              <div className="flex items-center gap-2 text-blue-100">
-                <div className="flex size-10 items-center justify-center rounded-full bg-blue-800">
+              <div className="flex items-center gap-2 text-gray-200">
+                <div className="flex size-10 items-center justify-center rounded-full bg-red-700">
                   <span className="text-lg font-bold">✓</span>
                 </div>
                 <span className="text-sm font-medium">Documentação Inclusa</span>
@@ -138,7 +138,7 @@ export function HeroSection({ banners }: { banners: any[] }) {
               alt={banner.title}
               className="size-full object-cover"
             />
-            <div className="absolute inset-0 bg-gradient-to-r from-blue-950/95 via-blue-900/70 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-r from-black/95 via-black/70 to-transparent" />
             <div className="absolute inset-0 flex items-center">
               <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 <div className="max-w-3xl text-white">
@@ -146,14 +146,14 @@ export function HeroSection({ banners }: { banners: any[] }) {
                     {banner.title}
                   </h1>
                   {banner.subtitle && (
-                    <p className="mt-6 text-pretty text-xl leading-relaxed text-blue-100">{banner.subtitle}</p>
+                    <p className="mt-6 text-pretty text-xl leading-relaxed text-gray-200">{banner.subtitle}</p>
                   )}
                   {banner.link_url && (
                     <div className="mt-10 flex gap-4">
                       <Button
                         size="lg"
                         asChild
-                        className="h-14 bg-white px-8 text-lg font-semibold text-blue-900 hover:bg-blue-50"
+                        className="h-14 bg-red-600 px-8 text-lg font-semibold text-white hover:bg-red-700"
                       >
                         <Link href={banner.link_url}>{banner.link_text || "Saiba Mais"}</Link>
                       </Button>
@@ -181,14 +181,14 @@ export function HeroSection({ banners }: { banners: any[] }) {
             className="absolute left-6 top-1/2 -translate-y-1/2 rounded-full bg-white/90 p-3 shadow-lg backdrop-blur-sm transition-all hover:bg-white hover:scale-110"
             aria-label="Previous slide"
           >
-            <ChevronLeft className="size-6 text-blue-900" />
+            <ChevronLeft className="size-6 text-gray-900" />
           </button>
           <button
             onClick={goToNext}
             className="absolute right-6 top-1/2 -translate-y-1/2 rounded-full bg-white/90 p-3 shadow-lg backdrop-blur-sm transition-all hover:bg-white hover:scale-110"
             aria-label="Next slide"
           >
-            <ChevronRight className="size-6 text-blue-900" />
+            <ChevronRight className="size-6 text-gray-900" />
           </button>
 
           <div className="absolute bottom-8 left-1/2 flex -translate-x-1/2 gap-2">

@@ -53,8 +53,8 @@ export function FinancingCalculatorClient({ vehiclePrice, vehicleName }: Financi
       <CardHeader>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="p-2.5 rounded-xl bg-blue-500/10">
-              <Calculator className="h-6 w-6 text-blue-400" />
+            <div className="p-2.5 rounded-xl bg-red-500/10">
+              <Calculator className="h-6 w-6 text-red-400" />
             </div>
             <div>
               <CardTitle className="text-white">Simule o Financiamento</CardTitle>
@@ -118,9 +118,9 @@ export function FinancingCalculatorClient({ vehiclePrice, vehicleName }: Financi
 
         {/* Results */}
         <div className="grid grid-cols-2 gap-4">
-          <div className="bg-gradient-to-br from-blue-500/10 to-indigo-500/10 rounded-xl p-4 border border-blue-500/20">
+          <div className="bg-gradient-to-br from-red-500/10 to-red-600/10 rounded-xl p-4 border border-red-500/20">
             <div className="flex items-center gap-2 mb-2">
-              <TrendingDown className="h-4 w-4 text-blue-400" />
+              <TrendingDown className="h-4 w-4 text-red-400" />
               <span className="text-xs text-slate-400">Valor financiado</span>
             </div>
             <p className="text-xl font-bold text-white">{formatCurrency(calculations.financedAmount)}</p>
@@ -168,7 +168,7 @@ export function FinancingCalculatorClient({ vehiclePrice, vehicleName }: Financi
 
         {/* CTA */}
         <Link 
-          href={`https://wa.me/5512999999999?text=Olá! Gostaria de simular o financiamento do ${vehicleName}. Entrada: ${formatCurrency(calculations.downPayment)}, Parcelas: ${months}x de ${formatCurrency(calculations.monthlyPayment)}`}
+          href={`https://wa.me/5512974063079?text=Olá! Gostaria de simular o financiamento do ${vehicleName}. Entrada: ${formatCurrency(calculations.downPayment)}, Parcelas: ${months}x de ${formatCurrency(calculations.monthlyPayment)}`}
           target="_blank"
           className="block"
         >
