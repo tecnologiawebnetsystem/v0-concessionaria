@@ -85,9 +85,11 @@ export function LoginForm() {
           redirectUrl = "/minha-conta"
         }
       }
-      
-      // Usar window.location para garantir redirecionamento completo
-      window.location.href = redirectUrl
+
+      // Aguarda um tick para o cookie ser persistido no browser antes de navegar
+      setTimeout(() => {
+        window.location.replace(redirectUrl)
+      }, 100)
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Erro ao fazer login")
     } finally {

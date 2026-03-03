@@ -112,6 +112,8 @@ export function VehicleForm({ vehicle, brands, categories }: VehicleFormProps) {
       setGeneratingPrice(false)
     }
   }
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
     setFormData((prev) => ({ ...prev, [name]: value }))
   }
