@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server"
 import { getSession } from "@/lib/session"
-import { sql } from "@neondatabase/serverless"
+import { sql } from "@/lib/db"
 
 export async function GET() {
   const session = await getSession()

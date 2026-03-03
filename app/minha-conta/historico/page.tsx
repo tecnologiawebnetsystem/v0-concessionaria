@@ -3,7 +3,7 @@
 import useSWR from "swr"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Skeleton } from "@/components/ui/skeleton"
+
 import { History, ArrowRight, Eye, Calendar, Gauge, Trash2 } from "lucide-react"
 import Link from "next/link"
 import Image from "next/image"
@@ -52,7 +52,7 @@ export default function CustomerHistoryPage() {
 
       {isLoading ? (
         <div className="space-y-3">
-          {[1,2,3].map(i => <Skeleton key={i} className="h-24 w-full rounded-xl" />)}
+          {[1,2,3].map(i => <div key={i} className="h-24 w-full rounded-xl bg-muted animate-pulse" />)}
         </div>
       ) : (history?.length ?? 0) > 0 ? (
         <div className="space-y-6">
