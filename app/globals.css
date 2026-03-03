@@ -10,113 +10,107 @@
    ============================================ */
 
 :root {
-  /* Cores base — modo claro */
-  --background:       oklch(0.985 0 0);        /* branco quase puro */
-  --foreground:       oklch(0.10 0 0);         /* preto profundo */
-  --card:             oklch(1 0 0);
-  --card-foreground:  oklch(0.10 0 0);
-  --popover:          oklch(1 0 0);
-  --popover-foreground: oklch(0.10 0 0);
+  /* Cores base — tema escuro como padrão */
+  --background:       oklch(0.08 0.004 0);        /* preto profundo */
+  --foreground:       oklch(0.97 0 0);             /* branco limpo */
+  --card:             oklch(0.12 0.004 0);         /* cinza muito escuro */
+  --card-foreground:  oklch(0.97 0 0);
+  --popover:          oklch(0.11 0.004 0);
+  --popover-foreground: oklch(0.97 0 0);
 
   /* Brand — Vermelho GT */
-  --primary:          oklch(0.48 0.22 25);     /* #dc2626 */
+  --primary:          oklch(0.53 0.23 25);         /* #dc2626 */
   --primary-foreground: oklch(1 0 0);
-  --primary-hover:    oklch(0.42 0.22 25);     /* #b91c1c */
-  --primary-light:    oklch(0.94 0.04 25);     /* vermelho suave p/ bg */
-  --primary-glow:     oklch(0.48 0.22 25 / 0.15);
+  --primary-hover:    oklch(0.45 0.23 25);         /* #b91c1c */
+  --primary-light:    oklch(0.18 0.06 25);         /* vermelho escuro p/ bg */
+  --primary-glow:     oklch(0.53 0.23 25 / 0.20);
 
-  /* Neutros */
-  --secondary:        oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.15 0 0);
-  --muted:            oklch(0.96 0.002 0);
-  --muted-foreground: oklch(0.50 0.005 0);
-  --surface:          oklch(0.99 0 0);
-  --surface-raised:   oklch(0.97 0.001 0);
+  /* Neutros escuros */
+  --secondary:        oklch(0.16 0.004 0);
+  --secondary-foreground: oklch(0.97 0 0);
+  --muted:            oklch(0.16 0.004 0);
+  --muted-foreground: oklch(0.58 0.005 0);
+  --surface:          oklch(0.12 0.004 0);
+  --surface-raised:   oklch(0.16 0.004 0);
 
   /* UI */
-  --accent:           oklch(0.48 0.22 25);
+  --accent:           oklch(0.53 0.23 25);
   --accent-foreground: oklch(1 0 0);
   --destructive:      oklch(0.50 0.22 25);
   --destructive-foreground: oklch(1 0 0);
-  --border:           oklch(0.90 0.003 0);
-  --border-strong:    oklch(0.82 0.004 0);
-  --input:            oklch(0.97 0.002 0);
-  --ring:             oklch(0.48 0.22 25 / 0.4);
+  --border:           oklch(0.22 0.005 0);
+  --border-strong:    oklch(0.30 0.005 0);
+  --input:            oklch(0.16 0.005 0);
+  --ring:             oklch(0.53 0.23 25 / 0.5);
 
   /* Charts */
-  --chart-1: oklch(0.48 0.22 25);
-  --chart-2: oklch(0.55 0.15 230);
+  --chart-1: oklch(0.55 0.23 25);
+  --chart-2: oklch(0.58 0.15 230);
   --chart-3: oklch(0.65 0.15 140);
-  --chart-4: oklch(0.60 0.15 50);
-  --chart-5: oklch(0.50 0.12 280);
+  --chart-4: oklch(0.65 0.15 50);
+  --chart-5: oklch(0.55 0.12 280);
 
-  /* Sidebar (painel admin/seller/cliente) */
-  --sidebar:          oklch(0.08 0.005 0);
+  /* Sidebar */
+  --sidebar:          oklch(0.06 0.004 0);
   --sidebar-foreground: oklch(0.92 0.003 0);
-  --sidebar-primary:  oklch(0.48 0.22 25);
+  --sidebar-primary:  oklch(0.53 0.23 25);
   --sidebar-primary-foreground: oklch(1 0 0);
-  --sidebar-accent:   oklch(0.16 0.005 0);
+  --sidebar-accent:   oklch(0.14 0.005 0);
   --sidebar-accent-foreground: oklch(0.92 0.003 0);
-  --sidebar-border:   oklch(0.20 0.005 0);
-  --sidebar-ring:     oklch(0.48 0.22 25);
+  --sidebar-border:   oklch(0.18 0.005 0);
+  --sidebar-ring:     oklch(0.53 0.23 25);
 
   /* Raios */
   --radius: 0.625rem;
 
-  /* Shadows personalizadas */
-  --shadow-card: 0 1px 3px 0 rgb(0 0 0 / 0.06), 0 1px 2px -1px rgb(0 0 0 / 0.06);
-  --shadow-elevated: 0 4px 16px -2px rgb(0 0 0 / 0.10), 0 2px 8px -2px rgb(0 0 0 / 0.06);
-  --shadow-brand: 0 8px 32px -4px oklch(0.48 0.22 25 / 0.35);
+  /* Shadows */
+  --shadow-card:    0 1px 3px 0 rgb(0 0 0 / 0.4), 0 1px 2px -1px rgb(0 0 0 / 0.4);
+  --shadow-elevated: 0 4px 16px -2px rgb(0 0 0 / 0.55), 0 2px 8px -2px rgb(0 0 0 / 0.4);
+  --shadow-brand:   0 8px 32px -4px oklch(0.53 0.23 25 / 0.5);
 }
 
 .dark {
-  --background:       oklch(0.09 0.005 0);
+  --background:       oklch(0.06 0.004 0);
   --foreground:       oklch(0.97 0 0);
-  --card:             oklch(0.13 0.005 0);
+  --card:             oklch(0.10 0.004 0);
   --card-foreground:  oklch(0.97 0 0);
-  --popover:          oklch(0.11 0.005 0);
+  --popover:          oklch(0.09 0.004 0);
   --popover-foreground: oklch(0.97 0 0);
-
-  --primary:          oklch(0.55 0.22 25);
+  --primary:          oklch(0.58 0.23 25);
   --primary-foreground: oklch(1 0 0);
-  --primary-hover:    oklch(0.62 0.22 25);
-  --primary-light:    oklch(0.20 0.06 25);
-  --primary-glow:     oklch(0.55 0.22 25 / 0.20);
-
-  --secondary:        oklch(0.18 0.005 0);
+  --primary-hover:    oklch(0.65 0.23 25);
+  --primary-light:    oklch(0.20 0.07 25);
+  --primary-glow:     oklch(0.58 0.23 25 / 0.25);
+  --secondary:        oklch(0.18 0.004 0);
   --secondary-foreground: oklch(0.97 0 0);
-  --muted:            oklch(0.18 0.005 0);
+  --muted:            oklch(0.18 0.004 0);
   --muted-foreground: oklch(0.60 0.005 0);
-  --surface:          oklch(0.13 0.005 0);
-  --surface-raised:   oklch(0.17 0.005 0);
-
-  --accent:           oklch(0.55 0.22 25);
+  --surface:          oklch(0.10 0.004 0);
+  --surface-raised:   oklch(0.15 0.004 0);
+  --accent:           oklch(0.58 0.23 25);
   --accent-foreground: oklch(1 0 0);
   --destructive:      oklch(0.50 0.20 25);
   --destructive-foreground: oklch(1 0 0);
-  --border:           oklch(0.22 0.005 0);
-  --border-strong:    oklch(0.30 0.005 0);
+  --border:           oklch(0.24 0.005 0);
+  --border-strong:    oklch(0.32 0.005 0);
   --input:            oklch(0.18 0.005 0);
-  --ring:             oklch(0.55 0.22 25 / 0.4);
-
-  --chart-1: oklch(0.62 0.22 25);
+  --ring:             oklch(0.58 0.23 25 / 0.5);
+  --chart-1: oklch(0.62 0.23 25);
   --chart-2: oklch(0.62 0.15 230);
   --chart-3: oklch(0.65 0.15 140);
   --chart-4: oklch(0.68 0.15 50);
   --chart-5: oklch(0.58 0.12 280);
-
-  --sidebar:          oklch(0.07 0.005 0);
+  --sidebar:          oklch(0.05 0.004 0);
   --sidebar-foreground: oklch(0.92 0.003 0);
-  --sidebar-primary:  oklch(0.55 0.22 25);
+  --sidebar-primary:  oklch(0.58 0.23 25);
   --sidebar-primary-foreground: oklch(1 0 0);
-  --sidebar-accent:   oklch(0.15 0.005 0);
+  --sidebar-accent:   oklch(0.13 0.005 0);
   --sidebar-accent-foreground: oklch(0.92 0.003 0);
-  --sidebar-border:   oklch(0.18 0.005 0);
-  --sidebar-ring:     oklch(0.55 0.22 25);
-
-  --shadow-card: 0 1px 3px 0 rgb(0 0 0 / 0.25), 0 1px 2px -1px rgb(0 0 0 / 0.25);
-  --shadow-elevated: 0 4px 16px -2px rgb(0 0 0 / 0.40), 0 2px 8px -2px rgb(0 0 0 / 0.25);
-  --shadow-brand: 0 8px 32px -4px oklch(0.55 0.22 25 / 0.45);
+  --sidebar-border:   oklch(0.16 0.005 0);
+  --sidebar-ring:     oklch(0.58 0.23 25);
+  --shadow-card:    0 1px 3px 0 rgb(0 0 0 / 0.5), 0 1px 2px -1px rgb(0 0 0 / 0.5);
+  --shadow-elevated: 0 4px 16px -2px rgb(0 0 0 / 0.65), 0 2px 8px -2px rgb(0 0 0 / 0.5);
+  --shadow-brand:   0 8px 32px -4px oklch(0.58 0.23 25 / 0.55);
 }
 
 @theme inline {
@@ -247,17 +241,17 @@
     box-shadow: var(--shadow-elevated);
   }
 
-  /* Badge de condição */
+  /* Badge de condição — adaptados ao tema escuro */
   .badge-new {
-    @apply bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-semibold px-2.5 py-0.5 rounded-full;
+    @apply bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 text-xs font-semibold px-2.5 py-0.5 rounded-full;
   }
   .badge-used {
-    @apply bg-sky-50 text-sky-700 border border-sky-200 text-xs font-semibold px-2.5 py-0.5 rounded-full;
+    @apply bg-sky-500/15 text-sky-400 border border-sky-500/30 text-xs font-semibold px-2.5 py-0.5 rounded-full;
   }
   .badge-featured {
-    @apply bg-amber-50 text-amber-700 border border-amber-200 text-xs font-semibold px-2.5 py-0.5 rounded-full;
+    @apply bg-amber-500/15 text-amber-400 border border-amber-500/30 text-xs font-semibold px-2.5 py-0.5 rounded-full;
   }
   .badge-offer {
-    @apply bg-red-50 text-red-700 border border-red-200 text-xs font-semibold px-2.5 py-0.5 rounded-full;
+    @apply bg-red-500/15 text-red-400 border border-red-500/30 text-xs font-semibold px-2.5 py-0.5 rounded-full;
   }
 }

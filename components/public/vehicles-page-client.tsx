@@ -275,7 +275,7 @@ export function VehiclesPageClient({ vehicles, brands, categories, currentFilter
                       )}
                     </Button>
                   </SheetTrigger>
-                  <SheetContent side="left" className="w-80 bg-background p-6 overflow-y-auto">
+                  <SheetContent side="left" className="w-80 bg-[#0d0d0d] border-r border-white/10 p-6 overflow-y-auto">
                     <SheetTitle className="sr-only">Filtros</SheetTitle>
                     <FilterPanel />
                   </SheetContent>
