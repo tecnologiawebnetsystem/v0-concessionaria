@@ -1,27 +1,60 @@
 import { NextResponse } from "next/server"
 import type { NextRequest } from "next/server"
-import { verifySession } from "./lib/session"
+import { jwtVerify } from "jose"
+
+const SECRET_KEY = new TextEncoder().encode(
+  process.env.JWT_SECRET || "your-secret-key-change-in-production"
+)
+
+async function getSessionFromRequest(request: NextRequest) {
+  const token = request.cookies.get("session")?.value
+  if (!token) return null
+
+  try {
+    const { payload } = await jwtVerify(token, SECRET_KEY)
+    return payload as { userId: string; email: string; name: string; role: string }
+  } catch {
+    return null
+  }
+}
 
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl
 
-  // Check if the path is an admin route
-  if (pathname.startsWith("/admin")) {
-    const token = request.cookies.get("session")?.value
+  const isAdminRoute = pathname.startsWith("/admin")
+  const isSellerRoute = pathname.startsWith("/seller")
+  const isCustomerRoute = pathname.startsWith("/minha-conta")
 
-    if (!token) {
-      return NextResponse.redirect(new URL("/login?redirect=/admin", request.url))
-    }
+  if (
+    pathname.startsWith("/api") ||
+    pathname.startsWith("/_next") ||
+    pathname.startsWith("/images") ||
+    pathname === "/login" ||
+    pathname === "/registro" ||
+    pathname === "/esqueci-senha"
+  ) {
+    return NextResponse.next()
+  }
 
-    const session = await verifySession(token)
+  if (isAdminRoute || isSellerRoute || isCustomerRoute) {
+    const session = await getSessionFromRequest(request)
 
     if (!session) {
-      return NextResponse.redirect(new URL("/login?redirect=/admin", request.url))
+      const loginUrl = new URL("/login", request.url)
+      loginUrl.searchParams.set("redirect", pathname)
+      return NextResponse.redirect(loginUrl)
     }
 
-    // Check if user has admin role
-    if (session.role !== "admin" && session.role !== "super_admin") {
-      return NextResponse.redirect(new URL("/", request.url))
+    if (isAdminRoute) {
+      if (session.role !== "admin" && session.role !== "super_admin") {
+        return NextResponse.redirect(new URL("/", request.url))
+      }
+    }
+
+    if (isSellerRoute) {
+      if (session.role !== "seller" && session.role !== "admin" && session.role !== "super_admin") {
+        return NextResponse.redirect(new URL("/", request.url))
+      }
     }
   }
 
@@ -29,5 +62,9 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/admin/:path*"],
+  matcher: [
+    "/admin/:path*",
+    "/seller/:path*",
+    "/minha-conta/:path*",
+  ],
 }

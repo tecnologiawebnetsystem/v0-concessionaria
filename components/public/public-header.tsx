@@ -179,6 +179,7 @@ export function PublicHeader() {
               </Link>
             </Button>
             
+            {user && (
             <Button 
               variant="ghost" 
               size="icon"
@@ -189,6 +190,7 @@ export function PublicHeader() {
                 <Heart className="size-5" />
               </Link>
             </Button>
+            )}
             
             {user ? (
               <DropdownMenu>
@@ -331,6 +333,7 @@ export function PublicHeader() {
                           <span className="font-medium">Buscar Veiculos</span>
                         </Link>
                       </SheetClose>
+                      {user && (
                       <SheetClose asChild>
                         <Link
                           href="/minha-conta/favoritos"
@@ -340,6 +343,7 @@ export function PublicHeader() {
                           <span className="font-medium">Favoritos</span>
                         </Link>
                       </SheetClose>
+                      )}
                     </div>
 
                     {user && (

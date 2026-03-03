@@ -1,4 +1,5 @@
 import { sql } from "@/lib/db"
+import { TrackVehicleView } from "@/components/public/track-vehicle-view"
 import { PublicHeader } from "@/components/public/public-header"
 import { PublicFooter } from "@/components/public/public-footer"
 import { UnifiedChat } from "@/components/public/unified-chat"
@@ -119,6 +120,7 @@ export default async function VehicleDetailPage({ params }: { params: Promise<{ 
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       
       <PublicHeader />
+      <TrackVehicleView vehicleId={vehicle.id} />
       <UnifiedChat />
       
       <main className="flex-1">
