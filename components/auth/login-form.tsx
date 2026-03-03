@@ -19,7 +19,7 @@ const DEMO_USERS = [
     color: "text-red-600 bg-red-50 border-red-200",
     iconColor: "text-red-600",
     email: "admin@nacionalveiculos.com.br",
-    password: "senha123",
+    password: "admin123",
   },
   {
     role: "Vendedor",
