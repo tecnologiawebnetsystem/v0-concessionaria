@@ -66,11 +66,11 @@ export async function authenticateUser(email: string, password: string): Promise
 export async function verifyAuth(request: NextRequest): Promise<User | null> {
   try {
     const cookieStore = await cookies()
-    const token = cookieStore.get("auth_token")?.value || request.cookies.get("auth_token")?.value
+    const token = cookieStore.get("session")?.value || request.cookies.get("session")?.value
 
     if (!token) return null
 
-    const secret = new TextEncoder().encode(process.env.JWT_SECRET || "your-secret-key-change-this")
+    const secret = new TextEncoder().encode(process.env.JWT_SECRET || "your-secret-key-change-in-production")
     const { payload } = await jwtVerify(token, secret)
 
     if (!payload.userId || typeof payload.userId !== "string") return null
