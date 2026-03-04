@@ -19,7 +19,7 @@ async function getVehiclesData() {
       FROM vehicles v
       LEFT JOIN brands b ON v.brand_id = b.id
       LEFT JOIN vehicle_categories c ON v.category_id = c.id
-      WHERE v.published = true AND v.status = 'available'
+      WHERE v.published = true
       ORDER BY v.is_featured DESC, v.created_at DESC
       LIMIT 300
     `,
@@ -66,7 +66,7 @@ export async function generateMetadata({ searchParams }: { searchParams: Promise
 
 export default async function VehiclesPage({ searchParams }: { searchParams: Promise<any> }) {
   const params = await searchParams
-  const { vehicles, brands, categories } = await getVehiclesData(params)
+  const { vehicles, brands, categories } = await getVehiclesData()
   
   const vehicleListSchema = generateVehicleListSchema(vehicles)
   const breadcrumbSchema = generateBreadcrumbSchema([
