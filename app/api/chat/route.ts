@@ -10,7 +10,7 @@ export async function POST(req: Request) {
            b.name as brand, c.name as category
     FROM vehicles v
     LEFT JOIN brands b ON v.brand_id = b.id
-    LEFT JOIN categories c ON v.category_id = c.id
+    LEFT JOIN vehicle_categories c ON v.category_id = c.id
     WHERE v.status = 'available' AND v.published = true
     ORDER BY v.is_featured DESC, v.created_at DESC
     LIMIT 30

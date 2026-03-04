@@ -105,8 +105,8 @@ export function PublicHeader() {
       className={cn(
         "sticky top-0 z-50 w-full transition-all duration-300",
         isScrolled 
-          ? "bg-black/95 backdrop-blur-xl shadow-lg shadow-black/20 border-b border-gray-800/50" 
-          : "bg-black"
+          ? "bg-gray-950/95 backdrop-blur-xl border-b border-white/8 shadow-[0_1px_0_0_rgb(255,255,255,0.06)]" 
+          : "bg-gray-950"
       )}
     >
       {/* Top bar */}
