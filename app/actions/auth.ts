@@ -1,10 +1,15 @@
 "use server"
 
 import { cookies } from "next/headers"
+import { redirect } from "next/navigation"
 import { authenticateUser } from "@/lib/auth"
 import { createSession } from "@/lib/session"
 
-export async function loginAction(formData: FormData) {
+export type LoginState = {
+  error?: string
+} | null
+
+export async function loginAction(prevState: LoginState, formData: FormData): Promise<LoginState> {
   const email = formData.get("email") as string
   const password = formData.get("password") as string
   const redirectTo = formData.get("redirectTo") as string
@@ -16,7 +21,7 @@ export async function loginAction(formData: FormData) {
   const user = await authenticateUser(email, password)
 
   if (!user) {
-    return { error: "Credenciais inválidas" }
+    return { error: "Email ou senha incorretos" }
   }
 
   const token = await createSession(user)
@@ -41,5 +46,5 @@ export async function loginAction(formData: FormData) {
         : "/minha-conta"
     : redirectTo
 
-  return { success: true, redirectTo: destination }
+  redirect(destination)
 }
