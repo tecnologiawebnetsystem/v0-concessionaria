@@ -1,6 +1,5 @@
 "use server"
 
-import { redirect } from "next/navigation"
 import { cookies } from "next/headers"
 import { authenticateUser } from "@/lib/auth"
 import { createSession } from "@/lib/session"
@@ -42,5 +41,5 @@ export async function loginAction(formData: FormData) {
         : "/minha-conta"
     : redirectTo
 
-  redirect(destination)
+  return { success: true, redirectTo: destination }
 }

@@ -58,26 +58,22 @@ export function LoginForm() {
     e.preventDefault()
     setIsLoading(true)
 
-    try {
-      const formData = new FormData()
-      formData.set("email", email)
-      formData.set("password", password)
-      formData.set("redirectTo", redirectTo)
+    const formData = new FormData()
+    formData.set("email", email)
+    formData.set("password", password)
+    formData.set("redirectTo", redirectTo)
 
-      const result = await loginAction(formData)
+    const result = await loginAction(formData)
 
-      // Se chegou aqui, houve erro (redirect bem-sucedido não retorna)
-      if (result?.error) {
-        toast.error(result.error)
-      }
-    } catch (error: unknown) {
-      // O Next.js lança um erro especial para redirect — isso é esperado e correto
-      if (error instanceof Error && error.message === "NEXT_REDIRECT") {
-        return
-      }
-      toast.error("Erro ao fazer login. Tente novamente.")
-    } finally {
+    if (result?.error) {
+      toast.error(result.error)
       setIsLoading(false)
+      return
+    }
+
+    if (result?.success && result.redirectTo) {
+      toast.success("Login realizado com sucesso!")
+      window.location.href = result.redirectTo
     }
   }
 
