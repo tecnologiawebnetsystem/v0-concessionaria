@@ -1,16 +1,15 @@
 "use client"
 
-import type React from "react"
-
-import { useState } from "react"
-import { useRouter, useSearchParams } from "next/navigation"
+import { useActionState } from "react"
+import { useSearchParams } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { toast } from "sonner"
-import { Loader2, ChevronDown, ChevronUp, Shield, Briefcase, User } from "lucide-react"
+import { Loader2, ChevronDown, ChevronUp, Shield, Briefcase, User, AlertCircle } from "lucide-react"
 import Link from "next/link"
+import { loginAction } from "@/app/actions/auth"
+import { useState, useRef } from "react"
 
 const DEMO_USERS = [
   {
@@ -40,61 +39,18 @@ const DEMO_USERS = [
 ]
 
 export function LoginForm() {
-  const router = useRouter()
   const searchParams = useSearchParams()
-  const redirect = searchParams.get("redirect") || "/"
+  const redirectTo = searchParams.get("redirect") || "/"
 
-  const [isLoading, setIsLoading] = useState(false)
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
+  const [state, formAction, isPending] = useActionState(loginAction, null)
   const [showDemo, setShowDemo] = useState(false)
+  const emailRef = useRef<HTMLInputElement>(null)
+  const passwordRef = useRef<HTMLInputElement>(null)
 
   function fillDemo(demoEmail: string, demoPassword: string) {
-    setEmail(demoEmail)
-    setPassword(demoPassword)
+    if (emailRef.current) emailRef.current.value = demoEmail
+    if (passwordRef.current) passwordRef.current.value = demoPassword
     setShowDemo(false)
-  }
-
-  async function onSubmit(e: React.FormEvent) {
-    e.preventDefault()
-    setIsLoading(true)
-
-    try {
-      const response = await fetch("/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      })
-
-      const data = await response.json()
-
-      if (!response.ok) {
-        throw new Error(data.error || "Erro ao fazer login")
-      }
-
-      toast.success("Login realizado com sucesso!")
-
-      // Redirecionar baseado no role do usuário
-      const role = data.user?.role
-      console.log("[v0] login ok - role:", role, "| data:", JSON.stringify(data))
-
-      const defaultRedirect =
-        role === "admin" || role === "super_admin"
-          ? "/admin"
-          : role === "seller"
-            ? "/seller"
-            : "/minha-conta"
-
-      const isGenericRedirect = !redirect || redirect === "/" || redirect === "/login"
-      const redirectUrl = isGenericRedirect ? defaultRedirect : redirect
-
-      console.log("[v0] redirecionando para:", redirectUrl)
-      window.location.href = redirectUrl
-    } catch (error) {
-      toast.error(error instanceof Error ? error.message : "Erro ao fazer login")
-    } finally {
-      setIsLoading(false)
-    }
   }
 
   return (
@@ -104,33 +60,46 @@ export function LoginForm() {
         <CardDescription>Entre com suas credenciais para acessar o sistema</CardDescription>
       </CardHeader>
       <CardContent>
-        <form onSubmit={onSubmit} className="space-y-4">
+        <form action={formAction} className="space-y-4">
+          <input type="hidden" name="redirectTo" value={redirectTo} />
+
           <div className="space-y-2">
             <Label htmlFor="email">Email</Label>
             <Input
+              ref={emailRef}
               id="email"
+              name="email"
               type="email"
               placeholder="seu@email.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
               required
-              disabled={isLoading}
+              disabled={isPending}
+              defaultValue=""
             />
           </div>
+
           <div className="space-y-2">
             <Label htmlFor="password">Senha</Label>
             <Input
+              ref={passwordRef}
               id="password"
+              name="password"
               type="password"
               placeholder="••••••••"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
               required
-              disabled={isLoading}
+              disabled={isPending}
+              defaultValue=""
             />
           </div>
-          <Button type="submit" className="w-full" disabled={isLoading}>
-            {isLoading ? (
+
+          {state?.error && (
+            <div className="flex items-center gap-2 rounded-md bg-red-50 border border-red-200 p-3 text-sm text-red-700">
+              <AlertCircle className="size-4 shrink-0" />
+              <span>{state.error}</span>
+            </div>
+          )}
+
+          <Button type="submit" className="w-full" disabled={isPending}>
+            {isPending ? (
               <>
                 <Loader2 className="mr-2 size-4 animate-spin" />
                 Entrando...
@@ -140,6 +109,7 @@ export function LoginForm() {
             )}
           </Button>
         </form>
+
         <div className="mt-4 text-center text-sm text-gray-600">
           Não tem uma conta?{" "}
           <Link href="/registro" className="font-medium text-red-600 hover:underline">
@@ -154,7 +124,7 @@ export function LoginForm() {
             onClick={() => setShowDemo(!showDemo)}
             className="flex w-full items-center justify-between text-sm text-gray-500 hover:text-gray-700 transition-colors"
           >
-            <span className="font-medium">Acessar como demonstracao</span>
+            <span className="font-medium">Acessar como demonstração</span>
             {showDemo ? <ChevronUp className="size-4" /> : <ChevronDown className="size-4" />}
           </button>
 
@@ -174,7 +144,9 @@ export function LoginForm() {
                     <div className="min-w-0">
                       <p className="font-semibold text-sm">{demo.role}</p>
                       <p className="text-xs truncate opacity-70">{demo.email}</p>
-                      <p className="text-xs opacity-70">Senha: <span className="font-mono">{demo.password}</span></p>
+                      <p className="text-xs opacity-70">
+                        Senha: <span className="font-mono">{demo.password}</span>
+                      </p>
                     </div>
                   </button>
                 )

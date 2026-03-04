@@ -29,9 +29,10 @@ export async function createSession(user: User): Promise<string> {
 export async function verifySession(token: string): Promise<SessionData | null> {
   try {
     const { payload } = await jwtVerify(token, SECRET_KEY)
+    console.log("[v0] verifySession OK - role:", (payload as any).role)
     return payload as unknown as SessionData
   } catch (error) {
-    console.error("[v0] Session verification failed:", error)
+    console.error("[v0] verifySession FALHOU:", error)
     return null
   }
 }
