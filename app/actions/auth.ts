@@ -19,6 +19,7 @@ export async function loginAction(prevState: LoginState, formData: FormData): Pr
   }
 
   const user = await authenticateUser(email, password)
+  console.log("[v0] loginAction - auth result:", user ? `OK role=${user.role}` : "FALHOU")
 
   if (!user) {
     return { error: "Email ou senha incorretos" }
@@ -46,5 +47,6 @@ export async function loginAction(prevState: LoginState, formData: FormData): Pr
         : "/minha-conta"
     : redirectTo
 
+  console.log("[v0] loginAction - cookie setado, redirecionando para:", destination)
   redirect(destination)
 }
