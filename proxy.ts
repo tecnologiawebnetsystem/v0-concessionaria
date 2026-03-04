@@ -38,21 +38,25 @@ export async function proxy(request: NextRequest) {
 
   if (isAdminRoute || isSellerRoute || isCustomerRoute) {
     const session = await getSessionFromRequest(request)
+    console.log("[v0] proxy - pathname:", pathname, "| session:", session ? `role=${session.role}` : "NULL")
 
     if (!session) {
       const loginUrl = new URL("/login", request.url)
       loginUrl.searchParams.set("redirect", pathname)
+      console.log("[v0] proxy - sem sessão, redirecionando para:", loginUrl.toString())
       return NextResponse.redirect(loginUrl)
     }
 
     if (isAdminRoute) {
       if (session.role !== "admin" && session.role !== "super_admin") {
+        console.log("[v0] proxy - acesso negado a /admin para role:", session.role)
         return NextResponse.redirect(new URL("/", request.url))
       }
     }
 
     if (isSellerRoute) {
       if (session.role !== "seller" && session.role !== "admin" && session.role !== "super_admin") {
+        console.log("[v0] proxy - acesso negado a /seller para role:", session.role)
         return NextResponse.redirect(new URL("/", request.url))
       }
     }
@@ -63,8 +67,11 @@ export async function proxy(request: NextRequest) {
 
 export const config = {
   matcher: [
+    "/admin",
     "/admin/:path*",
+    "/seller",
     "/seller/:path*",
+    "/minha-conta",
     "/minha-conta/:path*",
   ],
 }
