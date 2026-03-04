@@ -73,10 +73,10 @@ export function LoginForm() {
       }
 
       toast.success("Login realizado com sucesso!")
-      
+
       // Redirecionar baseado no role do usuário
       let redirectUrl = redirect
-      if (redirect === "/" || redirect === "/login") {
+      if (!redirectUrl || redirectUrl === "/" || redirectUrl === "/login") {
         if (data.user?.role === "admin" || data.user?.role === "super_admin") {
           redirectUrl = "/admin"
         } else if (data.user?.role === "seller") {
@@ -86,10 +86,8 @@ export function LoginForm() {
         }
       }
 
-      // Aguarda um tick para o cookie ser persistido no browser antes de navegar
-      setTimeout(() => {
-        window.location.replace(redirectUrl)
-      }, 100)
+      // Força navegação hard para garantir que o cookie de sessão seja lido pelo middleware
+      window.location.href = redirectUrl
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Erro ao fazer login")
     } finally {
