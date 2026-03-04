@@ -9,94 +9,30 @@ import { VehiclesPageClient } from "@/components/public/vehicles-page-client"
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://gtveiculos.com.br"
 
 async function getVehiclesData(searchParams: any) {
-  const { categoria, marca, ano_min, ano_max, preco_min, preco_max, busca, ordenar, combustivel, cambio } = searchParams
+  const { categoria, marca, combustivel, cambio, busca } = searchParams
 
-  let query = `
-    SELECT v.*, b.name as brand_name, c.name as category_name,
-    (SELECT url FROM vehicle_images WHERE vehicle_id = v.id AND is_primary = true LIMIT 1) as primary_image
-    FROM vehicles v
-    LEFT JOIN brands b ON v.brand_id = b.id
-    LEFT JOIN vehicle_categories c ON v.category_id = c.id
-    WHERE v.published = true AND v.status = 'available'
-  `
-
-  const params: any[] = []
-  let paramIndex = 1
-
-  if (categoria) {
-    query += ` AND c.slug = $${paramIndex}`
-    params.push(categoria)
-    paramIndex++
-  }
-
-  if (marca) {
-    query += ` AND b.slug = $${paramIndex}`
-    params.push(marca)
-    paramIndex++
-  }
-
-  if (ano_min) {
-    query += ` AND v.year >= $${paramIndex}`
-    params.push(Number.parseInt(ano_min))
-    paramIndex++
-  }
-
-  if (ano_max) {
-    query += ` AND v.year <= $${paramIndex}`
-    params.push(Number.parseInt(ano_max))
-    paramIndex++
-  }
-
-  if (preco_min) {
-    query += ` AND v.price >= $${paramIndex}`
-    params.push(Number.parseFloat(preco_min))
-    paramIndex++
-  }
-
-  if (preco_max) {
-    query += ` AND v.price <= $${paramIndex}`
-    params.push(Number.parseFloat(preco_max))
-    paramIndex++
-  }
-
-  if (combustivel && combustivel !== "all") {
-    query += ` AND v.fuel_type = $${paramIndex}`
-    params.push(combustivel)
-    paramIndex++
-  }
-
-  if (cambio && cambio !== "all") {
-    query += ` AND v.transmission ILIKE $${paramIndex}`
-    params.push(`%${cambio}%`)
-    paramIndex++
-  }
-
-  if (busca) {
-    query += ` AND (v.name ILIKE $${paramIndex} OR v.model ILIKE $${paramIndex} OR b.name ILIKE $${paramIndex})`
-    params.push(`%${busca}%`)
-    paramIndex++
-  }
-
-  const sortOptions: Record<string, string> = {
-    "menor-preco": "v.price ASC",
-    "maior-preco": "v.price DESC",
-    "mais-novo": "v.year DESC",
-    "mais-antigo": "v.year ASC",
-    "menor-km": "v.mileage ASC",
-    "maior-km": "v.mileage DESC",
-  }
-
-  const orderBy = sortOptions[ordenar as string] || "v.is_featured DESC, v.created_at DESC"
-  query += ` ORDER BY ${orderBy}`
-
-  const vehiclesResult = await sql.unsafe(query, params)
-  const vehicles = Array.isArray(vehiclesResult) ? vehiclesResult : []
-
-  const [brands, categories] = await Promise.all([
+  const [vehiclesResult, brands, categories] = await Promise.all([
+    sql`
+      SELECT v.*, b.name as brand_name, c.name as category_name,
+        (SELECT url FROM vehicle_images WHERE vehicle_id = v.id AND is_primary = true LIMIT 1) as primary_image
+      FROM vehicles v
+      LEFT JOIN brands b ON v.brand_id = b.id
+      LEFT JOIN vehicle_categories c ON v.category_id = c.id
+      WHERE v.published = true
+        AND v.status = 'available'
+        AND (${categoria || null} IS NULL OR c.slug = ${categoria || null})
+        AND (${marca || null} IS NULL OR b.slug = ${marca || null})
+        AND (${combustivel || null} IS NULL OR v.fuel_type ILIKE ${combustivel ? `%${combustivel}%` : null})
+        AND (${cambio || null} IS NULL OR v.transmission ILIKE ${cambio ? `%${cambio}%` : null})
+        AND (${busca || null} IS NULL OR v.name ILIKE ${busca ? `%${busca}%` : null} OR v.model ILIKE ${busca ? `%${busca}%` : null} OR b.name ILIKE ${busca ? `%${busca}%` : null})
+      ORDER BY v.is_featured DESC, v.created_at DESC
+      LIMIT 200
+    `,
     sql`SELECT * FROM brands WHERE is_active = true ORDER BY name`,
     sql`SELECT * FROM vehicle_categories WHERE is_active = true ORDER BY name`,
   ])
 
+  const vehicles = Array.isArray(vehiclesResult) ? vehiclesResult : []
   return { vehicles, brands, categories }
 }
 
