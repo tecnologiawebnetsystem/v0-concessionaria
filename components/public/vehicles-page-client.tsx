@@ -38,8 +38,8 @@ function VehicleCard({ vehicle, view }: { vehicle: Vehicle; view: "grid" | "list
   if (view === "list") {
     return (
       <Link href={`/veiculos/${vehicle.slug}`} className="group block">
-        <article className="flex gap-4 bg-card rounded-2xl border border-border hover:border-primary/30 overflow-hidden hover-lift transition-colors p-3">
-          <div className="relative w-40 h-28 flex-shrink-0 rounded-xl overflow-hidden bg-muted">
+        <article className="flex gap-4 bg-[#141414] rounded-2xl border border-white/8 hover:border-red-500/30 overflow-hidden hover-lift transition-colors p-3">
+          <div className="relative w-40 h-28 flex-shrink-0 rounded-xl overflow-hidden bg-[#1e1e1e]">
             {vehicle.primary_image && !imgErr ? (
               <Image src={vehicle.primary_image} alt={vehicle.name} fill className="object-cover group-hover:scale-105 transition-transform duration-500" onError={() => setImgErr(true)} />
             ) : (
@@ -68,13 +68,13 @@ function VehicleCard({ vehicle, view }: { vehicle: Vehicle; view: "grid" | "list
 
   return (
     <Link href={`/veiculos/${vehicle.slug}`} className="group block">
-      <article className="bg-card rounded-2xl overflow-hidden border border-border hover-lift hover:border-primary/30 transition-colors duration-300">
-        <div className="relative aspect-[16/10] overflow-hidden bg-muted">
+      <article className="bg-[#141414] rounded-2xl overflow-hidden border border-white/8 hover-lift hover:border-red-500/30 transition-colors duration-300">
+        <div className="relative aspect-[16/10] overflow-hidden bg-[#1e1e1e]">
           {vehicle.primary_image && !imgErr ? (
             <Image src={vehicle.primary_image} alt={vehicle.name} fill className="object-cover group-hover:scale-105 transition-transform duration-500" onError={() => setImgErr(true)} />
           ) : (
-            <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-muted to-muted/60">
-              <Car className="h-14 w-14 text-muted-foreground/30" />
+            <div className="w-full h-full flex items-center justify-center bg-[#1a1a1a]">
+              <Car className="h-14 w-14 text-white/10" />
             </div>
           )}
           <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
@@ -90,16 +90,16 @@ function VehicleCard({ vehicle, view }: { vehicle: Vehicle; view: "grid" | "list
           </div>
         </div>
         <div className="p-4">
-          <p className="text-xs text-muted-foreground font-medium mb-0.5 uppercase tracking-wide">{vehicle.brand_name}</p>
-          <h3 className="font-display font-semibold text-foreground text-base line-clamp-1 group-hover:text-primary transition-colors">{vehicle.name}</h3>
-          <div className="flex items-center gap-3 mt-2.5 text-xs text-muted-foreground">
+          <p className="text-xs text-gray-500 font-medium mb-0.5 uppercase tracking-wide">{vehicle.brand_name}</p>
+          <h3 className="font-display font-semibold text-white text-base line-clamp-1 group-hover:text-red-400 transition-colors">{vehicle.name}</h3>
+          <div className="flex items-center gap-3 mt-2.5 text-xs text-gray-500">
             <span className="flex items-center gap-1"><Calendar className="h-3.5 w-3.5" />{vehicle.year}</span>
             {vehicle.mileage !== undefined && <span className="flex items-center gap-1"><Gauge className="h-3.5 w-3.5" />{vehicle.mileage > 0 ? `${Number(vehicle.mileage).toLocaleString("pt-BR")} km` : "0 km"}</span>}
             {vehicle.fuel_type && <span className="flex items-center gap-1 capitalize"><Fuel className="h-3.5 w-3.5" />{vehicle.fuel_type}</span>}
           </div>
-          <div className="mt-3 pt-3 border-t border-border flex items-center justify-between">
-            <span className="text-xs text-muted-foreground">{vehicle.transmission || "Consulte"}</span>
-            <span className="text-xs font-semibold text-primary flex items-center gap-1 group-hover:gap-2 transition-all">Ver detalhes <ArrowRight className="h-3.5 w-3.5" /></span>
+          <div className="mt-3 pt-3 border-t border-white/8 flex items-center justify-between">
+            <span className="text-xs text-gray-500">{vehicle.transmission || "Consulte"}</span>
+            <span className="text-xs font-semibold text-red-400 flex items-center gap-1 group-hover:gap-2 transition-all">Ver detalhes <ArrowRight className="h-3.5 w-3.5" /></span>
           </div>
         </div>
       </article>
@@ -110,10 +110,10 @@ function VehicleCard({ vehicle, view }: { vehicle: Vehicle; view: "grid" | "list
 function FilterSection({ title, children, defaultOpen = true }: { title: string; children: React.ReactNode; defaultOpen?: boolean }) {
   const [open, setOpen] = useState(defaultOpen)
   return (
-    <div className="border-b border-border last:border-0 py-4">
-      <button onClick={() => setOpen(o => !o)} className="flex items-center justify-between w-full text-sm font-semibold text-foreground hover:text-primary transition-colors">
+    <div className="border-b border-white/8 last:border-0 py-4">
+      <button onClick={() => setOpen(o => !o)} className="flex items-center justify-between w-full text-sm font-semibold text-white hover:text-red-400 transition-colors">
         {title}
-        {open ? <ChevronUp className="h-4 w-4 text-muted-foreground" /> : <ChevronDown className="h-4 w-4 text-muted-foreground" />}
+        {open ? <ChevronUp className="h-4 w-4 text-gray-500" /> : <ChevronDown className="h-4 w-4 text-gray-500" />}
       </button>
       {open && <div className="mt-3">{children}</div>}
     </div>
@@ -171,10 +171,10 @@ export function VehiclesPageClient({ vehicles, brands, categories, currentFilter
   const FilterPanel = () => (
     <div className="space-y-0">
       {/* Header painel */}
-      <div className="flex items-center justify-between pb-4 border-b border-border mb-1">
-        <h2 className="font-display font-bold text-foreground">Filtros</h2>
+      <div className="flex items-center justify-between pb-4 border-b border-white/8 mb-1">
+        <h2 className="font-display font-bold text-white">Filtros</h2>
         {activeFiltersCount > 0 && (
-          <button onClick={clearFilters} className="text-xs text-primary hover:underline flex items-center gap-1">
+          <button onClick={clearFilters} className="text-xs text-red-400 hover:underline flex items-center gap-1">
             <X className="h-3.5 w-3.5" /> Limpar ({activeFiltersCount})
           </button>
         )}
@@ -194,11 +194,11 @@ export function VehiclesPageClient({ vehicles, brands, categories, currentFilter
         <div className="space-y-1.5 max-h-48 overflow-y-auto">
           {brands.map((b: any) => (
             <label key={b.id} className="flex items-center gap-2.5 cursor-pointer group">
-              <div className={`w-4 h-4 rounded border flex items-center justify-center transition-colors ${selectedBrands.includes(String(b.id)) ? "bg-primary border-primary" : "border-border group-hover:border-primary"}`}>
+              <div className={`w-4 h-4 rounded border flex items-center justify-center transition-colors ${selectedBrands.includes(String(b.id)) ? "bg-red-600 border-red-600" : "border-white/20 group-hover:border-red-500"}`}>
                 {selectedBrands.includes(String(b.id)) && <Check className="h-2.5 w-2.5 text-white" />}
               </div>
               <input type="checkbox" className="sr-only" checked={selectedBrands.includes(String(b.id))} onChange={() => toggleFilter(selectedBrands, setSelectedBrands, String(b.id))} />
-              <span className="text-sm text-foreground">{b.name}</span>
+              <span className="text-sm text-gray-300">{b.name}</span>
             </label>
           ))}
         </div>
@@ -208,7 +208,7 @@ export function VehiclesPageClient({ vehicles, brands, categories, currentFilter
         <FilterSection title="Combustivel">
           <div className="flex flex-wrap gap-2">
             {fuelTypes.map((f) => (
-              <button key={f} onClick={() => toggleFilter(selectedFuel, setSelectedFuel, f!)} className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition-all capitalize ${selectedFuel.includes(f!) ? "bg-primary text-white border-primary" : "border-border text-muted-foreground hover:border-primary hover:text-primary"}`}>
+              <button key={f} onClick={() => toggleFilter(selectedFuel, setSelectedFuel, f!)} className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition-all capitalize ${selectedFuel.includes(f!) ? "bg-red-600 text-white border-red-600" : "border-white/15 text-gray-400 hover:border-red-500 hover:text-red-400"}`}>
                 {f}
               </button>
             ))}
@@ -220,7 +220,7 @@ export function VehiclesPageClient({ vehicles, brands, categories, currentFilter
         <FilterSection title="Cambio" defaultOpen={false}>
           <div className="flex flex-wrap gap-2">
             {transmissions.map((t) => (
-              <button key={t} onClick={() => toggleFilter(selectedTransmission, setSelectedTransmission, t!)} className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition-all capitalize ${selectedTransmission.includes(t!) ? "bg-primary text-white border-primary" : "border-border text-muted-foreground hover:border-primary hover:text-primary"}`}>
+              <button key={t} onClick={() => toggleFilter(selectedTransmission, setSelectedTransmission, t!)} className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition-all capitalize ${selectedTransmission.includes(t!) ? "bg-red-600 text-white border-red-600" : "border-white/15 text-gray-400 hover:border-red-500 hover:text-red-400"}`}>
                 {t}
               </button>
             ))}
@@ -231,9 +231,9 @@ export function VehiclesPageClient({ vehicles, brands, categories, currentFilter
   )
 
   return (
-    <main className="flex-1 bg-background" id="main-content">
+    <main className="flex-1 bg-[#0a0a0a]" id="main-content">
       {/* Hero compacto */}
-      <section className="bg-gray-950 pt-10 pb-8">
+      <section className="bg-[#0a0a0a] pt-10 pb-8 border-b border-white/8">
         <div className="container mx-auto px-4">
           <h1 className="font-display text-3xl md:text-4xl font-bold text-white mb-6">
             {sorted.length > 0 ? `${sorted.length} veiculos encontrados` : "Nosso estoque"}
@@ -287,73 +287,74 @@ export function VehiclesPageClient({ vehicles, brands, categories, currentFilter
       </section>
 
       {/* Layout principal: sidebar + grid */}
-      <div className="container mx-auto px-4 py-8">
-        <div className="flex gap-8">
-          {/* Sidebar sticky — desktop */}
-          <aside className="hidden md:block w-64 flex-shrink-0">
-            <div className="sticky top-24 bg-card rounded-2xl border border-border p-5 shadow-card">
-              <FilterPanel />
-            </div>
-          </aside>
+      <div className="bg-[#0a0a0a] min-h-screen">
+        <div className="container mx-auto px-4 py-8">
+          <div className="flex gap-8">
+            {/* Sidebar sticky — desktop */}
+            <aside className="hidden md:block w-64 flex-shrink-0">
+              <div className="sticky top-24 bg-[#141414] rounded-2xl border border-white/8 p-5">
+                <FilterPanel />
+              </div>
+            </aside>
 
-          {/* Conteudo */}
-          <div className="flex-1 min-w-0">
-            {/* Barra de ordenacao */}
-            <div className="flex items-center justify-between mb-6 gap-4">
-              <p className="text-sm text-muted-foreground">
-                <span className="font-semibold text-foreground">{sorted.length}</span> veiculos
-                {activeFiltersCount > 0 && <span className="text-primary ml-1">(filtrado)</span>}
-              </p>
-              <div className="flex items-center gap-2">
-                <Select value={sortBy} onValueChange={setSortBy}>
-                  <SelectTrigger className="h-9 w-44 text-sm rounded-xl border-border">
-                    <SelectValue placeholder="Ordenar" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="relevancia">Mais relevantes</SelectItem>
-                    <SelectItem value="menor-preco">Menor preco</SelectItem>
-                    <SelectItem value="maior-preco">Maior preco</SelectItem>
-                    <SelectItem value="mais-novo">Mais novos</SelectItem>
-                    <SelectItem value="menor-km">Menor KM</SelectItem>
-                  </SelectContent>
-                </Select>
-                <div className="flex items-center border border-border rounded-xl overflow-hidden">
-                  <button onClick={() => setViewMode("grid")} className={`p-2 ${viewMode === "grid" ? "bg-primary text-white" : "text-muted-foreground hover:bg-muted"} transition-colors`} aria-label="Grade">
-                    <Grid3X3 className="h-4 w-4" />
-                  </button>
-                  <button onClick={() => setViewMode("list")} className={`p-2 ${viewMode === "list" ? "bg-primary text-white" : "text-muted-foreground hover:bg-muted"} transition-colors`} aria-label="Lista">
-                    <List className="h-4 w-4" />
-                  </button>
+            {/* Conteudo */}
+            <div className="flex-1 min-w-0">
+              {/* Barra de ordenacao */}
+              <div className="flex items-center justify-between mb-6 gap-4">
+                <p className="text-sm text-gray-400">
+                  <span className="font-semibold text-white">{sorted.length}</span> veiculos
+                  {activeFiltersCount > 0 && <span className="text-red-400 ml-1">(filtrado)</span>}
+                </p>
+                <div className="flex items-center gap-2">
+                  <Select value={sortBy} onValueChange={setSortBy}>
+                    <SelectTrigger className="h-9 w-44 text-sm rounded-xl bg-[#141414] border-white/10 text-white">
+                      <SelectValue placeholder="Ordenar" />
+                    </SelectTrigger>
+                    <SelectContent className="bg-[#141414] border-white/10 text-white">
+                      <SelectItem value="relevancia">Mais relevantes</SelectItem>
+                      <SelectItem value="menor-preco">Menor preco</SelectItem>
+                      <SelectItem value="maior-preco">Maior preco</SelectItem>
+                      <SelectItem value="mais-novo">Mais novos</SelectItem>
+                      <SelectItem value="menor-km">Menor KM</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <div className="flex items-center border border-white/10 rounded-xl overflow-hidden">
+                    <button onClick={() => setViewMode("grid")} className={`p-2 ${viewMode === "grid" ? "bg-red-600 text-white" : "text-gray-400 hover:bg-white/5 hover:text-white"} transition-colors`} aria-label="Grade">
+                      <Grid3X3 className="h-4 w-4" />
+                    </button>
+                    <button onClick={() => setViewMode("list")} className={`p-2 ${viewMode === "list" ? "bg-red-600 text-white" : "text-gray-400 hover:bg-white/5 hover:text-white"} transition-colors`} aria-label="Lista">
+                      <List className="h-4 w-4" />
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            {/* Active filter chips */}
-            {activeFiltersCount > 0 && (
-              <div className="flex flex-wrap gap-2 mb-5">
-                {selectedBrands.map(id => {
-                  const b = brands.find((br: any) => String(br.id) === id)
-                  return b ? (
-                    <span key={id} className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-medium border border-primary/20">
-                      {b.name} <button onClick={() => toggleFilter(selectedBrands, setSelectedBrands, id)}><X className="h-3 w-3" /></button>
+              {/* Active filter chips */}
+              {activeFiltersCount > 0 && (
+                <div className="flex flex-wrap gap-2 mb-5">
+                  {selectedBrands.map(id => {
+                    const b = brands.find((br: any) => String(br.id) === id)
+                    return b ? (
+                      <span key={id} className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-red-600/15 text-red-400 text-xs font-medium border border-red-500/25">
+                        {b.name} <button onClick={() => toggleFilter(selectedBrands, setSelectedBrands, id)}><X className="h-3 w-3" /></button>
+                      </span>
+                    ) : null
+                  })}
+                  {selectedFuel.map(f => (
+                    <span key={f} className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-red-600/15 text-red-400 text-xs font-medium border border-red-500/25 capitalize">
+                      {f} <button onClick={() => toggleFilter(selectedFuel, setSelectedFuel, f)}><X className="h-3 w-3" /></button>
                     </span>
-                  ) : null
-                })}
-                {selectedFuel.map(f => (
-                  <span key={f} className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-medium border border-primary/20 capitalize">
-                    {f} <button onClick={() => toggleFilter(selectedFuel, setSelectedFuel, f)}><X className="h-3 w-3" /></button>
-                  </span>
-                ))}
-              </div>
-            )}
+                  ))}
+                </div>
+              )}
 
-            {/* Grid / lista */}
-            {sorted.length === 0 ? (
-              <div className="flex flex-col items-center justify-center py-24 text-center">
-                <Car className="h-14 w-14 text-muted-foreground/30 mb-4" />
-                <h3 className="font-display font-semibold text-foreground mb-2">Nenhum veiculo encontrado</h3>
-                <p className="text-muted-foreground text-sm mb-6">Tente ajustar os filtros ou buscar por outro termo.</p>
-                <Button onClick={clearFilters} variant="outline" className="rounded-xl">Limpar filtros</Button>
+              {/* Grid / lista */}
+              {sorted.length === 0 ? (
+                <div className="flex flex-col items-center justify-center py-24 text-center">
+                  <Car className="h-14 w-14 text-white/10 mb-4" />
+                  <h3 className="font-display font-semibold text-white mb-2">Nenhum veiculo encontrado</h3>
+                <p className="text-gray-500 text-sm mb-6">Tente ajustar os filtros ou buscar por outro termo.</p>
+                <Button onClick={clearFilters} variant="outline" className="rounded-xl border-white/15 text-white hover:bg-white/5">Limpar filtros</Button>
               </div>
             ) : (
               <div className={viewMode === "grid" ? "grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5" : "flex flex-col gap-3"}>
