@@ -8,32 +8,30 @@ import { VehiclesPageClient } from "@/components/public/vehicles-page-client"
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://gtveiculos.com.br"
 
-async function getVehiclesData(searchParams: any) {
-  const { categoria, marca, combustivel, cambio, busca } = searchParams
-
+async function getVehiclesData() {
   const [vehiclesResult, brands, categories] = await Promise.all([
     sql`
-      SELECT v.*, b.name as brand_name, c.name as category_name,
-        (SELECT url FROM vehicle_images WHERE vehicle_id = v.id AND is_primary = true LIMIT 1) as primary_image
+      SELECT v.id, v.name, v.slug, v.year, v.price, v.mileage, v.fuel_type,
+             v.transmission, v.color, v.is_featured, v.is_new, v.status,
+             b.name as brand_name, b.slug as brand_slug,
+             c.name as category_name, c.slug as category_slug,
+             (SELECT url FROM vehicle_images WHERE vehicle_id = v.id AND is_primary = true LIMIT 1) as primary_image
       FROM vehicles v
       LEFT JOIN brands b ON v.brand_id = b.id
       LEFT JOIN vehicle_categories c ON v.category_id = c.id
-      WHERE v.published = true
-        AND v.status = 'available'
-        AND (${categoria || null} IS NULL OR c.slug = ${categoria || null})
-        AND (${marca || null} IS NULL OR b.slug = ${marca || null})
-        AND (${combustivel || null} IS NULL OR v.fuel_type ILIKE ${combustivel ? `%${combustivel}%` : null})
-        AND (${cambio || null} IS NULL OR v.transmission ILIKE ${cambio ? `%${cambio}%` : null})
-        AND (${busca || null} IS NULL OR v.name ILIKE ${busca ? `%${busca}%` : null} OR v.model ILIKE ${busca ? `%${busca}%` : null} OR b.name ILIKE ${busca ? `%${busca}%` : null})
+      WHERE v.published = true AND v.status = 'available'
       ORDER BY v.is_featured DESC, v.created_at DESC
-      LIMIT 200
+      LIMIT 300
     `,
-    sql`SELECT * FROM brands WHERE is_active = true ORDER BY name`,
-    sql`SELECT * FROM vehicle_categories WHERE is_active = true ORDER BY name`,
+    sql`SELECT id, name, slug, logo_url FROM brands WHERE is_active = true ORDER BY name`,
+    sql`SELECT id, name, slug FROM vehicle_categories WHERE is_active = true ORDER BY name`,
   ])
 
-  const vehicles = Array.isArray(vehiclesResult) ? vehiclesResult : []
-  return { vehicles, brands, categories }
+  return {
+    vehicles: Array.isArray(vehiclesResult) ? vehiclesResult : [],
+    brands: Array.isArray(brands) ? brands : [],
+    categories: Array.isArray(categories) ? categories : [],
+  }
 }
 
 export async function generateMetadata({ searchParams }: { searchParams: Promise<any> }): Promise<Metadata> {
