@@ -49,10 +49,11 @@ export async function setSession(user: User): Promise<void> {
   const token = await createSession(user)
   const cookieStore = await cookies()
 
+  const isProduction = process.env.NODE_ENV === "production"
   cookieStore.set("session", token, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "lax",
+    secure: isProduction,
+    sameSite: isProduction ? "lax" : "none",
     maxAge: 60 * 60 * 24 * 7, // 7 days
     path: "/",
   })
