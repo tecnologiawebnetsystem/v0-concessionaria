@@ -1,9 +1,8 @@
 "use client"
 
 import type React from "react"
-
 import { useState } from "react"
-import { useRouter, useSearchParams } from "next/navigation"
+import { useSearchParams } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -11,6 +10,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { toast } from "sonner"
 import { Loader2, ChevronDown, ChevronUp, Shield, Briefcase, User } from "lucide-react"
 import Link from "next/link"
+import { loginAction } from "@/app/actions/auth"
 
 const DEMO_USERS = [
   {
@@ -40,9 +40,8 @@ const DEMO_USERS = [
 ]
 
 export function LoginForm() {
-  const router = useRouter()
   const searchParams = useSearchParams()
-  const redirect = searchParams.get("redirect") || "/"
+  const redirectTo = searchParams.get("redirect") || "/"
 
   const [isLoading, setIsLoading] = useState(false)
   const [email, setEmail] = useState("")
@@ -55,43 +54,28 @@ export function LoginForm() {
     setShowDemo(false)
   }
 
-  async function onSubmit(e: React.FormEvent) {
+  async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
     setIsLoading(true)
 
     try {
-      const response = await fetch("/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      })
+      const formData = new FormData()
+      formData.set("email", email)
+      formData.set("password", password)
+      formData.set("redirectTo", redirectTo)
 
-      const data = await response.json()
+      const result = await loginAction(formData)
 
-      if (!response.ok) {
-        throw new Error(data.error || "Erro ao fazer login")
+      // Se chegou aqui, houve erro (redirect bem-sucedido não retorna)
+      if (result?.error) {
+        toast.error(result.error)
       }
-
-      toast.success("Login realizado com sucesso!")
-
-      // Redirecionar baseado no role do usuário
-      const role = data.user?.role
-      console.log("[v0] login ok - role:", role, "| data:", JSON.stringify(data))
-
-      const defaultRedirect =
-        role === "admin" || role === "super_admin"
-          ? "/admin"
-          : role === "seller"
-            ? "/seller"
-            : "/minha-conta"
-
-      const isGenericRedirect = !redirect || redirect === "/" || redirect === "/login"
-      const redirectUrl = isGenericRedirect ? defaultRedirect : redirect
-
-      console.log("[v0] redirecionando para:", redirectUrl)
-      window.location.href = redirectUrl
-    } catch (error) {
-      toast.error(error instanceof Error ? error.message : "Erro ao fazer login")
+    } catch (error: unknown) {
+      // O Next.js lança um erro especial para redirect — isso é esperado e correto
+      if (error instanceof Error && error.message === "NEXT_REDIRECT") {
+        return
+      }
+      toast.error("Erro ao fazer login. Tente novamente.")
     } finally {
       setIsLoading(false)
     }
@@ -174,7 +158,9 @@ export function LoginForm() {
                     <div className="min-w-0">
                       <p className="font-semibold text-sm">{demo.role}</p>
                       <p className="text-xs truncate opacity-70">{demo.email}</p>
-                      <p className="text-xs opacity-70">Senha: <span className="font-mono">{demo.password}</span></p>
+                      <p className="text-xs opacity-70">
+                        Senha: <span className="font-mono">{demo.password}</span>
+                      </p>
                     </div>
                   </button>
                 )
