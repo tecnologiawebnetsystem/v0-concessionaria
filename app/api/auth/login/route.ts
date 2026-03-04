@@ -28,11 +28,10 @@ export async function POST(request: NextRequest) {
       user: { id: user.id, email: user.email, name: user.name, role: user.role },
     })
 
-    const isProduction = process.env.NODE_ENV === "production"
     response.cookies.set("session", token, {
       httpOnly: true,
-      secure: isProduction,
-      sameSite: isProduction ? "lax" : "none",
+      secure: false,
+      sameSite: "lax",
       maxAge: 60 * 60 * 24 * 7,
       path: "/",
     })

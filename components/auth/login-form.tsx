@@ -76,6 +76,8 @@ export function LoginForm() {
 
       // Redirecionar baseado no role do usuário
       const role = data.user?.role
+      console.log("[v0] login ok - role:", role, "| data:", JSON.stringify(data))
+
       const defaultRedirect =
         role === "admin" || role === "super_admin"
           ? "/admin"
@@ -86,7 +88,7 @@ export function LoginForm() {
       const isGenericRedirect = !redirect || redirect === "/" || redirect === "/login"
       const redirectUrl = isGenericRedirect ? defaultRedirect : redirect
 
-      // Força navegação hard para garantir que o cookie de sessão seja lido pelo middleware
+      console.log("[v0] redirecionando para:", redirectUrl)
       window.location.href = redirectUrl
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Erro ao fazer login")

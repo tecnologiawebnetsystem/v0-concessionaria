@@ -53,7 +53,7 @@ export async function setSession(user: User): Promise<void> {
   cookieStore.set("session", token, {
     httpOnly: true,
     secure: isProduction,
-    sameSite: isProduction ? "lax" : "none",
+    sameSite: "lax",
     maxAge: 60 * 60 * 24 * 7, // 7 days
     path: "/",
   })
