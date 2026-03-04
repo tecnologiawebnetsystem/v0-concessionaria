@@ -75,16 +75,16 @@ export function LoginForm() {
       toast.success("Login realizado com sucesso!")
 
       // Redirecionar baseado no role do usuário
-      let redirectUrl = redirect
-      if (!redirectUrl || redirectUrl === "/" || redirectUrl === "/login") {
-        if (data.user?.role === "admin" || data.user?.role === "super_admin") {
-          redirectUrl = "/admin"
-        } else if (data.user?.role === "seller") {
-          redirectUrl = "/seller"
-        } else {
-          redirectUrl = "/minha-conta"
-        }
-      }
+      const role = data.user?.role
+      const defaultRedirect =
+        role === "admin" || role === "super_admin"
+          ? "/admin"
+          : role === "seller"
+            ? "/seller"
+            : "/minha-conta"
+
+      const isGenericRedirect = !redirect || redirect === "/" || redirect === "/login"
+      const redirectUrl = isGenericRedirect ? defaultRedirect : redirect
 
       // Força navegação hard para garantir que o cookie de sessão seja lido pelo middleware
       window.location.href = redirectUrl
