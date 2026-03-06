@@ -6,9 +6,10 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
-import { Edit, Trash2, Eye, Search, ImageIcon } from "lucide-react"
+import { Edit, Trash2, Eye, Search, ImageIcon, Instagram } from "lucide-react"
 import { toast } from "sonner"
 import { useRouter } from "next/navigation"
+import { InstagramShareDialog } from "./instagram-share-dialog"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -129,7 +130,29 @@ export function VehiclesTable({ vehicles: initialVehicles }: { vehicles: any[] }
                     </div>
                   </TableCell>
                   <TableCell className="text-right">
-                    <div className="flex justify-end gap-2">
+                    <div className="flex justify-end gap-1">
+                      <InstagramShareDialog
+                        vehicle={{
+                          id: vehicle.id,
+                          name: vehicle.name,
+                          model: vehicle.model,
+                          year: vehicle.year,
+                          price: Number(vehicle.price),
+                          mileage: vehicle.mileage ? Number(vehicle.mileage) : undefined,
+                          color: vehicle.color,
+                          fuel_type: vehicle.fuel_type,
+                          transmission: vehicle.transmission,
+                          description: vehicle.description,
+                          brand_name: vehicle.brand_name,
+                          category_name: vehicle.category_name,
+                          image_url: vehicle.primary_image_url,
+                        }}
+                        trigger={
+                          <Button variant="ghost" size="sm" title="Compartilhar no Instagram">
+                            <Instagram className="size-4 text-pink-600" />
+                          </Button>
+                        }
+                      />
                       <Button variant="ghost" size="sm" asChild>
                         <Link href={`/admin/vehicles/${vehicle.id}`}>
                           <Edit className="size-4" />

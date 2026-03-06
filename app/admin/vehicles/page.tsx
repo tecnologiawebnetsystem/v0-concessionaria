@@ -7,7 +7,8 @@ import { VehiclesTable } from "@/components/admin/vehicles/vehicles-table"
 async function getVehicles() {
   const vehicles = await sql`
     SELECT v.*, b.name as brand_name, c.name as category_name,
-    (SELECT COUNT(*) FROM vehicle_images WHERE vehicle_id = v.id) as image_count
+    (SELECT COUNT(*) FROM vehicle_images WHERE vehicle_id = v.id) as image_count,
+    (SELECT url FROM vehicle_images WHERE vehicle_id = v.id ORDER BY is_primary DESC, display_order ASC LIMIT 1) as primary_image_url
     FROM vehicles v
     LEFT JOIN brands b ON v.brand_id = b.id
     LEFT JOIN vehicle_categories c ON v.category_id = c.id
