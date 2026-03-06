@@ -15,6 +15,7 @@ import {
   Percent, FileText, Shield, TrendingUp, Target, DollarSign, Edit, Save, X
 } from "lucide-react"
 import Link from "next/link"
+import { CepInput } from "@/components/ui/cep-input"
 
 const fetcher = (url: string) => fetch(url).then(r => r.json())
 const fmt = (v: number) => new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(v)
@@ -46,6 +47,16 @@ export default function SellerProfilePage() {
       pix_key: profile.pix_key ?? "",
     })
     setEditing(true)
+  }
+
+  const handleCepFound = (address: { cep: string; street: string; neighborhood: string; city: string; state: string }) => {
+    setForm((prev: any) => ({
+      ...prev,
+      zip_code: address.cep,
+      address: address.street || prev.address,
+      city: address.city,
+      state: address.state,
+    }))
   }
 
   const handleSave = async () => {
@@ -159,10 +170,15 @@ export default function SellerProfilePage() {
                     <MapPin className="size-5 text-emerald-400" /> Endereco
                   </h3>
                   <div className="grid gap-4 md:grid-cols-2">
+                    <CepInput
+                      defaultValue={form.zip_code}
+                      onAddressFound={handleCepFound}
+                      showAddressPreview={true}
+                    />
+                    <div /> {/* Spacer */}
                     <div className="md:col-span-2"><EditField field="address" label="Logradouro" /></div>
                     <EditField field="city" label="Cidade" />
                     <EditField field="state" label="Estado" />
-                    <EditField field="zip_code" label="CEP" />
                   </div>
                 </div>
                 <Separator className="bg-slate-700" />

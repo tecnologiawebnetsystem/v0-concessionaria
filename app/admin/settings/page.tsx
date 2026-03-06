@@ -2,6 +2,7 @@ import { sql } from "@/lib/db"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { SeedDataButton } from "@/components/admin/settings/seed-data-button"
+import { IntegrationsForm } from "@/components/admin/settings/integrations-form"
 
 async function getStats() {
   const [vehiclesCount] = await sql`SELECT COUNT(*) as count FROM vehicles`
@@ -17,8 +18,22 @@ async function getStats() {
   }
 }
 
+async function getIntegrationSettings() {
+  try {
+    const settings = await sql`
+      SELECT key, value, category, type 
+      FROM site_settings 
+      WHERE category = 'integrations'
+    `
+    return settings
+  } catch {
+    return []
+  }
+}
+
 export default async function SettingsPage() {
   const stats = await getStats()
+  const integrationSettings = await getIntegrationSettings()
 
   return (
     <div className="space-y-6">
@@ -27,12 +42,17 @@ export default async function SettingsPage() {
         <p className="text-muted-foreground mt-2">Gerencie as configurações do site e dados</p>
       </div>
 
-      <Tabs defaultValue="data" className="w-full">
+      <Tabs defaultValue="integrations" className="w-full">
         <TabsList>
+          <TabsTrigger value="integrations">Integrações</TabsTrigger>
           <TabsTrigger value="data">Dados</TabsTrigger>
           <TabsTrigger value="general">Geral</TabsTrigger>
           <TabsTrigger value="seo">SEO</TabsTrigger>
         </TabsList>
+        
+        <TabsContent value="integrations" className="space-y-4 mt-6">
+          <IntegrationsForm initialSettings={integrationSettings} />
+        </TabsContent>
 
         <TabsContent value="data" className="space-y-4">
           <Card>
