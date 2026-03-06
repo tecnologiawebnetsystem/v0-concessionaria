@@ -155,12 +155,15 @@ export function VehicleQRCode({ vehicleId, vehicleName, vehicleSlug, variant = '
     )
   }
 
+  // Gerar QR automaticamente para variant card
+  useEffect(() => {
+    if (variant === 'card') {
+      generateQR()
+    }
+  }, [variant])
+
   // Card completo
   if (variant === 'card') {
-    useEffect(() => {
-      generateQR()
-    }, [])
-
     return (
       <Card>
         <CardHeader>

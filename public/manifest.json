@@ -10,68 +10,16 @@
   "scope": "/",
   "icons": [
     {
-      "src": "/icons/icon-72x72.png",
-      "sizes": "72x72",
-      "type": "image/png",
-      "purpose": "maskable any"
-    },
-    {
-      "src": "/icons/icon-96x96.png",
-      "sizes": "96x96",
-      "type": "image/png",
-      "purpose": "maskable any"
-    },
-    {
-      "src": "/icons/icon-128x128.png",
-      "sizes": "128x128",
-      "type": "image/png",
-      "purpose": "maskable any"
-    },
-    {
-      "src": "/icons/icon-144x144.png",
-      "sizes": "144x144",
-      "type": "image/png",
-      "purpose": "maskable any"
-    },
-    {
-      "src": "/icons/icon-152x152.png",
-      "sizes": "152x152",
-      "type": "image/png",
-      "purpose": "maskable any"
-    },
-    {
-      "src": "/icons/icon-192x192.png",
+      "src": "/icons/icon-192x192.jpg",
       "sizes": "192x192",
-      "type": "image/png",
+      "type": "image/jpeg",
       "purpose": "maskable any"
     },
     {
-      "src": "/icons/icon-384x384.png",
-      "sizes": "384x384",
-      "type": "image/png",
-      "purpose": "maskable any"
-    },
-    {
-      "src": "/icons/icon-512x512.png",
+      "src": "/icons/icon-512x512.jpg",
       "sizes": "512x512",
-      "type": "image/png",
+      "type": "image/jpeg",
       "purpose": "maskable any"
-    }
-  ],
-  "screenshots": [
-    {
-      "src": "/screenshots/home.png",
-      "sizes": "1280x720",
-      "type": "image/png",
-      "form_factor": "wide",
-      "label": "Pagina inicial"
-    },
-    {
-      "src": "/screenshots/catalog.png",
-      "sizes": "1280x720",
-      "type": "image/png",
-      "form_factor": "wide",
-      "label": "Catalogo de veiculos"
     }
   ],
   "categories": ["shopping", "business", "lifestyle"],
@@ -80,22 +28,13 @@
       "name": "Ver Veiculos",
       "short_name": "Veiculos",
       "description": "Navegar pelo catalogo de veiculos",
-      "url": "/veiculos",
-      "icons": [{ "src": "/icons/car-icon.png", "sizes": "96x96" }]
+      "url": "/veiculos"
     },
     {
       "name": "Meus Favoritos",
       "short_name": "Favoritos",
       "description": "Ver veiculos favoritos",
-      "url": "/minha-conta/favoritos",
-      "icons": [{ "src": "/icons/heart-icon.png", "sizes": "96x96" }]
-    },
-    {
-      "name": "Agendar Test Drive",
-      "short_name": "Test Drive",
-      "description": "Agendar um test drive",
-      "url": "/agendamento",
-      "icons": [{ "src": "/icons/calendar-icon.png", "sizes": "96x96" }]
+      "url": "/minha-conta/favoritos"
     }
   ],
   "related_applications": [],

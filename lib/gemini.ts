@@ -1,4 +1,5 @@
 import { sql } from "@/lib/db"
+import { GoogleGenerativeAI } from "@google/generative-ai"
 
 interface GeminiResponse {
   candidates?: Array<{
@@ -25,6 +26,20 @@ async function getGeminiApiKey(): Promise<string | null> {
     return null
   }
 }
+
+export async function getGeminiClient() {
+  const apiKey = await getGeminiApiKey()
+  if (!apiKey) return null
+  
+  try {
+    const genAI = new GoogleGenerativeAI(apiKey)
+    return genAI.getGenerativeModel({ model: "gemini-2.0-flash" })
+  } catch {
+    return null
+  }
+}
+
+export { generateVehicleDescription as generateVehicleRecommendations }
 
 export async function generateWithGemini(prompt: string): Promise<{ success: boolean; text?: string; error?: string }> {
   const apiKey = await getGeminiApiKey()
