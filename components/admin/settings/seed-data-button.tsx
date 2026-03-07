@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
-import { Download, Loader2 } from "lucide-react"
+import { Download, Loader2, ImageIcon } from "lucide-react"
 import { toast } from "sonner"
 import { useRouter } from "next/navigation"
 
@@ -13,10 +13,11 @@ interface SeedDataButtonProps {
 export function SeedDataButton({ currentVehicles }: SeedDataButtonProps) {
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
+  const [isLoadingImages, setIsLoadingImages] = useState(false)
 
   const handleSeedData = async () => {
     if (currentVehicles > 0) {
-      if (!confirm("Você já possui veículos cadastrados. Deseja adicionar mais dados de exemplo?")) {
+      if (!confirm("Voce ja possui veiculos cadastrados. Deseja adicionar mais dados de exemplo?")) {
         return
       }
     }
@@ -30,34 +31,76 @@ export function SeedDataButton({ currentVehicles }: SeedDataButtonProps) {
       if (!response.ok) throw new Error()
 
       const data = await response.json()
-      toast.success(`${data.vehiclesAdded} veículos adicionados com sucesso!`)
+      toast.success(`${data.vehiclesAdded} veiculos adicionados com sucesso!`)
       router.refresh()
-    } catch (error) {
+    } catch {
       toast.error("Erro ao adicionar dados de exemplo")
     } finally {
       setIsLoading(false)
     }
   }
 
+  const handleSeedImages = async () => {
+    if (currentVehicles === 0) {
+      toast.error("Adicione veiculos primeiro antes de popular imagens")
+      return
+    }
+
+    setIsLoadingImages(true)
+    try {
+      const response = await fetch("/api/admin/seed-vehicle-images", {
+        method: "POST",
+      })
+
+      if (!response.ok) throw new Error()
+
+      const data = await response.json()
+      if (data.success) {
+        toast.success(data.message)
+      } else {
+        toast.info(data.message)
+      }
+      router.refresh()
+    } catch {
+      toast.error("Erro ao popular imagens")
+    } finally {
+      setIsLoadingImages(false)
+    }
+  }
+
   return (
     <div className="space-y-4">
       <p className="text-sm text-muted-foreground">
-        Clique no botão abaixo para adicionar 50+ veículos de exemplo em todas as categorias, cada um com múltiplas
-        fotos e especificações completas.
+        Adicione veiculos de exemplo ou imagens para os veiculos existentes.
       </p>
-      <Button onClick={handleSeedData} disabled={isLoading}>
-        {isLoading ? (
-          <>
-            <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-            Adicionando dados...
-          </>
-        ) : (
-          <>
-            <Download className="h-4 w-4 mr-2" />
-            Adicionar Dados de Exemplo
-          </>
-        )}
-      </Button>
+      <div className="flex flex-wrap gap-3">
+        <Button onClick={handleSeedData} disabled={isLoading || isLoadingImages}>
+          {isLoading ? (
+            <>
+              <Loader2 className="size-4 mr-2 animate-spin" />
+              Adicionando...
+            </>
+          ) : (
+            <>
+              <Download className="size-4 mr-2" />
+              Adicionar Veiculos
+            </>
+          )}
+        </Button>
+        <Button onClick={handleSeedImages} disabled={isLoading || isLoadingImages} variant="outline">
+          {isLoadingImages ? (
+            <>
+              <Loader2 className="size-4 mr-2 animate-spin" />
+              Populando imagens...
+            </>
+          ) : (
+            <>
+              <ImageIcon className="size-4 mr-2" />
+              Popular Imagens (5 por veiculo)
+            </>
+          )}
+        </Button>
+      </div>
     </div>
   )
 }

@@ -1,0 +1,11 @@
+// Barrel exports para componentes de veiculos
+export { Vehicle360Viewer } from "./vehicle-360-viewer"
+export { VehicleInteriorTour } from "./vehicle-interior-tour"
+export { VehicleVideoPlayer } from "./vehicle-video-player"
+export { ImmersiveGallery } from "./immersive-gallery"
+export { VehicleReservation } from "./vehicle-reservation"
+export { AdvancedFinancingCalculator } from "./advanced-financing-calculator"
+export { DeliveryCalculator } from "./delivery-calculator"
+export { VehicleHistoryReport } from "./vehicle-history-report"
+export { VehicleInspectionReport } from "./vehicle-inspection-report"
+export { VehicleQRCode } from "./vehicle-qr-code"

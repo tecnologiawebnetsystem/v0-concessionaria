@@ -127,7 +127,7 @@ export const metadata: Metadata = {
   },
   
   // Manifest
-  manifest: "/manifest.webmanifest",
+  manifest: "/manifest.json",
   
   // Verification
   verification: {
@@ -196,6 +196,18 @@ export default function RootLayout({
           </VehicleProvider>
         </ThemeProvider>
         <Analytics />
+        {/* Service Worker Registration */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              if ('serviceWorker' in navigator) {
+                window.addEventListener('load', function() {
+                  navigator.serviceWorker.register('/sw.js').catch(function() {});
+                });
+              }
+            `,
+          }}
+        />
       </body>
     </html>
   )

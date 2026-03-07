@@ -1,7 +1,7 @@
 "use client"
 
-import { useActionState } from "react"
-import { useSearchParams } from "next/navigation"
+import { useActionState, useEffect } from "react"
+import { useSearchParams, useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -40,18 +40,35 @@ const DEMO_USERS = [
 
 export function LoginForm() {
   const searchParams = useSearchParams()
+  const router = useRouter()
   const redirectTo = searchParams.get("redirect") || "/"
 
   const [state, formAction, isPending] = useActionState(loginAction, null)
   const [showDemo, setShowDemo] = useState(false)
+  const [isRedirecting, setIsRedirecting] = useState(false)
   const emailRef = useRef<HTMLInputElement>(null)
   const passwordRef = useRef<HTMLInputElement>(null)
+
+  // Efeito para fazer o redirect após login bem-sucedido
+  useEffect(() => {
+    if (state?.success && state?.redirectTo) {
+      setIsRedirecting(true)
+      // Pequeno delay para garantir que o cookie foi persistido
+      const timer = setTimeout(() => {
+        router.push(state.redirectTo!)
+        router.refresh()
+      }, 100)
+      return () => clearTimeout(timer)
+    }
+  }, [state, router])
 
   function fillDemo(demoEmail: string, demoPassword: string) {
     if (emailRef.current) emailRef.current.value = demoEmail
     if (passwordRef.current) passwordRef.current.value = demoPassword
     setShowDemo(false)
   }
+
+  const isLoading = isPending || isRedirecting
 
   return (
     <Card>
@@ -72,7 +89,7 @@ export function LoginForm() {
               type="email"
               placeholder="seu@email.com"
               required
-              disabled={isPending}
+              disabled={isLoading}
               defaultValue=""
             />
           </div>
@@ -86,23 +103,23 @@ export function LoginForm() {
               type="password"
               placeholder="••••••••"
               required
-              disabled={isPending}
+              disabled={isLoading}
               defaultValue=""
             />
           </div>
 
-          {state?.error && (
+          {state?.error && !isRedirecting && (
             <div className="flex items-center gap-2 rounded-md bg-red-50 border border-red-200 p-3 text-sm text-red-700">
               <AlertCircle className="size-4 shrink-0" />
               <span>{state.error}</span>
             </div>
           )}
 
-          <Button type="submit" className="w-full" disabled={isPending}>
-            {isPending ? (
+          <Button type="submit" className="w-full" disabled={isLoading}>
+            {isLoading ? (
               <>
                 <Loader2 className="mr-2 size-4 animate-spin" />
-                Entrando...
+                {isRedirecting ? "Redirecionando..." : "Entrando..."}
               </>
             ) : (
               "Entrar"

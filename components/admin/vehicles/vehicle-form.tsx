@@ -47,14 +47,13 @@ export function VehicleForm({ vehicle, brands, categories }: VehicleFormProps) {
 
   async function handleGenerateDescription() {
     if (!formData.name || !formData.year) {
-      toast.error("Preencha pelo menos o nome e o ano do veículo.")
+      toast.error("Preencha pelo menos o nome e o ano do veiculo.")
       return
     }
     setGeneratingDesc(true)
     try {
       const brandName = brands.find(b => b.id === formData.brand_id)?.name || ""
-      const categoryName = categories.find(c => c.id === formData.category_id)?.name || ""
-      const res = await fetch("/api/ai/generate-description", {
+      const res = await fetch("/api/admin/vehicles/generate-description", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -64,53 +63,27 @@ export function VehicleForm({ vehicle, brands, categories }: VehicleFormProps) {
           mileage: formData.mileage,
           fuel_type: formData.fuel_type,
           transmission: formData.transmission,
-          engine: formData.engine,
           color: formData.color,
-          category: categoryName,
+          price: formData.price,
         }),
       })
       const data = await res.json()
-      if (data.description) {
+      if (data.success && data.description) {
         setFormData(prev => ({ ...prev, description: data.description }))
-        toast.success("Descrição gerada com IA!")
+        toast.success("Descricao gerada com Gemini AI!")
+      } else {
+        toast.error(data.error || "Erro ao gerar descricao")
       }
     } catch {
-      toast.error("Erro ao gerar descrição")
+      toast.error("Erro ao gerar descricao")
     } finally {
       setGeneratingDesc(false)
     }
   }
 
   async function handleSuggestPrice() {
-    if (!formData.name || !formData.year) {
-      toast.error("Preencha pelo menos o nome e o ano do veículo.")
-      return
-    }
-    setGeneratingPrice(true)
-    try {
-      const brandName = brands.find(b => b.id === formData.brand_id)?.name || ""
-      const res = await fetch("/api/ai/suggest-price", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          brand: brandName,
-          model: formData.name,
-          year: formData.year,
-          mileage: formData.mileage,
-          fuel_type: formData.fuel_type,
-          transmission: formData.transmission,
-        }),
-      })
-      const data = await res.json()
-      if (data.suggestedPrice) {
-        setFormData(prev => ({ ...prev, price: data.suggestedPrice }))
-        toast.success(`Preço sugerido: R$ ${Number(data.suggestedPrice).toLocaleString("pt-BR")}`)
-      }
-    } catch {
-      toast.error("Erro ao sugerir preço")
-    } finally {
-      setGeneratingPrice(false)
-    }
+    toast.info("Funcao de sugestao de preco em desenvolvimento. Configure o Gemini AI em Configuracoes > Integracoes.")
+    setGeneratingPrice(false)
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {

@@ -1,12 +1,13 @@
 "use server"
 
 import { cookies } from "next/headers"
-import { redirect } from "next/navigation"
 import { authenticateUser } from "@/lib/auth"
 import { createSession } from "@/lib/session"
 
 export type LoginState = {
   error?: string
+  success?: boolean
+  redirectTo?: string
 } | null
 
 export async function loginAction(prevState: LoginState, formData: FormData): Promise<LoginState> {
@@ -19,7 +20,6 @@ export async function loginAction(prevState: LoginState, formData: FormData): Pr
   }
 
   const user = await authenticateUser(email, password)
-  console.log("[v0] loginAction - auth result:", user ? `OK role=${user.role}` : "FALHOU")
 
   if (!user) {
     return { error: "Email ou senha incorretos" }
@@ -47,6 +47,7 @@ export async function loginAction(prevState: LoginState, formData: FormData): Pr
         : "/minha-conta"
     : redirectTo
 
-  console.log("[v0] loginAction - cookie setado, redirecionando para:", destination)
-  redirect(destination)
+  // Retorna sucesso e destino - o redirect será feito pelo cliente
+  // Isso garante que o cookie seja persistido antes do redirect
+  return { success: true, redirectTo: destination }
 }
