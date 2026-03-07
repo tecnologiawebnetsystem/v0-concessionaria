@@ -1,3 +1,5 @@
+"use client"
+
 import { WifiOff, RefreshCw, Home, Heart, Phone } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
