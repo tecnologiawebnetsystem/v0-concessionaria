@@ -106,10 +106,6 @@ const nextConfig = {
     ]
   },
 
-  // Experimental features
-  experimental: {
-    optimizeCss: true,
-  },
-}
+  }
 
 export default nextConfig
