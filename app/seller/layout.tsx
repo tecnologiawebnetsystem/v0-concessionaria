@@ -2,7 +2,6 @@ import type React from "react"
 import { SellerSidebar } from "@/components/seller/seller-sidebar"
 import { SellerHeader } from "@/components/seller/seller-header"
 import { getSession } from "@/lib/session"
-import { redirect } from "next/navigation"
 import { sql } from "@/lib/db"
 
 async function getSellerData(userId: string) {
@@ -29,17 +28,9 @@ async function getSellerData(userId: string) {
 }
 
 export default async function SellerLayout({ children }: { children: React.ReactNode }) {
+  // Sessao ja foi verificada pelo proxy.ts
   const session = await getSession()
-
-  if (!session) {
-    redirect("/login?redirect=/seller")
-  }
-
-  if (session.role !== "seller" && session.role !== "admin" && session.role !== "super_admin") {
-    redirect("/")
-  }
-
-  const sellerData = await getSellerData(session.userId)
+  const sellerData = session ? await getSellerData(session.userId) : null
 
   return (
     <div className="flex min-h-screen bg-gradient-to-br from-slate-950 via-emerald-950/30 to-slate-900">
