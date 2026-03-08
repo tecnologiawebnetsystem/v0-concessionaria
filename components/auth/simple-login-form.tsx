@@ -8,6 +8,17 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Loader2, Shield, Briefcase, User, AlertCircle, CheckCircle } from "lucide-react"
 import Link from "next/link"
 
+async function setupDemo() {
+  try {
+    const res = await fetch("/api/auth/setup-demo")
+    const data = await res.json()
+    console.log("[v0] Setup demo:", data)
+    alert(data.message || data.error)
+  } catch (err) {
+    console.error("[v0] Erro setup:", err)
+  }
+}
+
 const DEMO_USERS = [
   {
     role: "Administrador",
@@ -76,12 +87,14 @@ export function SimpleLoginForm() {
   }
 
   async function handleQuickLogin(demoUser: typeof DEMO_USERS[0]) {
+    console.log("[v0] handleQuickLogin chamado para:", demoUser.role)
     setEmail(demoUser.email)
     setPassword(demoUser.password)
     setLoading(true)
     setError("")
 
     try {
+      console.log("[v0] Fazendo fetch para /api/auth/simple-login")
       const res = await fetch("/api/auth/simple-login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -92,21 +105,27 @@ export function SimpleLoginForm() {
         credentials: "include",
       })
 
+      console.log("[v0] Resposta recebida, status:", res.status)
       const data = await res.json()
+      console.log("[v0] Data:", data)
 
       if (!res.ok) {
+        console.log("[v0] Erro no login:", data.error)
         setError(data.error || "Erro ao fazer login")
         setLoading(false)
         return
       }
 
+      console.log("[v0] Login OK, redirecionando para:", data.redirectTo)
       setSuccess(true)
       
       // Redirect direto
       setTimeout(() => {
+        console.log("[v0] Executando redirect agora")
         window.location.href = data.redirectTo
       }, 500)
-    } catch {
+    } catch (err) {
+      console.log("[v0] Erro catch:", err)
       setError("Erro de conexao. Tente novamente.")
       setLoading(false)
     }
@@ -224,6 +243,17 @@ export function SimpleLoginForm() {
             Criar conta
           </Link>
         </p>
+
+        {/* Botao oculto para configurar senhas demo */}
+        <div className="pt-4 border-t">
+          <button 
+            type="button"
+            onClick={setupDemo}
+            className="text-xs text-muted-foreground hover:text-primary underline w-full text-center"
+          >
+            Configurar usuarios demo
+          </button>
+        </div>
       </CardContent>
     </Card>
   )

@@ -8,10 +8,13 @@ const SECRET_KEY = new TextEncoder().encode(
 )
 
 export async function POST(request: Request) {
+  console.log("[v0] simple-login API chamada")
   try {
     const { email, password } = await request.json()
+    console.log("[v0] Email recebido:", email)
 
     if (!email || !password) {
+      console.log("[v0] Email ou senha faltando")
       return NextResponse.json(
         { error: "Email e senha sao obrigatorios" },
         { status: 400 }
@@ -19,14 +22,17 @@ export async function POST(request: Request) {
     }
 
     // Buscar usuario
+    console.log("[v0] Buscando usuario no banco...")
     const users = await sql`
       SELECT id, email, name, role, password_hash 
       FROM users 
       WHERE email = ${email} AND is_active = true 
       LIMIT 1
     `
+    console.log("[v0] Usuarios encontrados:", users.length)
 
     if (users.length === 0) {
+      console.log("[v0] Usuario nao encontrado")
       return NextResponse.json(
         { error: "Usuario nao encontrado" },
         { status: 401 }
@@ -34,9 +40,11 @@ export async function POST(request: Request) {
     }
 
     const user = users[0]
+    console.log("[v0] Usuario encontrado:", user.email, "role:", user.role)
 
     // Verificar senha
     const isValid = await bcrypt.compare(password, user.password_hash)
+    console.log("[v0] Senha valida:", isValid)
     if (!isValid) {
       return NextResponse.json(
         { error: "Senha incorreta" },
