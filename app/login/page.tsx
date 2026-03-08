@@ -1,4 +1,4 @@
-import { LoginForm } from "@/components/auth/login-form"
+import { SimpleLoginForm } from "@/components/auth/simple-login-form"
 import type { Metadata } from "next"
 import Link from "next/link"
 import Image from "next/image"
@@ -18,7 +18,7 @@ export default function LoginPage() {
           </Link>
           <p className="mt-3 text-sm text-gray-400">Faça login para continuar</p>
         </div>
-        <LoginForm />
+        <SimpleLoginForm />
       </div>
     </div>
   )
